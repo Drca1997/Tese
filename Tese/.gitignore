@@ -3,6 +3,8 @@
 
 !.gitignore
 !Assets
+Tese/Library/ArtifactDB
+Tese/Library/SourceAssetDB
 
 
 
