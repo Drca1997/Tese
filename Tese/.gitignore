@@ -6,5 +6,5 @@
 !.gitignore
 !Assets
 !ProjectSettings
-Tese/Library/ArtifactDB
-Tese/Library/SourceAssetDB
+Library/ArtifactDB
+Library/SourceAssetDB
