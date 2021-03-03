@@ -3,6 +3,7 @@
 
 !.gitignore
 !Assets
+!ProjectSettings
 Tese/Library/ArtifactDB
 Tese/Library/SourceAssetDB
 
