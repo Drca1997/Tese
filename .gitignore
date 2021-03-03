@@ -1,7 +1,7 @@
 /*
 /*/
 
-!Tese/.gitignore
-!Tese/Assets/
-!Tese/ProjectSettings/
+!.gitignore
+!Assets
+!ProjectSettings
 
