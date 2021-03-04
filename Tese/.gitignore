@@ -3,7 +3,6 @@
 
 *.log
 Logs/shadercompiler-UnityShaderCompiler.exe0.log
-
 !.gitignore
 !Assets
 !ProjectSettings
