@@ -4,52 +4,27 @@ using UnityEngine;
 
 public class Grid 
 {
-    private int width;
-    private int height;
-    private float cellSize;
+    public int width;
+    public int height;
+    public float cellSize;
     public Agent[,] agentGrid;
-    private GameObject[,] objectGrid;
+    public GameObject[,] objectGrid;
 
-    public Grid (int width, int height, float cellSize, Agent[,] agentGrid)
+    public Grid (int width, int height, float cellSize, Agent[,] agentGrid, GameObject[,] objectGrid)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.agentGrid = agentGrid;
-        this.objectGrid = new GameObject[width, height];
-
-        InstantiateObjectGrid();
+        this.objectGrid = objectGrid;
     }
 
-    public void InstantiateObjectGrid()
-    {
-        for (int i = 0; i < agentGrid.GetLength(0); i++)
-        {
-            for (int j = 0; j < agentGrid.GetLength(1); j++)
-            {
-                //CreateText(agentGrid[i, j].typeName, GetWorldPosition(i, j) + new Vector3(cellSize, cellSize) / 2);
-                objectGrid[i,j] = CreateSquare((agentGrid[i, j].state == 1) ? Color.black : Color.white, agentGrid[i, j].typeName, GetWorldPosition(i, j) + new Vector3(cellSize, cellSize) / 2);  
-            }
-        }
-    }
-
-    public void UpdateObjectGrid()
-    {
-        for (int i = 0; i < agentGrid.GetLength(0); i++)
-        {
-            for (int j = 0; j < agentGrid.GetLength(1); j++)
-            {
-                objectGrid[i, j].GetComponent<SpriteRenderer>().color = (agentGrid[i, j].state == 1) ? Color.black : Color.white;
-            }
-        }
-    }
-
-    private Vector3 GetWorldPosition (int x, int y)
+    public Vector3 GetWorldPosition (int x, int y)
     {
         return new Vector3(x, y) * cellSize;
     }
 
-    private void CreateText(string text, Vector3 position)
+    public void CreateText(string text, Vector3 position)
     {
         GameObject gameObject = new GameObject("Texto_Fixolas", typeof(TextMesh));
         Transform trans = gameObject.transform;
@@ -60,7 +35,7 @@ public class Grid
         textMesh.color = Color.black;
         textMesh.anchor = TextAnchor.MiddleCenter;
     }
-    private GameObject CreateSquare(Color color, string name, Vector3 position)
+    public GameObject CreateSquare(Color color, string name, Vector3 position)
     {  
         GameObject gameObject = new GameObject(name,typeof(SpriteRenderer));
         Transform trans = gameObject.transform;

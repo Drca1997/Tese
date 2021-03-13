@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class LifeAgent : Agent
 {
-    public LifeAgent(int state, int x, int y) {
-        this.state = state;
+    public LifeAgent(List<int> states, int x, int y) {
+
+        //states[0] - alive neighours 
+        //states[1] - alive/dead
+        this.states = states;
         this.position = new Vector2Int(x,y);
-        this.type = 1;
         this.typeName = "Live_Agent";
         this.relative_sensors = new Vector2Int[] {
             new Vector2Int(-1, -1),
@@ -22,24 +24,36 @@ public class LifeAgent : Agent
         this.constant_sensors = new Vector2Int[] {};
     }
 
-    public override void UpdateAgent(Agent[] sensors)
+    public override Grid UpdateAgent(Grid g, int step_stage)
     {
-        int sum=0;
-        foreach(Agent sensor in sensors)
+        switch (step_stage)
         {
-            if (sensor.state == 1) sum++;
-        }
+            //contar numero de vizinhos vivios
+            case 0:
+                Agent[] sensors = GetSensors(g);
+                states[0] = 0;
+                foreach (Agent sensor in sensors)
+                {
+                    if (sensor.states[1] == 1) states[0]++;
+                }
+                break;
 
-        if (state == 1)
-        {
-            if (sum < 2 || sum > 3) state = 0;
-            else state = 1;
+            //mudar de estado de acordo com o numero de vizinhos
+            case 1:
+                if (states[1] == 1)
+                {
+                    if (states[0] < 2 || states[0] > 3) states[1] = 0;
+                    else states[1] = 1;
+                }
+                else
+                {
+                    if (states[0] == 3) states[1] = 1;
+                    else states[1] = 0;
+                }
+                break;
         }
-        else
-        {
-            if (sum == 3) state = 1;
-            else state = 0;
-        }
+        return g;
+
     }
 
 }
