@@ -23,7 +23,7 @@ public class GraphicsManager
         {
             for (int j = 0; j < grid.Array.GetLength(1); j++)
             {
-                spriteRenderers.Add(Utils.CreateSpriteRenderer(grid.GetWorldPosition(i, j), sprites[grid.Array[i, j]], cellSize));
+                spriteRenderers.Add(Utils.CreateSpriteRenderer(grid.GetWorldPosition(i, j), sprites[grid.Array[i, j]], grid.CellSize));
             }
         }
     }
