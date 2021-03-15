@@ -251,7 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 8
   height: 8
-  origin: 000000000000000000000000
+  origin: fcfffffffcfffffffcffffff
   cellSize: 1
   randomizeMap: 0
   sprites:
@@ -260,4 +260,4 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 07b523b3fd9c20f488bbe21ffcf8b881, type: 3}
   - {fileID: 21300000, guid: 647da7226306f324d874857146a964be, type: 3}
   - {fileID: 21300000, guid: dd03764fe07cf7747acce58717f7ed8e, type: 3}
-  bombRadius: 0
+  bombRadius: 2

@@ -17,7 +17,7 @@ public class GameHandler : MonoBehaviour
     [SerializeField]
     private Sprite[] sprites;
     [SerializeField]
-    private int bombRadius;
+    private int bombRadius; //inutil por agora, ate que faça logica da bomba modular para suportar diferentes radios
     private Grid grid;
     private List <GameObject> spriteRenderers;
     private List<Bomb> bombs;
@@ -29,6 +29,7 @@ public class GameHandler : MonoBehaviour
         grid.DisplayGrid();
         grid.DebugPrintGrid();
         GraphicsSetup();
+        bombs = new List<Bomb>();
     }
 
     // Update is called once per frame
