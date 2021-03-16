@@ -62,4 +62,83 @@ public static class Utils
         }
         return null;
     }
+
+    public static bool IsValidAction(Grid grid, BaseAgent agent, int action)
+    {
+        switch (action)
+        {
+            case 0: //move up
+                if (agent.Y + 1 < grid.Array.GetLength(1)) // se esta dentro dos limites
+                {
+                    if (Utils.IsTileWalkable(grid, agent.X, agent.Y + 1)) //Se é walkable
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            case 1: //move down
+                if (agent.Y - 1 >= 0) // se esta dentro dos limites
+                {
+                    if (Utils.IsTileWalkable(grid, agent.X, agent.Y - 1)) //Se é walkable
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            case 2: //move left
+                if (agent.X - 1 >= 0) // se esta dentro dos limites
+                {
+                    if (Utils.IsTileWalkable(grid, agent.X - 1, agent.Y)) //Se é walkable
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            case 3: //move right
+                if (agent.X + 1 < grid.Array.GetLength(0)) // se esta dentro dos limites
+                {
+                    if (Utils.IsTileWalkable(grid, agent.X + 1, agent.Y)) //Se é walkable
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            case 4: //plant bomb
+                if (!agent.PlantedBomb)
+                {
+                    agent.PlantedBomb = true;
+                    return true;
+                }
+
+                return false;
+
+            case 5: //do nothing
+                return true;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    /**
+    public static List<int[]> GetTilesInBounds(Grid grid, int x, int y)
+    {
+        List<int[]> tiles = new List<int[]>();
+        if (y + 1 < grid.Array.GetLength(1))
+        {
+            if (.IsTileAffected(x, y + 1))
+            {
+                tiles.Add(new int[] { x, y + 1 });
+            }
+            //se (x,y+2) nao está fora do mapa, e (x, y+1) nao é algo que tapou o radio da explosao
+            if (y + 2 < grid.Array.GetLength(1) && grid.Array[x, y + 1] != 2 && grid.Array[x, y + 1] != 3)
+            {
+                if (IsTileAffected(x, y + 2))
+                {
+                    tTiles.Add(new int[] { x, y + 2 });
+                }
+            }
+        }
+        return tiles;
+    }*/
 }

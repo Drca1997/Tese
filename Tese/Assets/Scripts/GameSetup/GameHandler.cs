@@ -189,4 +189,9 @@ public class GameHandler : MonoBehaviour
         }
         return null;
     }
+
+    public List<Bomb> getBombs()
+    {
+        return bombs;
+    }
 }
