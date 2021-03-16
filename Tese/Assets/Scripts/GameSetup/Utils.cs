@@ -33,4 +33,33 @@ public static class Utils
         obj.GetComponent<SpriteRenderer>().sprite = sprite;
         return obj;
     }
+
+    public static bool IsTileWalkable(Grid grid, int x, int y) {
+        if (grid.Array[x, y] == 1)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public static string ActionToString(int action)
+    {
+        switch (action)
+        {
+            case 0:
+                return "moveu-se para cima";
+            case 1:
+                return "moveu-se para baixo";
+            case 2:
+                return "moveu-se para a esquerda";
+            case 3:
+                return "moveu-se para a direita";
+            case 4:
+                return "PLANTOU BOMBA";
+            case 5:
+                return "permaneceu no mesmo sítio";
+               
+        }
+        return null;
+    }
 }

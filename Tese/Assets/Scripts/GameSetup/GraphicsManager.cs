@@ -34,17 +34,27 @@ public class GraphicsManager
         {
             for (int j = 0; j < grid.Array.GetLength(1); j++)
             {
-
                 SpriteRenderer sR = spriteRenderers[i * grid.Array.GetLength(1) + j].GetComponent<SpriteRenderer>();
                 if (sR == null)
                 {
                     Debug.Log("ERRO: TILE NAO ENCONTRADA!");
                 }
                 else
-                {
-                    sR.sprite = sprites[grid.Array[i, j]];
+                {                  
+                    if (grid.Array[i,j] == 5)
+                    {
+                        sR.sprite = sprites[0];
+                    }
+                    else
+                    {
+                       sR.sprite = sprites[grid.Array[i, j]];
+                    }
+                    
+   
                 }
             }
+                
+            
         }
     }
 }

@@ -64,13 +64,14 @@ public class Grid
         }
     }
 
-    public void DisplayGrid()
+    public void DisplayGrid(bool debugText)
     {
         for (int x = 0; x < array.GetLength(0); x++)
         {
             for (int y = 0; y < array.GetLength(1); y++)
             {
-                debugTextArray[x, y] = Utils.CreateText(Array[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(CellSize, CellSize) * 0.5f, new Vector3(0.25f, 0.25f), Color.white, Mathf.FloorToInt(10 * cellSize), TextAnchor.MiddleCenter, TextAlignment.Center);
+                if (debugText)
+                    debugTextArray[x, y] = Utils.CreateText(Array[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(CellSize, CellSize) * 0.5f, new Vector3(0.25f, 0.25f), Color.white, Mathf.FloorToInt(10 * cellSize), TextAnchor.MiddleCenter, TextAlignment.Center);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                 Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
 

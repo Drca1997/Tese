@@ -4,5 +4,6 @@ using UnityEngine;
 
 public interface IDecisionRequester
 {
+    void GetWorld(Grid grid, int x, int y);
     int RequestDecision(); 
 }
