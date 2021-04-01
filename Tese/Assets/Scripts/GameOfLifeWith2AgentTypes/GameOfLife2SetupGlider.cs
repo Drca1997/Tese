@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//ISetup Interface for the Game of Life with one agent type game scenario with:
+
+//ISetup Interface for the Game of Life with two agent types game scenario with:
 //a "glider" structure setted up from the beginning
-public class GameOfLifeSetup_Glider : MonoBehaviour, ISetup
+public class GameOfLife2SetupGlider : MonoBehaviour, ISetup
 {
     //width of the simulation grid, by default 20 units
     public int width = 20;
@@ -21,8 +22,7 @@ public class GameOfLifeSetup_Glider : MonoBehaviour, ISetup
     {
 
         //Creation of a setup matrix with the structure of a "glider"
-        //each cell in the setup matrix indicates if a LifeAgent with a states[1] component with value 1 (meaning its "alive") should be placed
-        //at the same position in the agentGrid
+        //each cell in the setup matrix indicates if a LifeAgentAlive Agent should be placed at the same position in the agentGrid
         int[,] setupGrid = new int[width, height];
         if (width > 5 & height > 5)
         {
@@ -34,16 +34,22 @@ public class GameOfLifeSetup_Glider : MonoBehaviour, ISetup
         }
 
         //Creation and initialization of the agentGrid acording to the setupGrid
-        //positions with value 1 in the setupGrid have a LifeAgent with a states[1] component with value 1 (meaning its "alive") on the agentGrid
-        //positions with value 0 in the setupGrid have a LifeAgent with a states[1] component with value 0 (meaning its "dead") on the agentGrid
+        //positions with value 1 in the setupGrid have a LifeAgentAlive on the agentGrid
+        //positions with value 0 in the setupGrid have a LifeAgentDead on the agentGrid
         List<Agent>[,] agentGrid = new List<Agent>[width, height];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 agentGrid[x, y] = new List<Agent> { };
-                agentGrid[x, y].Add(new LifeAgent(new List<int> { 0, (setupGrid[x, y] == 1) ? 1 : 0 }, x, y));
-                
+                if (setupGrid[x, y] == 1)
+                {
+                    agentGrid[x, y].Add(new LifeAgentAlive(new List<int> { 0 }, x, y));
+                }
+                else
+                {
+                    agentGrid[x, y].Add(new LifeAgentDead(new List<int> { 0 }, x, y));
+                }
             }
         }
 

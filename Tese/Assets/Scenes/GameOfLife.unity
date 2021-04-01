@@ -134,9 +134,9 @@ GameObject:
   - component: {fileID: 249840270}
   - component: {fileID: 249840269}
   - component: {fileID: 249840274}
-  - component: {fileID: 249840272}
   - component: {fileID: 249840271}
   - component: {fileID: 249840273}
+  - component: {fileID: 249840272}
   m_Layer: 0
   m_Name: teste
   m_TagString: Untagged
@@ -232,7 +232,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 249840268}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 430a7b52091c0a54080fab24e849db79, type: 3}
+  m_Script: {fileID: 11500000, guid: 1669f475891ff414097fb64f85afe9ae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &249840273
@@ -244,12 +244,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 249840268}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a01bfc9ff50516e4fa22842079d221ca, type: 3}
+  m_Script: {fileID: 11500000, guid: 105fb38a40ae0fe4fb5ae477787c35d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 200
-  height: 100
-  cellSize: 1
+  width: 20
+  height: 10
+  numberRandomMovingAgents: 1
+  numberPlayerAgents: 10
+  cellSize: 10
   randomFillPercetn: 20
 --- !u!114 &249840274
 MonoBehaviour:
@@ -263,6 +265,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b5d8869152256e49afa11f3c5f02370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  finishedLoop: 1
+  loopNumber: 1
+  updatingPlayer: 0
+  index: 0
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
