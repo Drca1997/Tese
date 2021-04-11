@@ -7,7 +7,7 @@ public class RandomAgent : BaseAgent, IDecisionRequester
 
     public void GetWorld(Grid grid, int x, int y)
     {
-        this.grid = grid;
+        this.Grid = grid;
         this.x = x;
         this.y = y;
     }
@@ -16,7 +16,7 @@ public class RandomAgent : BaseAgent, IDecisionRequester
     public int RequestDecision()
     {
         int action = Random.Range(0, 6);
-        while (!Utils.IsValidAction(grid, this, action))
+        while (!Utils.IsValidAction(Grid, this, action))
         {
             action = Random.Range(0, 6);
         }

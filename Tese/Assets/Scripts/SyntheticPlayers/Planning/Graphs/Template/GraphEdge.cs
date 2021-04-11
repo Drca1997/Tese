@@ -24,6 +24,7 @@ public class GraphEdge
         this.cost = 1.0;
     }
 
+
     public int From { get => from; set => from = value; }
     public int To { get => to; set => to = value; }
     public double Cost { get => cost; set => cost = value; }

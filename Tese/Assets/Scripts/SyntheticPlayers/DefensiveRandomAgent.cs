@@ -7,7 +7,7 @@ public class DefensiveRandomAgent : BaseAgent, IDecisionRequester
     private bool onDanger = false;
     public void GetWorld(Grid grid, int x, int y)
     {
-        this.grid = grid;
+        this.Grid = grid;
         this.x = x;
         this.y = y;
     }
@@ -18,7 +18,7 @@ public class DefensiveRandomAgent : BaseAgent, IDecisionRequester
         List<int[]> dangerTiles = CalculateDanger(onDanger, x, y);
         if (onDanger) {
             if (dangerTiles.Count == 0){
-                while (!Utils.IsValidAction(grid, this, action))
+                while (!Utils.IsValidAction(Grid, this, action))
                 {
                     action = Random.Range(0, 6);
                 }
@@ -31,7 +31,7 @@ public class DefensiveRandomAgent : BaseAgent, IDecisionRequester
         }
         else
         {
-            while (!Utils.IsValidAction(grid, this, action))
+            while (!Utils.IsValidAction(Grid, this, action))
             {
                 action = Random.Range(0, 6);
             }
@@ -70,7 +70,7 @@ public class DefensiveRandomAgent : BaseAgent, IDecisionRequester
         List<int> possibleActions = new List<int>();
         for (int i = 0; i < 6; i++)
         {
-            if (Utils.IsValidAction(grid, this, i))
+            if (Utils.IsValidAction(Grid, this, i))
             {
                 possibleActions.Add(i);
             }
@@ -103,7 +103,7 @@ public class DefensiveRandomAgent : BaseAgent, IDecisionRequester
         }
 
         int randomAction = Random.Range(0, 6);
-        while (!Utils.IsValidAction(grid, this, randomAction))
+        while (!Utils.IsValidAction(Grid, this, randomAction))
         {
             randomAction = Random.Range(0, 6);
         }

@@ -259,6 +259,13 @@ GameObject:
   m_Component:
   - component: {fileID: 548479764}
   - component: {fileID: 548479765}
+  - component: {fileID: 548479772}
+  - component: {fileID: 548479771}
+  - component: {fileID: 548479767}
+  - component: {fileID: 548479770}
+  - component: {fileID: 548479769}
+  - component: {fileID: 548479768}
+  - component: {fileID: 548479766}
   m_Layer: 0
   m_Name: Agent1
   m_TagString: Agent
@@ -289,9 +296,117 @@ MonoBehaviour:
   m_GameObject: {fileID: 548479763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ce399fbe9cdb344a9caecfd49d45b07, type: 3}
+  m_Script: {fileID: 11500000, guid: efa156463fccd06428069f1535202b22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &548479766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548479763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4d0eebf1e0efea429755ebad5e59656, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 548479765}
+  rawAction: 4
+  cost: 1
+  oppositeAction: {fileID: 0}
+--- !u!114 &548479767
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548479763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eee7bae47afdd5d4596334e4363943be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 548479765}
+  rawAction: 0
+  cost: 1
+  oppositeAction: {fileID: 548479770}
+--- !u!114 &548479768
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548479763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c28c64aa8c3916d4e978dd86620760bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 548479765}
+  rawAction: 3
+  cost: 1
+  oppositeAction: {fileID: 548479769}
+--- !u!114 &548479769
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548479763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3ea0365774e9ed409a04f4c1c743f10, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 548479765}
+  rawAction: 2
+  cost: 1
+  oppositeAction: {fileID: 548479768}
+--- !u!114 &548479770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548479763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2fc93b8c232f474b899dae7f716d989, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 548479765}
+  rawAction: 1
+  cost: 1
+  oppositeAction: {fileID: 548479767}
+--- !u!114 &548479771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548479763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe4f902de9eb7724eaae2e65de72a2d9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 548479765}
+  priority: 2
+--- !u!114 &548479772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 548479763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f74c068447a2c1e4ea666395cfed2c6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agent: {fileID: 548479765}
+  priority: 1
 --- !u!1 &688369230
 GameObject:
   m_ObjectHideFlags: 0
@@ -346,7 +461,6 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 07b523b3fd9c20f488bbe21ffcf8b881, type: 3}
   - {fileID: 21300000, guid: 647da7226306f324d874857146a964be, type: 3}
   - {fileID: 21300000, guid: dd03764fe07cf7747acce58717f7ed8e, type: 3}
-  bombRadius: 2
 --- !u!1 &1503603398
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ public class GameHandler : MonoBehaviour
     private bool randomizeMap;
     [SerializeField]
     private Sprite[] sprites;
-    [SerializeField]
+    //[SerializeField]
     private int bombRadius; //inutil por agora, ate que faça logica da bomba modular para suportar diferentes radios
     private Grid grid;
     private List <GameObject> spriteRenderers;
@@ -29,16 +29,17 @@ public class GameHandler : MonoBehaviour
     private void Awake()
     {
         agents = GameObject.FindGameObjectsWithTag("Agent").ToList();
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-        grid = new Grid(width, width, new Vector3(origin[0], origin[1], origin[2]), cellSize,randomizeMap);
+        grid = new Grid(width, width, new Vector3(origin[0], origin[1], origin[2]), cellSize, randomizeMap);
         grid.DisplayGrid(false);
         //grid.DebugPrintGrid();
         bombs = new List<Bomb>();
         graphicsManager = new GraphicsManager(grid, sprites);
         AgentsSetup();
+    }
+    // Start is called before the first frame update
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -60,62 +61,89 @@ public class GameHandler : MonoBehaviour
         {
             
             BaseAgent agent = agents[i].GetComponent<BaseAgent>();
+            Debug.Log(agent.name);
             int action = agents[i].GetComponent<IDecisionRequester>().RequestDecision();
-            switch (action)
-            {
-                case 0: //move up
-                    if (grid.Array[agent.X, agent.Y] == 5)
-                        grid.Array[agent.X, agent.Y] = 4;
-                    else
-                        grid.Array[agent.X, agent.Y] = 1;
-
-                    agent.Y += 1;
-                    grid.Array[agent.X, agent.Y] = 0;
-                    break;
-                case 1: //move down
-                    if (grid.Array[agent.X, agent.Y] == 5)
-                        grid.Array[agent.X, agent.Y] = 4;
-                    else
-                        grid.Array[agent.X, agent.Y] = 1;
-
-                    agent.Y -= 1;
-                    grid.Array[agent.X, agent.Y] = 0;
-                    break;
-                case 2: //move west
-                    if (grid.Array[agent.X, agent.Y] == 5)
-                        grid.Array[agent.X, agent.Y] = 4;
-                    else
-                        grid.Array[agent.X, agent.Y] = 1;
-
-                    agent.X -= 1;
-                    grid.Array[agent.X, agent.Y] = 0;
-                    break;
-
-                case 3: //move east
-                    if (grid.Array[agent.X, agent.Y] == 5)
-                        grid.Array[agent.X, agent.Y] = 4;
-                    else
-                        grid.Array[agent.X, agent.Y] = 1;
-
-                    agent.X += 1;
-                    grid.Array[agent.X, agent.Y] = 0;
-                    break;
-                case 4: //plant bomb
-
-                    Bomb bomba = new Bomb(grid, agent.X,
-                        agent.Y, ref agent);
-                    bombs.Add(bomba);
-                    grid.Array[agent.X, agent.Y] = 5;
-                    break;
-                case 5: //do nothing
-                    break;
-                default:
-                    break;
-            }  
+            ProcessAction(agent, action);
+            
         }
        
     }
 
+    void ProcessAction(BaseAgent agent, int action)
+    {
+        switch (action)
+        {
+            case 0: //move up
+                if (grid.Array[agent.X, agent.Y] == 5)
+                    grid.Array[agent.X, agent.Y] = 4;
+                else
+                    grid.Array[agent.X, agent.Y] = 1;
+                
+                agent.Y += 1;
+                if (grid.Array[agent.X, agent.Y] == 4)
+                    grid.Array[agent.X, agent.Y] = 5;
+                else
+                    grid.Array[agent.X, agent.Y] = 0;
+                break;
+            case 1: //move down
+                if (grid.Array[agent.X, agent.Y] == 5)
+                    grid.Array[agent.X, agent.Y] = 4;
+                else
+                    grid.Array[agent.X, agent.Y] = 1;
+
+                agent.Y -= 1;
+                if (grid.Array[agent.X, agent.Y] == 4)
+                    grid.Array[agent.X, agent.Y] = 5;
+                else
+                    grid.Array[agent.X, agent.Y] = 0;
+                break;
+            case 2: //move west
+                if (grid.Array[agent.X, agent.Y] == 5)
+                    grid.Array[agent.X, agent.Y] = 4;
+                else
+                    grid.Array[agent.X, agent.Y] = 1;
+
+                agent.X -= 1;
+                if (grid.Array[agent.X, agent.Y] == 4)
+                    grid.Array[agent.X, agent.Y] = 5;
+                else
+                    grid.Array[agent.X, agent.Y] = 0;
+                break;
+
+            case 3: //move east
+                if (grid.Array[agent.X, agent.Y] == 5)
+                    grid.Array[agent.X, agent.Y] = 4;
+                else
+                    grid.Array[agent.X, agent.Y] = 1;
+
+                agent.X += 1;
+                if (grid.Array[agent.X, agent.Y] == 4)
+                    grid.Array[agent.X, agent.Y] = 5;
+                else
+                    grid.Array[agent.X, agent.Y] = 0;
+                break;
+            case 4: //plant bomb
+
+                Bomb bomba = new Bomb(grid, agent.X,
+                    agent.Y, ref agent);
+                bombs.Add(bomba);
+                grid.Array[agent.X, agent.Y] = 5;
+                agent.PlantedBomb = true;
+                break;
+            case 5: //do nothing
+                break;
+            default: // aleatorio;
+                Debug.Log("Efetuando ação aleatória");
+                int randomAction;
+                do
+                {
+                    randomAction = Random.Range(0, 6);
+                } while (!Utils.IsValidAction(grid, agent, randomAction)) ;
+                Debug.Log(agent.name + " " + Utils.ActionToString(randomAction));
+                ProcessAction(agent, randomAction);
+                break;
+        }
+    }
     void CheckBombs()
     {
         foreach (Bomb bomba in bombs.ToList())
@@ -133,6 +161,7 @@ public class GameHandler : MonoBehaviour
                         Debug.Log("AGENTE MORREU");
                         GameObject deadAgent = GetAgent(tile[0], tile[1]);
                         agents.Remove(deadAgent);
+                        //deadAgent.GetComponent<BaseAgent>().IsAlive = false;
                         Destroy(deadAgent);
                         bomba.Agent.PlantedBomb = false;
                         grid.Array[tile[0], tile[1]] = 1;

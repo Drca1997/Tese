@@ -4,10 +4,11 @@ using UnityEngine;
 
 public abstract class BaseAgent: MonoBehaviour
 {
-    protected Grid grid;
+    private Grid grid;
     protected int x;
     protected int y;
     protected bool plantedbomb;
+    private bool isAlive = true;
 
     public bool PlantedBomb
     {
@@ -24,4 +25,6 @@ public abstract class BaseAgent: MonoBehaviour
         get => y;
         set => y = value;
     }
+    public bool IsAlive { get => isAlive; set => isAlive = value; }
+    public Grid Grid { get => grid; set => grid = value; }
 }

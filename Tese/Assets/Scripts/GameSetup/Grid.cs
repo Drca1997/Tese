@@ -21,6 +21,7 @@ public class Grid
         array = new int[width, height];
         debugTextArray = new TextMesh[width, height];
         GridSetup(aleatorio);
+        
     }
 
     private void GridSetup(bool aleatorio)
@@ -48,8 +49,8 @@ public class Grid
 
         else
         {
-            int[,] tempArray = new int[,] { { 0, 1,1,2,2,1,1,0}, { 1,2,1,1,1,2,2,1}, {2,3,3,2,2,3,3,2}, {1,1,2,1,2,2,1,1},
-                {1,3,3,2,2,3,3,1 }, { 2,3,1,1,1,2,3,2}, {1,2,2,2,1,2,2,1 }, {0,1,1,2,2,1,1,0 } };
+            int[,] tempArray = new int[,] { { 0, 1,1,2,2,1,1,0}, { 1,2,1,1,1,2,2,1}, {2,3,3,2,2,3,3,1}, {1,1,2,1,2,2,1,1},
+                {1,3,3,2,2,3,3,1 }, { 2,3,1,1,1,2,3,1}, {1,2,2,2,1,2,2,1 }, {0,1,1,2,2,1,1,0 } };
             array = tempArray;
         }
     }

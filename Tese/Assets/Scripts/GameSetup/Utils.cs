@@ -5,6 +5,111 @@ using UnityEngine;
 
 public static class Utils
 {
+    
+    public const int beSafeGoalPriority = 1;
+    public const int attackEnemyGoalPriority = 2;
+    public const int gridWidth = 8;
+    public const double explodibleBlockCost = 5.0;
+
+    public static int[,] deepCopyWorld(int[,] world)
+    {
+        int[,] deepCopy = new int[world.GetLength(0), world.GetLength(1)];
+        for (int i = 0; i < world.GetLength(0); i++)
+        {
+            for (int j = 0; j < world.GetLength(1); j++)
+            {
+                deepCopy[i, j] = world[i, j];
+            }
+        }
+        return deepCopy;
+    }
+    public static IEnumerable GridIterator(int[,] grid)
+    {
+        for (int i=0; i < grid.GetLength(0); i++)
+        {
+            for (int j=0; j < grid.GetLength(1); j++)
+            {
+               yield return new int[2] { i, j };
+            }
+        }
+    }
+
+
+    public static int [] GetTileFromIndex(int index, int width)
+    {
+        int x = index / width;
+        int y = index % width;
+        return new int[2] {x, y };
+    }
+
+    public static List<int> GetNeighbouringTilesIndexes(int [,] grid, int index)
+    {
+        int[] tempIndexes = new int[4];
+        tempIndexes[0] = index - grid.GetLength(0);
+        tempIndexes[1] = index - 1;
+        tempIndexes[2] = index + 1;
+        tempIndexes[3] = index + grid.GetLength(0);
+        List<int> validIndexes = new List<int>();
+        if (tempIndexes[0] >= 0) //north neighbour
+        {
+            validIndexes.Add(tempIndexes[0]);
+        }
+        if (index % grid.GetLength(0) != 0) //EastNeighbour-> 1ºelem de cada linha é multiplo da largura do grid
+        {
+            validIndexes.Add(tempIndexes[1]);
+        }
+        if (tempIndexes[2] % grid.GetLength(0) != 0)//West Neighbour-> ultimo elem de cada linha nao pode ser multiplo da largura do grid
+        {
+            validIndexes.Add(tempIndexes[2]);
+        }
+        if (tempIndexes[3] < grid.GetLength(0) * grid.GetLength(1)) //south neighbour
+        {
+            validIndexes.Add(tempIndexes[3]);
+        }
+        return validIndexes;
+
+    }
+
+    public static List<int[]> GetAdjacentTiles(int[,] grid, int[] tile)
+    {
+        List<int[]> adjacentTiles = new List<int[]>();
+        if (tile[1] + 1 < grid.GetLength(1))
+        {
+            adjacentTiles.Add(new int[2] { tile[0], tile[1] + 1 });
+
+            if (tile[1] + 2 < grid.GetLength(1))
+            {
+                adjacentTiles.Add(new int[2] { tile[0], tile[1] + 2 });
+            }
+        }
+        if (tile[1] - 1 >= 0)
+        {
+            adjacentTiles.Add(new int[2] { tile[0], tile[1] - 1 });
+            if (tile[1] - 2 >= 0)
+            {
+                adjacentTiles.Add(new int[2] { tile[0], tile[1] - 2 });
+            }
+
+        }
+        if (tile[0] + 1 < grid.GetLength(0))
+        {
+            adjacentTiles.Add(new int[2] { tile[0] + 1, tile[1] });
+            if (tile[0] + 2 < grid.GetLength(0))
+            {
+                adjacentTiles.Add(new int[2] { tile[0] + 2, tile[1] });
+            }
+        }
+        if (tile[0] - 1 >= 0)
+        {
+            adjacentTiles.Add(new int[2] { tile[0] - 1, tile[1] });
+            if (tile[0] - 2 >= 0)
+            {
+                adjacentTiles.Add(new int[2] { tile[0] - 2, tile[1] });
+            }
+        }
+        return adjacentTiles;
+    }
+
     public static Vector3 GetMouseWorldPosition()
     {
         return Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -36,9 +141,14 @@ public static class Utils
     }
 
     public static bool IsTileWalkable(Grid grid, int x, int y) {
-        if (grid.Array[x, y] == 1)
+        if (x >= 0 && x < grid.Width && y >= 0 && y < grid.Height)
         {
-            return true;
+            if (grid.Array[x, y] == 1 || grid.Array[x, y] == 4)
+            {
+                return true;
+            }
+
+            
         }
         return false;
     }
@@ -122,149 +232,151 @@ public static class Utils
     }
 
 
-    #region ASTAR
-    public static List<GraphNode> AStar(Graph graph, GraphNode start, List<GraphNode> possibleGoals, Func<GraphNode, List<GraphNode>, double> heuristic)
+    public static bool IsTileSafe(int[,] grid, int [] tile)
     {
-        List<GraphNode> expandableList = new List<GraphNode>{start}; //pega-se no primeiro nó
-        List<GraphNode> visitedList = new List<GraphNode>();
-
-        start.HCost = heuristic(start, possibleGoals);
-        start.FCost = start.GCost + start.HCost;
-
-        while (expandableList.Count != 0) //enquanto houver nós para serem visitados
+       
+        if (grid[tile[0], tile[1]] == 4) // se esta uma bomba na tile
         {
-            Debug.Log("EXPANDABLE LIST:");
-            DebugAStarList(expandableList);
-            Debug.Log("VISITED LIST:");
-            DebugAStarList(visitedList);
+            return false;
+        }
+        if(!IsNorthTilesSafe(grid, tile))
+        {
+            return false;
+        }
+        if (!IsSouthTilesSafe(grid, tile))
+        {
+            return false;
+        }
+        if (!IsEastTilesSafe(grid, tile))
+        {
+            return false;
+        }
+       if (!IsWestTilesSafe(grid, tile))
+        {
+            return false;
+        }
+        return true;
+    }
 
-            GraphNode node = GetLowestFCostNode(expandableList);
-            Debug.Log("SELECIONOU-SE NÓ " + node.Index);
-            if (possibleGoals.Contains(node))  //verifica-se se é objetivo
+    private static bool IsNorthTilesSafe(int[,] grid, int[] tile)
+    {
+
+        if (tile[1] + 1 < grid.GetLength(1) && grid[tile[0], tile[1] + 1] == 4) //se bomba em (x, y+1)
+        {
+            return false;
+        }
+
+        if (tile[1] + 2 < grid.GetLength(1) && grid[tile[0], tile[1] + 2] == 4) //se bomba em (x, y+2)
+        {
+            //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
+            if (grid[tile[0], tile[1] + 1] != 2 && grid[tile[0], tile[1] + 1] != 3)
             {
-                Debug.Log("OBJETIVO ENCONTRADO");
-                return GetPath(node);
-                
+                return false;
             }
-            //se nao for nó objetivo 
-            Debug.Log("NÓ ADICIONADO Á LISTA DE VISITADOS");
-            expandableList.Remove(node);
-            visitedList.Add(node); //adiciona-se à lista de visitados
-            //e expande-se 
-            List<GraphEdge> edges = graph.EdgesAdjacencyListVector[node.Index];
-            for (int i=0; i < edges.Count; i++)
+
+        }
+        return true;
+    }
+    
+    private static bool IsSouthTilesSafe(int[,] grid, int[] tile)
+    {
+        if (tile[1] -1 >=0 &&grid[tile[0], tile[1] - 1] == 4)//se bomba em (x, y-1)
+        {
+            return false;
+        }
+        if (tile[1] - 2 >= 0 &&grid[tile[0], tile[1] - 2] == 4)//se bomba em (x, y-2)
+        {
+            //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
+            if (grid[tile[0], tile[1] - 1] != 2 && grid[tile[0], tile[1] - 1] != 3)
             {
-                
-                GraphNode childNode = graph.Nodes[edges[i].To];
-                Debug.Log("Expandindo para nó filho " + childNode.Index);
-                if (visitedList.Contains(childNode)) //caso nó filho já tenha sido visitado
-                {
-                    Debug.Log("ESTE NÓ JA FOI VISITADO, IGNORA-SE");
-                    continue;
-                }
-                //calcula-se A*score dos nós filhos (g + h)-> valor das arestas + h do nó em causa
-                double gCost = node.GCost + edges[i].Cost;
-                
-                if (childNode.HCost == int.MaxValue) //calcula hCost se ainda não o foi
-                {
-                    childNode.HCost = heuristic(childNode, possibleGoals);
-                    Debug.Log("H DE NÓ " + childNode.Index + "= " + childNode.HCost);
-                }
-                double fCost = childNode.HCost + gCost;
+                return false;
+            }
+        }
+        return true;
+    }
 
-                //Previne casos quando nó filho ja esta na expandable list, com Fscore maior
-                if (expandableList.Contains(childNode) )
-                {
+    private static bool IsWestTilesSafe(int[,] grid,int[] tile)
+    {
+        if (tile[0] - 1 >= 0 && grid[tile[0] - 1, tile[1]] == 4) // se bomba em (x-1, y)
+        {
+            return false;
+        }
+        if (tile[0] - 2 >= 0 &&grid[tile[0] - 2, tile[1]] == 4) // se bomba em (x-2, y)
+        {
+            //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
+            if (grid[tile[0] - 1, tile[1]] != 2 && grid[tile[0] - 1, tile[1]] != 3)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
-                    if (childNode.FCost > fCost)
+    private static bool IsEastTilesSafe(int[,] grid, int[] tile)
+    {
+        if (tile[0] + 1 < grid.GetLength(0) && grid[tile[0] + 1, tile[1]] == 4) // se bomba em (x+1, y)
+        {
+            return false;
+        }
+        if (tile[0] + 2 < grid.GetLength(0) && grid[tile[0] + 2, tile[1]] == 4) // se bomba em (x+2, y)
+        {
+            //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
+            if (grid[tile[0] + 1, tile[1]] != 2 && grid[tile[0] + 1, tile[1]] != 3)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static bool [,] dangerMap(int[,] grid)
+    {
+        bool[,] dangerMap = new bool[grid.GetLength(0), grid.GetLength(1)];
+        for (int i=0; i < grid.GetLength(0); i++)
+        {
+            for (int j=0; j < grid.GetLength(1); j++)
+            {
+                if (!IsTileSafe(grid, new int[2] { i, j}))
+                {
+                    dangerMap[i, j] = false;
+                }
+                else
+                {
+                    dangerMap[i, j] = true;
+                }
+            }
+        }
+        return dangerMap;
+    }
+
+    public static List<int[]> dangerTiles(bool[,] dangerMap, bool reverse) //reverse indica se devolve dangerTiles(false) ou safeTiles(true)
+    {
+        List<int[]> dangerTiles = new List<int[]>();
+        for (int i=0; i < dangerMap.GetLength(0); i++)
+        {
+            for (int j=0; j < dangerMap.GetLength(1); j++)
+            {
+                if (reverse)
+                {
+                    if (!dangerMap[i, j])
                     {
-                        Debug.Log("NÓ FILHO NA OPENLIST, E ENCONTRADO F MENOR");
-                        childNode.FCost = fCost;
-                        childNode.GCost = gCost;
-                        childNode.PreviousPathNode = node;
-                        Debug.Log("NOVO F: " + childNode.FCost);
-                    }                   
+                        dangerTiles.Add(new int[2] { i, j });
+                    }
+
                 }
-                else 
+                else
                 {
-                    Debug.Log("NÓ " + childNode.Index+" ADICIONADO À OPENLIST, POSSIVEL DE SER EXPANDIDO");
-                    childNode.FCost = fCost;
-                    childNode.GCost = gCost;
-                    childNode.PreviousPathNode = node;
-                    expandableList.Add(childNode); //adiciona-se nós filhos à lista de nós expandíveis
-                }                   
+                    if (dangerMap[i, j])
+                    {
+                        dangerTiles.Add(new int[2] { i, j });
+                    }
+                }
+               
             }
         }
-        return null; //se já se visitou todos os nós possíveis e nenhum deles é objetivo
+        return dangerTiles;
     }
-
-    //Passível de optimização, efetuando procura binária
-    private static GraphNode GetLowestFCostNode(List<GraphNode> list)
-    {
-        GraphNode best = list[0];
-        for (int i = 1; i < list.Count; i++)
-        {
-            if (list[i].FCost < best.FCost)
-            {
-                best = list[i];
-            }
-        }
-        return best;
-    }
-
-    private static List<GraphNode> GetPath(GraphNode goalNode)
-    {
-        List<GraphNode> solution = new List<GraphNode>();
-        solution.Add(goalNode);
-        GraphNode currentNode = goalNode;
-        while (currentNode.PreviousPathNode != null)
-        {
-            solution.Add(currentNode.PreviousPathNode);
-            currentNode = currentNode.PreviousPathNode;
-        }
-        solution.Reverse();
-        return solution;
-    }
-
-    public static void DebugAStarList(List<GraphNode> list)
-    {
-        Debug.Log("IN THIS LIST: (with " + list.Count + " nodes)");
-        string result = null;
-        foreach(GraphNode node in list)
-        {
-            result += "||NODE " + node.Index + " (F = " + node.FCost
-                + ", G = " + node.GCost + ", H = " + node.HCost;
-        }
-        Debug.Log(result);
-    }
-    public static int CalculateManhattanDistance(int[] start, int[] end)
-    {   
-        return Mathf.Abs(end[0] - start[0]) + Mathf.Abs(end[1] - start[1]);
-    }
-
-    public static List<int[]> GetNeighbouringTiles(Grid grid, int x, int y)
-    {
-        List<int[]> neighbours = new List<int[]>();
-        if (y + 1 < grid.Array.GetLength(1))
-        {
-            neighbours.Add(new int[2] {x,y + 1 });
-        }
-        if (x + 1 < grid.Array.GetLength(0))
-        {
-            neighbours.Add(new int[2] {x + 1 ,y});
-        }
-        if (y - 1 >= 0)
-        {
-            neighbours.Add(new int[2] {x,y - 1 });
-        }
-        if (x - 1 >= 0)
-        {
-            neighbours.Add(new int[2] {x-1, y});
-        }
-        return neighbours;
-    }
-
-    #endregion
+    
 
     /**
     public static List<int[]> GetTilesInBounds(Grid grid, int x, int y)
