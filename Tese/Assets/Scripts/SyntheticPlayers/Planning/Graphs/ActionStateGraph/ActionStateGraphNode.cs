@@ -8,12 +8,12 @@ public class ActionStateGraphNode : GraphNode
     private PlanningAgent agent;
     private int[] agentPos;
     private Action actionTakenToReachHere;
-    private Logger logger;
+
     public ActionStateGraphNode(int index, PlanningAgent agent, int[,] grid) : base(index)
     {
-        logger = new Logger(@"D:\ASNode.log");
+        
         this.Grid = Utils.deepCopyWorld(grid);
-        logger.WriteLine(grid);
+       
         this.Agent = agent;
         AgentPos = new int[2] {agent.SimulatedX, agent.SimulatedY };
     }
