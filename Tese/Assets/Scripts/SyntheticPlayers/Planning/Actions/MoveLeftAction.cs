@@ -23,17 +23,21 @@ public class MoveLeftAction : Action
         }
         if (Agent.SimulatedX - 1 >= 0)
         {
+            Debug.Log(Effect[Agent.SimulatedX - 1, Agent.SimulatedY]);
             if (Effect[Agent.SimulatedX-1, Agent.SimulatedY] == 4)
             {
                 Effect[Agent.SimulatedX-1, Agent.SimulatedY] = 5;
                 Agent.SimulatedX -= 1;
+                
             }
             else if (Effect[Agent.SimulatedX-1, Agent.SimulatedY] == 1)
             {
                 Effect[Agent.SimulatedX-1, Agent.SimulatedY] = 0;
                 Agent.SimulatedX -= 1;
+
             }
         }
+        
     }
 
     public override bool CheckPreconditions()

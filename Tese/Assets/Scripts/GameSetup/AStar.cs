@@ -105,7 +105,7 @@ public static class AStar
             {
                 Debug.Log("OBJETIVO ENCONTRADO");
                 
-                return GetPlan(goal, node);
+                return GetPlan(node);
             }
             
             
@@ -128,8 +128,10 @@ public static class AStar
                 Debug.Log(actions[i].DebugWorld());
                 actions[i].UpdateEffectGrid(node.Grid);
                 Debug.Log(actions[i].DebugWorld());
+                Debug.Log("SimX: " + agent.SimulatedX + ", SimY: " + agent.SimulatedY);
                 actions[i].Simulate();
                 Debug.Log(actions[i].DebugWorld());
+                Debug.Log("SimX: " + agent.SimulatedX + ", SimY: " + agent.SimulatedY);
                 ActionStateGraphNode childNode = new ActionStateGraphNode(ind, agent, actions[i].Effect);
                 ind++;
 
@@ -139,7 +141,7 @@ public static class AStar
                 if (ListContainsNode(visitedList, childNode)) //caso nó filho já tenha sido visitado
                 {
                     Debug.Log("ESTE NÓ JA FOI VISITADO, IGNORA-SE");
-                   
+                    actions[i].Revert();
                     continue;
                 }
                 //calcula-se A*score dos nós filhos (g + h)-> valor das arestas + h do nó em causa
@@ -227,7 +229,7 @@ public static class AStar
         return solution;
     }
 
-    private static List<Action> GetPlan(Goal goal,ActionStateGraphNode node)
+    private static List<Action> GetPlan(ActionStateGraphNode node)
     {
         
         List<Action> actionsTaken = new List<Action>();
@@ -240,12 +242,6 @@ public static class AStar
             currentNode = (ActionStateGraphNode)currentNode.PreviousPathNode;
             
         }
-        if (goal.GetType() == typeof(BeSafeGoal))
-        {
-            actionsTaken.Reverse();
-        }
-
-
         actionsTaken = GetOppositeActions(actionsTaken);
         return actionsTaken;
     }
