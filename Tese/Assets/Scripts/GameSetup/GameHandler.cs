@@ -61,7 +61,6 @@ public class GameHandler : MonoBehaviour
         {
             
             BaseAgent agent = agents[i].GetComponent<BaseAgent>();
-            Debug.Log(agent.name);
             int action = agents[i].GetComponent<IDecisionRequester>().RequestDecision();
             ProcessAction(agent, action);
             

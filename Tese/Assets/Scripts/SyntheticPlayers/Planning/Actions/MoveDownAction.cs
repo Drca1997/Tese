@@ -42,27 +42,33 @@ public class MoveDownAction : Action
         }
         return Utils.IsTileWalkable(Agent.Grid, Agent.SimulatedX, Agent.SimulatedY - 1);
     }
-    /**
-    public override void Execute(Grid grid, BaseAgent agent)
+
+    public override bool IsPossible()
     {
-        if (grid.Array[agent.X, agent.Y] == 5)
-        {
-            grid.Array[agent.X, agent.Y] = 4;
-        }
-        else if (grid.Array[agent.X, agent.Y] == 0)
-        {
-            grid.Array[agent.X, agent.Y] = 1;
-        }
-        if (agent.Y - 1 >= 0)
-        {
-            if (grid.Array[agent.X, agent.Y-1] == 4)
-            {
-                grid.Array[agent.X, agent.Y-1] = 5;
-            }
-            else if (grid.Array[agent.X, agent.Y-1] == 1)
-            {
-                grid.Array[agent.X, agent.Y-1] = 0;
-            }
-        }
-    }*/
+        return CheckPreconditions();
+    }
+
+    /**
+public override void Execute(Grid grid, BaseAgent agent)
+{
+   if (grid.Array[agent.X, agent.Y] == 5)
+   {
+       grid.Array[agent.X, agent.Y] = 4;
+   }
+   else if (grid.Array[agent.X, agent.Y] == 0)
+   {
+       grid.Array[agent.X, agent.Y] = 1;
+   }
+   if (agent.Y - 1 >= 0)
+   {
+       if (grid.Array[agent.X, agent.Y-1] == 4)
+       {
+           grid.Array[agent.X, agent.Y-1] = 5;
+       }
+       else if (grid.Array[agent.X, agent.Y-1] == 1)
+       {
+           grid.Array[agent.X, agent.Y-1] = 0;
+       }
+   }
+}*/
 }

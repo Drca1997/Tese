@@ -6,6 +6,12 @@ public class MoveUpAction : Action
 {
     public override void Revert()
     {
+        Agent.SimulatedY -= 1;
+
+    }
+
+    public override void Simulate()
+    {
         if (Effect[Agent.SimulatedX, Agent.SimulatedY] == 5)
         {
             Effect[Agent.SimulatedX, Agent.SimulatedY] = 4;
@@ -14,26 +20,19 @@ public class MoveUpAction : Action
         {
             Effect[Agent.SimulatedX, Agent.SimulatedY] = 1;
         }
-        if (Agent.SimulatedY - 1 >= 0)
+        if (Agent.SimulatedY + 1 < Agent.Grid.Height)
         {
-            if (Effect[Agent.SimulatedX, Agent.SimulatedY - 1] == 4)
+            if (Effect[Agent.SimulatedX, Agent.SimulatedY + 1] == 4)
             {
-                Effect[Agent.SimulatedX, Agent.SimulatedY - 1] = 5;
-                Agent.SimulatedY -= 1;
+                Effect[Agent.SimulatedX, Agent.SimulatedY + 1] = 5;
+                Agent.SimulatedY += 1;
             }
-            else if (Effect[Agent.SimulatedX, Agent.SimulatedY - 1] == 1)
+            else if (Effect[Agent.SimulatedX, Agent.SimulatedY + 1] == 1)
             {
-                Effect[Agent.SimulatedX, Agent.SimulatedY - 1] = 0;
-                Agent.SimulatedY -= 1;
+                Effect[Agent.SimulatedX, Agent.SimulatedY + 1] = 0;
+                Agent.SimulatedY += 1;
             }
         }
-
-
-    }
-
-    public override void Simulate()
-    {
-        Agent.SimulatedY += 1;
     }
 
     public override bool CheckPreconditions()
@@ -44,27 +43,33 @@ public class MoveUpAction : Action
         }
         return Utils.IsTileWalkable(Agent.Grid, Agent.SimulatedX, Agent.SimulatedY + 1);
     }
-    /**
-    public override void Execute(Grid grid, BaseAgent agent)
+
+    public override bool IsPossible()
     {
-        if (grid.Array[agent.X, agent.Y] == 5)
-        {
-            grid.Array[agent.X, agent.Y] = 4;
-        }
-        else if (grid.Array[agent.X, agent.Y] == 0)
-        {
-            grid.Array[agent.X, agent.Y] = 1;
-        }
-        if (agent.Y + 1 < grid.Height)
-        {
-            if (grid.Array[agent.X, agent.Y+1] == 4)
-            {
-                grid.Array[agent.X, agent.Y+1] = 5;
-            }
-            else if (grid.Array[agent.X, agent.Y+1] == 1)
-            {
-                grid.Array[agent.X, agent.Y+1] = 0;
-            }
-        }
-    }*/
+        return CheckPreconditions();
+    }
+
+    /**
+public override void Execute(Grid grid, BaseAgent agent)
+{
+   if (grid.Array[agent.X, agent.Y] == 5)
+   {
+       grid.Array[agent.X, agent.Y] = 4;
+   }
+   else if (grid.Array[agent.X, agent.Y] == 0)
+   {
+       grid.Array[agent.X, agent.Y] = 1;
+   }
+   if (agent.Y + 1 < grid.Height)
+   {
+       if (grid.Array[agent.X, agent.Y+1] == 4)
+       {
+           grid.Array[agent.X, agent.Y+1] = 5;
+       }
+       else if (grid.Array[agent.X, agent.Y+1] == 1)
+       {
+           grid.Array[agent.X, agent.Y+1] = 0;
+       }
+   }
+}*/
 }

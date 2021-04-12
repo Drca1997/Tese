@@ -234,8 +234,8 @@ public static class Utils
 
     public static bool IsTileSafe(int[,] grid, int [] tile)
     {
-       
-        if (grid[tile[0], tile[1]] == 4) // se esta uma bomba na tile
+        
+        if (grid[tile[0], tile[1]] == 4 || grid[tile[0], tile[1]] == 5) // se esta uma bomba na tile
         {
             return false;
         }
@@ -261,12 +261,12 @@ public static class Utils
     private static bool IsNorthTilesSafe(int[,] grid, int[] tile)
     {
 
-        if (tile[1] + 1 < grid.GetLength(1) && grid[tile[0], tile[1] + 1] == 4) //se bomba em (x, y+1)
+        if (tile[1] + 1 < grid.GetLength(1) && (grid[tile[0], tile[1] + 1] == 4 || grid[tile[0], tile[1] + 1] == 5)) //se bomba em (x, y+1)
         {
             return false;
         }
 
-        if (tile[1] + 2 < grid.GetLength(1) && grid[tile[0], tile[1] + 2] == 4) //se bomba em (x, y+2)
+        if (tile[1] + 2 < grid.GetLength(1) && (grid[tile[0], tile[1] + 2] == 4 || grid[tile[0], tile[1] + 2] == 5) ) //se bomba em (x, y+2)
         {
             //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
             if (grid[tile[0], tile[1] + 1] != 2 && grid[tile[0], tile[1] + 1] != 3)
@@ -280,11 +280,11 @@ public static class Utils
     
     private static bool IsSouthTilesSafe(int[,] grid, int[] tile)
     {
-        if (tile[1] -1 >=0 &&grid[tile[0], tile[1] - 1] == 4)//se bomba em (x, y-1)
+        if (tile[1] -1 >=0 && (grid[tile[0], tile[1] - 1] == 4 || grid[tile[0], tile[1] - 1] == 5))//se bomba em (x, y-1)
         {
             return false;
         }
-        if (tile[1] - 2 >= 0 &&grid[tile[0], tile[1] - 2] == 4)//se bomba em (x, y-2)
+        if (tile[1] - 2 >= 0 && (grid[tile[0], tile[1] - 2] == 4 || grid[tile[0], tile[1] - 2] == 5))//se bomba em (x, y-2)
         {
             //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
             if (grid[tile[0], tile[1] - 1] != 2 && grid[tile[0], tile[1] - 1] != 3)
@@ -297,11 +297,11 @@ public static class Utils
 
     private static bool IsWestTilesSafe(int[,] grid,int[] tile)
     {
-        if (tile[0] - 1 >= 0 && grid[tile[0] - 1, tile[1]] == 4) // se bomba em (x-1, y)
+        if (tile[0] - 1 >= 0 && (grid[tile[0] - 1, tile[1]] == 4 || grid[tile[0] - 1, tile[1]] == 5)) // se bomba em (x-1, y)
         {
             return false;
         }
-        if (tile[0] - 2 >= 0 &&grid[tile[0] - 2, tile[1]] == 4) // se bomba em (x-2, y)
+        if (tile[0] - 2 >= 0 && (grid[tile[0] - 2, tile[1]] == 4 || grid[tile[0] - 2, tile[1]] == 5)) // se bomba em (x-2, y)
         {
             //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
             if (grid[tile[0] - 1, tile[1]] != 2 && grid[tile[0] - 1, tile[1]] != 3)
@@ -314,11 +314,12 @@ public static class Utils
 
     private static bool IsEastTilesSafe(int[,] grid, int[] tile)
     {
-        if (tile[0] + 1 < grid.GetLength(0) && grid[tile[0] + 1, tile[1]] == 4) // se bomba em (x+1, y)
+        
+        if (tile[0] + 1 < grid.GetLength(0) && (grid[tile[0] + 1, tile[1]] == 4 || grid[tile[0] + 1, tile[1]] == 5)) // se bomba em (x+1, y)
         {
             return false;
         }
-        if (tile[0] + 2 < grid.GetLength(0) && grid[tile[0] + 2, tile[1]] == 4) // se bomba em (x+2, y)
+        if (tile[0] + 2 < grid.GetLength(0) && (grid[tile[0] + 2, tile[1]] == 4 || grid[tile[0] + 2, tile[1]] == 5)) // se bomba em (x+2, y)
         {
             //se a tile entre tile atual e agente nao é algo que tapou a explosao da bomba
             if (grid[tile[0] + 1, tile[1]] != 2 && grid[tile[0] + 1, tile[1]] != 3)
@@ -338,14 +339,15 @@ public static class Utils
             {
                 if (!IsTileSafe(grid, new int[2] { i, j}))
                 {
-                    dangerMap[i, j] = false;
+                    dangerMap[i, j] = true;
                 }
                 else
                 {
-                    dangerMap[i, j] = true;
+                    dangerMap[i, j] = false;
                 }
             }
         }
+        
         return dangerMap;
     }
 

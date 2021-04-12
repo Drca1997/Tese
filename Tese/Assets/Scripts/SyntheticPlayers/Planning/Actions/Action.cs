@@ -57,6 +57,21 @@ public abstract class Action: MonoBehaviour
         Effect = Utils.deepCopyWorld(newGrid);
     }
 
+    public string DebugWorld()
+    {
+        string result = null;
+
+        for (int i = Effect.GetLength(1) - 1; i >= 0; i--)
+        {
+            result += "\n";
+            for (int j = 0; j < Effect.GetLength(0); j++)
+            {
+                result += Effect[j, i] + "|";
+            }
+        }
+        return result;
+    }
+    public abstract bool IsPossible();
     public abstract bool CheckPreconditions();
     public abstract void Simulate();
     public abstract void Revert();

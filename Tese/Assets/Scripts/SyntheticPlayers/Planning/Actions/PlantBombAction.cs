@@ -12,18 +12,28 @@ public class PlantBombAction : Action
 
     public override void Simulate()
     {
+        Effect[Agent.SimulatedX, Agent.SimulatedY] = 0;
+    }
+    public void Execute()
+    {
         Effect[Agent.SimulatedX, Agent.SimulatedY] = 5;
         Agent.SimulatedPlantedBomb = true;
     }
 
     public override bool CheckPreconditions()
     {
-        if (!Agent.SimulatedPlantedBomb && Agent.Grid.Array[Agent.SimulatedX, Agent.SimulatedY] != 5)
+        return Effect[Agent.SimulatedX, Agent.SimulatedY] == 5;
+    }
+
+    public override bool IsPossible()
+    {
+        if (!Agent.PlantedBomb && Agent.Grid.Array[Agent.X, Agent.Y] != 5)
         {
             return true;
         }
         return false;
     }
+
 
     /*
     public override void Execute(Grid grid, BaseAgent agent)

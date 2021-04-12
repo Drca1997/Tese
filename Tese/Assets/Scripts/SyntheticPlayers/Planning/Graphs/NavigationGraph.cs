@@ -67,14 +67,15 @@ public static class NavigationGraph
             else
             {
                 goals.Add(graph.Nodes[goal.RefTile[0] * grid.GetLength(0) + goal.RefTile[1]]);
+                
             }
             
         }
         else if (goal.GetType() == typeof(BeSafeGoal))
         {
             //todas as tiles que nao sao dangerTiles
-            List<int[]> safeTiles = Utils.dangerTiles(Utils.dangerMap(grid), true);
-            foreach(int [] tile in safeTiles)
+            //List<int[]> safeTiles = Utils.dangerTiles(Utils.dangerMap(grid), true);
+            foreach(int [] tile in goal.TargetTiles)
             {
                 goals.Add(graph.Nodes[tile[0] * grid.GetLength(0) + tile[1]]);
             }

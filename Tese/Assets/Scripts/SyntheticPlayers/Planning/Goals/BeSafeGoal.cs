@@ -19,17 +19,16 @@ public class BeSafeGoal : Goal
     {
         Debug.Log("Verificando se é possível fugir de uma bomba");
         this.RefTile = new int[2] {Agent.X, Agent.Y };
-        Debug.Log("x: " + RefTile[0] + ", y: " + RefTile[1]);
-      
-        bool isSafe = Utils.IsTileSafe(this.GameWorld, RefTile);
-        if (!isSafe)
+        
+        if (!Utils.IsTileSafe(this.GameWorld, RefTile))
         {
             Debug.Log("NOT SAFE! POSSÍVEL FUGIR DE BOMBA!");
-            this.TargetTiles = Utils.dangerTiles(Utils.dangerMap(this.GameWorld), false);
+            this.TargetTiles = Utils.dangerTiles(Utils.dangerMap(Agent.Grid.Array), true);
+            return true;
         }
         Debug.Log("Já está seguro. Mais produtivo encontrar outro objetivo...");
     
-        return !isSafe;
+        return false;
     }
 
     public override double Heuristic(ActionStateGraphNode state, ActionStateGraphNode goal)
@@ -43,9 +42,12 @@ public class BeSafeGoal : Goal
 
     public override bool IsObjective(ActionStateGraphNode node)
     {
-        //verificar se está numa safeTile;
-        return Utils.IsTileSafe(node.Grid, new int[2] { node.Agent.SimulatedX, node.Agent.SimulatedY});
-       
+        if (node.Agent.SimulatedX == node.Agent.X && node.Agent.SimulatedY == node.Agent.Y)
+        {
+            return true;
+        }
+        return false;
+
     }
 
     public override int[,] GetGoalGrid(int[,] currentGrid, int index, PlanningAgent agent)

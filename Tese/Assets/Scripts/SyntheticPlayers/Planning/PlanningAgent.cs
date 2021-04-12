@@ -51,7 +51,7 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
             {
                 Debug.Log("Verificando plano existente");
                
-                if (currentGoal.IsPossible() && currentPlan[0].CheckPreconditions())
+                if (currentGoal.IsPossible() && currentPlan[0].IsPossible())
                 {
                     Debug.Log("Possível de avançar para a próxima ação do plano");
                     nextAction = AdvancePlan();
@@ -60,8 +60,7 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
                 else
                 {
                     Debug.Log("Impossível seguir com plano em frente. A gerar um novo plano...");
-                    currentPlan = Plan(); //Gera Novo Plano
-                    DebugPlan(currentPlan);
+                    currentPlan = Plan(); //Gera Novo Plan
                     nextAction = AdvancePlan(); //Efetua Primeira Ação do Plano
                     ResetSim(); //reset agents' planning sim atributes 
 
@@ -77,7 +76,6 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
         {
             
             currentPlan = Plan(); //Gera Novo Plano
-            DebugPlan(currentPlan);
             nextAction = AdvancePlan(); //Efetua Primeira Ação do Plano
             ResetSim(); //reset agents' planning sim atributes 
         }
@@ -91,7 +89,6 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
             int nextAction = currentPlan[0].RawAction;
             Debug.Log("Ação a executar este turno: " + Utils.ActionToString(nextAction));
             currentPlan.Remove(currentPlan[0]);
-            if (currentPlan.Count > 0) { Debug.Log("Ação Seguinte: " + Utils.ActionToString(currentPlan[0].RawAction)); }
             return nextAction;
         }
         Debug.Log("Impossível seguir com plano à frente");
@@ -110,26 +107,16 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
         }
         
         List<GraphNode> pathfindingNodes= NavigationGraph.GetPath(Grid.Array, X, Y, goal);
-        int goalNodeIndex;
-        if (pathfindingNodes.Count >= 2)
-        {
-            goalNodeIndex = pathfindingNodes[pathfindingNodes.Count - 2].Index; //obtém ultimo elemento, que é o nó objetivo
-        }
-        else{
-            goalNodeIndex = pathfindingNodes[0].Index;
-        }
+        int goalNodeIndex = GetGoalNodeIndex(goal, pathfindingNodes);
+       
         int [] simTile = Utils.GetTileFromIndex(goalNodeIndex,  Grid.Width);
         SimulatedX = simTile[0];
-        simulatedY = simTile[1]; 
-      
+        simulatedY = simTile[1];
 
         ActionStateGraphNode goalNode = new ActionStateGraphNode(0, this, goal.GetGoalGrid(Grid.Array, goalNodeIndex, this)); //cria nó com base no estado objetivo
-        string world = goalNode.DebugWorld();
-        Debug.Log(world);
-       
         ActionStateGraphNode currentNode = new ActionStateGraphNode(1, this, this.Grid.Array); //cria nó com base no estado atual do jogo
       
-        List<Action> newPlan = AStar.AStarForPlanning(this, goalNode, currentNode, goal.IsObjective, possibleActions, goal.Heuristic); //aquigoalNode e currentNode trocam-se pois é procura regressiva
+        List<Action> newPlan = AStar.AStarForPlanning(this, goalNode, currentNode, possibleActions, goal); //aquigoalNode e currentNode trocam-se pois é procura regressiva
         DebugPlan(newPlan);
        
         return newPlan;
@@ -148,21 +135,10 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
 
     private Goal GetNextGoal()
     {
-        Debug.Log("GETNEXTGOAL");
         foreach (Goal goal in possibleGoals)
         {
-            //verificar se goal é possivel
-           if (goal.GetType() == typeof(AttackEnemyGoal)){
-                Debug.Log("IS ATTACKENEMYGOAL POSSIBLE");
-               
-            }
-           else if (goal.GetType() == typeof(BeSafeGoal))
-            {
-                Debug.Log("IS BESAFEGOAL POSSIBLE");
-              
-            }
             if (goal.IsPossible()) { 
-                Debug.Log("Objetivo encontrado");
+                Debug.Log("Objetivo encontrado: " + goal.GetType());
                
                 return goal; 
             }
@@ -170,6 +146,26 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
         Debug.Log("Nenhum objetivo disponível");
       
         return null;
+    }
+
+    private int GetGoalNodeIndex(Goal goal, List<GraphNode> list)
+    {
+        if (goal.GetType() == typeof(AttackEnemyGoal))
+        {
+            if (list.Count >= 2)
+            {
+                return list[list.Count - 2].Index; //obtém ultimo elemento, que é o nó objetivo
+            }
+            else
+            {
+                return list[0].Index;
+            }
+        }
+        else if (goal.GetType() == typeof(BeSafeGoal))
+        {
+            return list[list.Count - 1].Index;
+        }
+        return -1;
     }
     private void ResetSim()
     {
@@ -181,17 +177,22 @@ public class PlanningAgent : BaseAgent, IDecisionRequester
     {
         if (plan != null)
         {
+            string result = null;
             foreach (Action action in plan)
             {
                 if (action != null)
-                    Debug.Log(Utils.ActionToString(action.RawAction) + "->");
+                {
+                    result += Utils.ActionToString(action.RawAction) + "->";
+                }
+                    
             }
+           Debug.Log("PLANO:\n" + result);
         }
         else
         {
             Debug.Log("PLANO VAZIO!");
         }
-       
+        
     }
 
     public Action [] PossibleActions { get => possibleActions; set => possibleActions = value; }

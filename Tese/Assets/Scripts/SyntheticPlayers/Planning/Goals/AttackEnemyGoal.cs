@@ -60,7 +60,7 @@ public class AttackEnemyGoal : Goal
     {
         int[] start = new int[2] { state.Agent.SimulatedX, goal.Agent.SimulatedY };
         int[] end = new int[2] { goal.Agent.X, goal.Agent.Y };
-        return AStar.CalculateManhattanDistance(start, end);
+        return AStar.CalculateManhattanDistance(start, end); 
     }
 
     public override bool IsObjective(ActionStateGraphNode node)
@@ -68,7 +68,7 @@ public class AttackEnemyGoal : Goal
         
         if (node.Agent.SimulatedX== node.Agent.X && node.Agent.SimulatedY == node.Agent.Y)
         {
-            
+            /*
             foreach (int[] tile in TargetTiles)
             {
                 
@@ -76,7 +76,8 @@ public class AttackEnemyGoal : Goal
                 {
                     return true;
                 }
-            }
+            }*/
+            return true;
         }    
         return false;
     }
@@ -123,12 +124,12 @@ public class AttackEnemyGoal : Goal
 
             int goalNodeIndex = pathToNearestEnemy[pathToNearestEnemy.Count - 1].Index;
             RefTile = Utils.GetTileFromIndex(goalNodeIndex, Agent.Grid.Array.GetLength(0)); ;
-            Debug.Log("Encontrado inimigo em " + RefTile[0] + ", " + RefTile[1]);
+           
           
         }
         else
         {
-            Debug.Log("Nenhum inimigo encontrado!");
+            
             RefTile = null;
         }
     }

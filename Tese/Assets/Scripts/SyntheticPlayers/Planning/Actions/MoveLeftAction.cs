@@ -44,28 +44,34 @@ public class MoveLeftAction : Action
         }
         return Utils.IsTileWalkable(Agent.Grid, Agent.SimulatedX-1, Agent.SimulatedY);
     }
-    /**
-    public override void Execute(Grid grid, BaseAgent agent)
+
+    public override bool IsPossible()
     {
-        if (grid.Array[agent.X, agent.Y] == 5)
-        {
-            grid.Array[agent.X, agent.Y] = 4;
-        }
-        else if (grid.Array[agent.X, agent.Y] == 0)
-        {
-            grid.Array[agent.X, agent.Y] = 1;
-        }
-        if (agent.X - 1 >= 0)
-        {
-            if (grid.Array[agent.X - 1, agent.Y] == 4)
-            {
-                grid.Array[agent.X - 1, agent.Y] = 5;
-            }
-            else if (grid.Array[agent.X - 1, agent.Y] == 1)
-            {
-                grid.Array[agent.X - 1, agent.Y] = 0;
-            }
-        }
-    }*/
+        return CheckPreconditions();
+    }
+
+    /**
+public override void Execute(Grid grid, BaseAgent agent)
+{
+   if (grid.Array[agent.X, agent.Y] == 5)
+   {
+       grid.Array[agent.X, agent.Y] = 4;
+   }
+   else if (grid.Array[agent.X, agent.Y] == 0)
+   {
+       grid.Array[agent.X, agent.Y] = 1;
+   }
+   if (agent.X - 1 >= 0)
+   {
+       if (grid.Array[agent.X - 1, agent.Y] == 4)
+       {
+           grid.Array[agent.X - 1, agent.Y] = 5;
+       }
+       else if (grid.Array[agent.X - 1, agent.Y] == 1)
+       {
+           grid.Array[agent.X - 1, agent.Y] = 0;
+       }
+   }
+}*/
 
 }
