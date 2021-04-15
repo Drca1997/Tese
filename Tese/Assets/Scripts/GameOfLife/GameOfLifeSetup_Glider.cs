@@ -48,7 +48,7 @@ public class GameOfLifeSetup_Glider : MonoBehaviour, ISetup
         }
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(width, height, cellSize, agentGrid);
+        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Live_Agent" });
         return grid;
     }
 

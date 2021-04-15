@@ -28,7 +28,7 @@ public class AFire : Agent
     public override void UpdateAgent(Grid g, int step_stage, System.Random prng)
     {
         //Will remove Agents of these types if they are in its postion of the agentGrid
-        List<string> flamableTypes = new List<string> {"Agent_Weak_Wall"};
+        List<string> flamableTypes = new List<string> {"Agent_Weak_Wall", "Malaquias_Bomberman", "Player_Bomberman", "Agent_Bomberman" };
         List<Agent> sensors = GetSensors(g);
         foreach (Agent a in sensors)
         {
@@ -36,8 +36,7 @@ public class AFire : Agent
             {
                 if (string.Compare(a.typeName, type) == 0)
                 {
-                    EliminateAgent(a, g);
-                    return;
+                    EliminateAgent(a, g, step_stage, prng);
                 }
             }
         }
@@ -47,7 +46,16 @@ public class AFire : Agent
         else
         {
             //eleminate self
-            RemoveAgentOffGrid(this, g);
+            EliminateAgent(this, g, step_stage, prng);
         }
+    }
+
+
+
+    //Receives Grid (g), int (step_stage), and System.Random (prng)
+    //Executed on the elimination of the Agent form the agentGrid
+    public override void Epitaph(Grid g, int step_stage, System.Random prng)
+    {
+
     }
 }

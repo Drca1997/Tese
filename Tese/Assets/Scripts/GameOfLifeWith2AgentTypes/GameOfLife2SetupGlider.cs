@@ -54,7 +54,7 @@ public class GameOfLife2SetupGlider : MonoBehaviour, ISetup
         }
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(width, height, cellSize, agentGrid);
+        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Live_Agent_Dead", "Live_Agent_Alive", "Random_Move_Agent", "Player_Movement_Agent" });
         return grid;
     }
 

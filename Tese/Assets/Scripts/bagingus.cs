@@ -54,8 +54,11 @@ public class bagingus : MonoBehaviour
         }
         //CAMERA SET UP
 
+        UpdateInterface.SettupSimulation(grid, prng);
+
         //Updating the visuals acording with the IVisualize Interface and the initial state of the grid
         VisualizeInterface.VisualizeGrid(grid);
+        
     }
 
     private void Update()
@@ -66,6 +69,7 @@ public class bagingus : MonoBehaviour
         //If the updated component of the Grid object is true than the visuals are updated
         if (grid.updated)
         {
+            //Utils.PrintIntGrid(grid.ConvertAgentGrid());
             VisualizeInterface.VisualizeGrid(grid);
             grid.updated = false;
         }

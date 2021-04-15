@@ -28,6 +28,8 @@ public abstract class Agent
     //A list of strings that indicate what other types of Agents this Agent cannot coexist in the same grid position with
     public List<string> colliderTypes = new List<string> {};
 
+    //we doin this?
+    public IUpdate updateInterface;
 
     //Receives Grid (g), int (step_stage), and System.Random (prng)
     //The function that each Agent type must implement
@@ -36,6 +38,12 @@ public abstract class Agent
     //An action may be modifying the grid by creating, modifying or deleting this or other Agents
     //If updating the whole grid one time step requires more than one update in which the Agents have to use different rules, the step_stage int may be used 
     public abstract void UpdateAgent(Grid g, int step_stage, System.Random prng);
+
+
+    //Receives Grid (g), int (step_stage), and System.Random (prng)
+    //Executed on the elimination of the Agent form the agentGrid
+    //The elimination of some Agents may affect the grid beyond just their removal
+    public abstract void Epitaph(Grid g, int step_stage, System.Random prng);
 
     //Receives Grid (grid)
     //Returns a list of all Agents contained in the sensor positions on the grid
@@ -50,7 +58,7 @@ public abstract class Agent
         foreach (Vector2Int sensorPos in relative_sensors)
         {
             //The real position is added to the total sensors list
-            Vector2Int realPos = GetRealPos(position, sensorPos, grid);
+            Vector2Int realPos = Utils.GetRealPos(position, sensorPos, grid);
             total_sensors.Add(realPos);
         }
 
@@ -72,32 +80,7 @@ public abstract class Agent
         return agentSensors;
     }
 
-    //Receives Vector2Int (agentPos), Vector2Int (sensorPos), and Grid (grid)
-    //Returns a Vector2Int
-    //The grid loops horizontally and vertically such as the cells at one extreme have the cells at the other extreme as neighbors
-    //This function receives a relative position to the Agent and returns the real position on the grid 
-    public Vector2Int GetRealPos(Vector2Int agentPos, Vector2Int sensorPos, Grid grid)
-    {
-        Vector2Int realPos = agentPos + sensorPos;
-
-        //Constraining the position on both axis
-        realPos.x = Utils.LoopInt(0, grid.width, realPos.x);
-        realPos.y = Utils.LoopInt(0, grid.height, realPos.y);
-        
-        return realPos;
-    }
-
-    //Receives Vector2Int (gridPos), Grid (grid), List<string> (colliderTypeList)
-    //Returns bool
-    //Function used to check if a given position on the grid contains an Agent with a typeName component contained in the given colliderTypeList
-    public bool CollisionCheck(Vector2Int gridPos, Grid grid, List<string> colliderTypeList)
-    {
-        foreach(Agent a in grid.agentGrid[gridPos.x, gridPos.y])
-        {
-            if (colliderTypeList.Contains(a.typeName)) return true;
-        }
-        return false;
-    }
+    
 
     //Receives Vector2Int (newAgentPos), Agent (newAgent), Grid (grid)
     //Returns bool
@@ -105,7 +88,7 @@ public abstract class Agent
     public bool PutAgentOnGrid(Vector2Int newAgentPos, Agent newAgent, Grid grid)
     {
         //check for collisions
-        if (!CollisionCheck(newAgentPos, grid, newAgent.colliderTypes))
+        if (!Utils.CollisionCheck(newAgentPos, grid, newAgent.colliderTypes))
         {
             newAgent.position = newAgentPos;
             grid.agentGrid[newAgentPos.x, newAgentPos.y].Add(newAgent);
@@ -122,10 +105,11 @@ public abstract class Agent
         grid.agentGrid[agentToRemove.position.x, agentToRemove.position.y].Remove(agentToRemove);
     }
 
-    //Receives Agent (agentToEliminate) and Grid (grid)
+    //Receives Agent (agentToEliminate), Grid (grid), int (step_stage), and System.Random (prng)
     //Eliminates the given Agent by calling the RemoveAgentOffGrid function and turning its "exists" component to false
-    public void EliminateAgent(Agent agentToEliminate, Grid grid)
+    public void EliminateAgent(Agent agentToEliminate, Grid grid, int step_stage, System.Random prng)
     {
+        agentToEliminate.Epitaph(grid, step_stage, prng);
         agentToEliminate.exists = false;
         RemoveAgentOffGrid(agentToEliminate, grid);
     }
@@ -137,7 +121,7 @@ public abstract class Agent
     public bool MoveAgent(Vector2Int newAgentPos, Agent agentToMove, Grid grid)
     {
         //check for collisions
-        if (!CollisionCheck(newAgentPos, grid, agentToMove.colliderTypes))
+        if (!Utils.CollisionCheck(newAgentPos, grid, agentToMove.colliderTypes))
         {
             RemoveAgentOffGrid(agentToMove, grid);
             PutAgentOnGrid(newAgentPos, agentToMove, grid);

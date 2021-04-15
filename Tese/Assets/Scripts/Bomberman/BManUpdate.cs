@@ -2,16 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//IUpdate Interface for the Bomberman game scenario with 3 states:
+//IUpdate Interface for the Bomberman game scenario with 4 states:
 //Finished updating
 //Updating Non-Player Agents
 //Updating Player Agent
+//Game Over
 public class BManUpdate : MonoBehaviour, IUpdate
 {
+    //Bollean that indicates if debug mode is on (using the right mouse button to move the simulation on)
+    public bool debug = false;
+    //Integer that indicates number of players (includes agent bomberman and synthetic players) currently in the simulation
+    public int numberPlayers;
+    //Integer that indicates the minimum number of players (includes agent bomberman and synthetic players) for the simulation to continue
+    public int minNumberPlayers = 2;
     //Bollean that indicates if the update loop has ended
     public bool finishedLoop = true;
     //Bollean that indicates if currently a Player Agent is being updated
     public bool updatingPlayer = false;
+    //Bollean that indicates if a Player Agent has been eliminated 
+    public bool gameOver = false;
 
     //List of all Agents contained in the Grid 
     //Agents are updated in the order they appear in this list
@@ -21,13 +30,32 @@ public class BManUpdate : MonoBehaviour, IUpdate
     //A reference to the index of the current Agent on randList is stored
     public int index;
 
+
+    public void SettupSimulation(Grid grid, System.Random prng)
+    {
+        List<Agent> agentList = Utils.PutAgentsInList(grid.agentGrid);
+        numberPlayers = 0;
+        foreach(Agent a in agentList)
+        {
+            switch (a.typeName)
+            {
+                case "Malaquias_Bomberman":
+                case "Agent_Bomberman":
+                case "Player_Bomberman":
+                    numberPlayers++;
+                    break;
+                
+            }
+        }
+    }
+
     //Receives the Grid object and a System.Random as a parameters
     //The agents contained in the agentGrid component of the Grid object are updated acording with the instrunctions in this function
     //This function is responsible for the order in which the agents are updated, as well as how to handle agents that require player input
     public void UpdateGrid(Grid grid, System.Random prng)
     {
-        //If the last update cycle is over, then we start a new one
-        if (finishedLoop)
+        //If the last update cycle is over and the Agent Player is still on the grid, then we start a new one
+        if (finishedLoop && !gameOver && (!debug || Input.GetMouseButtonDown(1)))
         {
             finishedLoop = false;
             //The randlist is rebuilt (since in the last update cycle new Agents may have been added to the grid, or old Agents removed)
@@ -96,5 +124,23 @@ public class BManUpdate : MonoBehaviour, IUpdate
         }
     }
 
-    
+    public void AgentCall(Agent agent, Grid grid, System.Random prng)
+    {
+        switch (agent.typeName)
+        {
+            case "Malaquias_Bomberman":
+            case "Agent_Bomberman":
+            case "Player_Bomberman":
+                numberPlayers--;
+                if (numberPlayers < minNumberPlayers)
+                {
+                    gameOver = true;
+                    Debug.Log("Game Over man");
+                }
+                break;
+            default:
+                Debug.Log("unknown Agent called");
+                break;
+        }
+    }
 }

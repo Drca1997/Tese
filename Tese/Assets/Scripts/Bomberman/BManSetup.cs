@@ -34,17 +34,21 @@ public class BManSetup : MonoBehaviour, ISetup
                 {
                     agentGrid[x, y].Add(new AWeakWall(new List<int> {}, x, y));
                 }
+                else if (prng.Next(0, 100) < randomFillPercetn)
+                {
+                    agentGrid[x, y].Add(new AStrongWall(new List<int> { }, x, y));
+                }
             }
         }
 
         //Bomberman Player Agent positioned on a random location within the grid
         int randx = prng.Next(0, width);
         int randy = prng.Next(0, height);
-        AgentPlayer playerAgent = new PBomberman(new List<int> {}, randx, randy, this);
+        AgentPlayer playerAgent = new PBomberman(new List<int> {}, randx, randy, this, GetComponent<IUpdate>());
         agentGrid[randx, randy].Add(playerAgent);
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(width, height, cellSize, agentGrid);
+        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Agent_Weak_Wall", "Agent_Strong_Wall", "Player_Bomberman", "Agent_Bomberman", "Agent_Bomb", "Agent_Fire" });
 
         return grid;
     }

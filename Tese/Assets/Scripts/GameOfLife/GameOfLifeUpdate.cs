@@ -31,6 +31,13 @@ public class GameOfLifeUpdate : MonoBehaviour, IUpdate
     //A reference to the index of the current Agent on randList is stored
     public int index;
 
+
+    public void SettupSimulation(Grid g, System.Random prng)
+    {
+
+    }
+
+
     //Receives the Grid object and a System.Random as a parameters
     //The agents contained in the agentGrid component of the Grid object are updated acording with the instrunctions in this function
     //This function is responsible for the order in which the agents are updated, as well as how to handle agents that require player input
@@ -130,4 +137,8 @@ public class GameOfLifeUpdate : MonoBehaviour, IUpdate
         }
     }
 
+    public void AgentCall(Agent agent, Grid grid, System.Random prng)
+    {
+
+    }
 }

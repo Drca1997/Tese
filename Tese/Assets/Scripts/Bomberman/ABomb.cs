@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,12 +9,13 @@ public class ABomb : Agent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
-    public ABomb(List<int> states, int x, int y)
+    public ABomb(List<int> states, int x, int y, IUpdate updateInterface)
     {
         //states[0] - number of updates until explosion
         this.states = states;
         this.position = new Vector2Int(x, y);
         this.typeName = "Agent_Bomb";
+        this.updateInterface = updateInterface;
 
         //This Agent's update rules ar not influenced by exterior inputs
         this.relative_sensors = new List<Vector2Int> { };
@@ -29,24 +31,23 @@ public class ABomb : Agent
         if (states[0] > 0) states[0]--;
         else
         {
-            //cross pattern
-            List<Vector2Int> firePlaces = new List<Vector2Int> {
-                new Vector2Int(0, 0),
-                new Vector2Int(0, -1),
-                new Vector2Int(-1, 0),
-                new Vector2Int(1, 0),
-                new Vector2Int(0, 1) 
-            };
-
             //eleminate self
-            RemoveAgentOffGrid(this, g);
+            EliminateAgent(this, g, step_stage, prng);
 
-            //create new AFire Agents in the positions contained in firePlaces
-            foreach(Vector2Int pos in firePlaces)
-            {
-                Vector2Int realPos = GetRealPos(position, pos, g);
-                PutAgentOnGrid(realPos, new AFire(new List<int> {0}, realPos.x, realPos.y), g);
-            }
+        }
+    }
+
+    //Receives Grid (g), int (step_stage), and System.Random (prng)
+    //Executed on the elimination of the Agent form the agentGrid
+    //Bomb creates a number of AFire Agents in a patttern on elimination 
+    public override void Epitaph(Grid g, int step_stage, System.Random prng)
+    {
+
+        //create new AFire Agents in the positions contained in the cross pattern returned by Utils.PatternCross()
+        foreach (Vector2Int pos in Utils.PatternCross(2,position,g,new List<string> { "Agent_Strong_Wall" }, new List<string> { "Agent_Weak_Wall" }))
+        {
+            Vector2Int realPos = Utils.GetRealPos(position, pos, g);
+            PutAgentOnGrid(realPos, new AFire(new List<int> { 0 }, realPos.x, realPos.y), g);
         }
     }
 }

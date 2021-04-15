@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,6 +18,10 @@ public class Grid
     //Each position of the matrix may contain multiple Agents
     public List<Agent>[,] agentGrid;
 
+    //An Array containting all the agentTypes on the grid
+    //Can be used to map a List<Agent>[,] into a List<int>[,]
+    public string[] agentTypes;
+
     //A matrix of GameObjects
     //Can be understood as the visual representation of the agentGrid
     public GameObject[,] objectGrid;
@@ -28,15 +33,16 @@ public class Grid
     public bool updated;
 
 
-    //Receives int (width), int (height), float (cellSize), List<Agent>[,] (agentGrid)
+    //Receives int (width), int (height), float (cellSize), List<Agent>[,] (agentGrid), string[] (agentTypes)
     //Grid constructor
     //Initiates the objectGrid
-    public Grid (int width, int height, float cellSize, List<Agent>[,] agentGrid)
+    public Grid (int width, int height, float cellSize, List<Agent>[,] agentGrid, string[] agentTypes)
     {
         this.width = width;
         this.height = height;
         this.cellSize = cellSize;
         this.agentGrid = agentGrid;
+        this.agentTypes = agentTypes;
         this.objectGrid = new GameObject[width, height];
         this.updated = false;
 
@@ -68,5 +74,27 @@ public class Grid
     public Vector2 GetXY(Vector3 worldPosition)
     {
         return new Vector2(Mathf.FloorToInt((worldPosition- container.transform.position).x/cellSize), Mathf.FloorToInt((worldPosition - container.transform.position).y / cellSize));
+    }
+
+    public List<int>[,] ConvertAgentGrid()
+    {
+        List<int>[,] convertedGrid = new List<int>[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                convertedGrid[x, y] = new List<int> { };
+                foreach (Agent a in agentGrid[x, y])
+                {
+                    convertedGrid[x, y].Add(GetAgentTypeInt(a.typeName));
+                }
+            }
+        }
+        return convertedGrid;
+    }
+
+    public int GetAgentTypeInt(string type)
+    {
+        return Array.IndexOf(agentTypes, type);
     }
 }

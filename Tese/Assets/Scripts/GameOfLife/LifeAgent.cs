@@ -66,4 +66,11 @@ public class LifeAgent : Agent
 
     }
 
+    //Receives Grid (g), int (step_stage), and System.Random (prng)
+    //Executed on the elimination of the Agent form the agentGrid
+    public override void Epitaph(Grid g, int step_stage, System.Random prng)
+    {
+
+    }
+
 }

@@ -53,11 +53,18 @@ public class LifeAgentAlive : Agent
                 //eliminates itself and creates an LifeAgentDead in its place
                 if (states[0] < 2 || states[0] > 3)
                 {
-                    EliminateAgent(this, g);
+                    EliminateAgent(this, g, step_stage, prng);
                     PutAgentOnGrid(position, new LifeAgentDead(new List<int> {0}, position.x, position.y), g);
                 }
                 break;
         }
+
+    }
+
+    //Receives Grid (g), int (step_stage), and System.Random (prng)
+    //Executed on the elimination of the Agent form the agentGrid
+    public override void Epitaph(Grid g, int step_stage, System.Random prng)
+    {
 
     }
 

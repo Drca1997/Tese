@@ -7,14 +7,19 @@ using UnityEngine;
 public class PBomberman : AgentPlayer
 {
     public MonoBehaviour mono;
-    public PBomberman(List<int> states, int x, int y, MonoBehaviour mono)
+    public PBomberman(List<int> states, int x, int y, MonoBehaviour mono, IUpdate updateInterface)
     {
         //This agent cannot be placed in the same position of the agentGrid with the Agent types on this list
         this.colliderTypes.Add("Agent_Weak_Wall");
+        this.colliderTypes.Add("Agent_Strong_Wall");
+        this.colliderTypes.Add("Agent_Bomb");
+        this.colliderTypes.Add("Agent_Bomberman");
+        this.colliderTypes.Add("Malaquias_Bomberman");
         this.states = states;
         this.position = new Vector2Int(x, y);
         this.mono = mono;
         this.typeName = "Player_Bomberman";
+        this.updateInterface = updateInterface;
 
         //Since the player will be the one deciding what actions to take, no sensors are needed for this Agent
         this.relative_sensors = new List<Vector2Int> { };
@@ -61,7 +66,7 @@ public class PBomberman : AgentPlayer
                 newPosition.x = Utils.LoopInt(0, g.width, newPosition.x + 1);
                 break;
             case KeyCode.Space:
-                PutAgentOnGrid(position, new ABomb(new List<int> {3}, position.x, position.y), g);
+                PutAgentOnGrid(position, new ABomb(new List<int> {3}, position.x, position.y, updateInterface), g);
                 break;
         }
 
@@ -75,5 +80,11 @@ public class PBomberman : AgentPlayer
         updated = true;
     }
 
+    //Receives Grid (g), int (step_stage), and System.Random (prng)
+    //Executed on the elimination of the Agent form the agentGrid
+    public override void Epitaph(Grid g, int step_stage, System.Random prng)
+    {
+        updateInterface.AgentCall(this, g, prng);
+    }
 
 }

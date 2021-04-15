@@ -11,7 +11,7 @@ using UnityEngine;
 public class BManVisualize : MonoBehaviour, IVisualize
 {
     //If more than one Agent is in a position of the agentGrid, this priority list will dictate which one shall be represented in the objectGrid
-    string[] priorityList = new string[] { "Player_Bomberman", "Agent_Bomb", "Agent_Fire", "Agent_Weak_Wall" };
+    string[] priorityList = new string[] { "Malaquias_Bomberman", "Player_Bomberman", "Agent_Bomberman", "Agent_Bomb", "Agent_Fire", "Agent_Strong_Wall", "Agent_Weak_Wall" };
 
     //Receives the Grid object as a parameter
     //The GameObjects contained in the objectGrid component of the Grid object are updated in order to indicate what agent types are dontained in that same position on the agentGrid
@@ -38,14 +38,23 @@ public class BManVisualize : MonoBehaviour, IVisualize
                     //Each type of agent has its own representation
                     grid.objectGrid[i, j].name = a.typeName;
                     switch (a.typeName) {
+                        case "Malaquias_Bomberman":
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
+                            break;
                         case "Player_Bomberman":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.blue;
+                            break;
+                        case "Agent_Bomberman":
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.green;
                             break;
                         case "Agent_Bomb":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.red;
                             break;
                         case "Agent_Fire":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.yellow;
+                            break;
+                        case "Agent_Strong_Wall":
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.black;
                             break;
                         case "Agent_Weak_Wall":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.grey;

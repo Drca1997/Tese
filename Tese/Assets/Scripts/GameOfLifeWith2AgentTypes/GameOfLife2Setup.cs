@@ -8,7 +8,7 @@ using UnityEngine;
 //a number of PlayerMovementAgent Agents
 public class GameOfLife2Setup : MonoBehaviour, ISetup
 {
-    //width of the simulation grid, by default 20 units
+    //width of the simulation grid, by default 20 units     
     public int width = 20;
     //height of the simulation grid, by default 10 units
     public int height = 10;
@@ -86,7 +86,7 @@ public class GameOfLife2Setup : MonoBehaviour, ISetup
 
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(width, height, cellSize, agentGrid);
+        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Live_Agent_Dead", "Live_Agent_Alive", "Random_Move_Agent", "Player_Movement_Agent" });
 
         return grid;
     }
