@@ -56,14 +56,15 @@ public class BManSetupM : MonoBehaviour, ISetup
                         agentGrid[x, y].Add(new ABomberman(new List<int> { }, x, y, GetComponent<IUpdate>()));
                         break;
                     case 5:
-                        agentGrid[x, y].Add(new MBomberman(new List<int> { }, x, y, GetComponent<IUpdate>()));
+                        agentGrid[x, y].Add(new RandomSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
                         break;
                 }
             }
         }
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(setup_grid.GetLength(1), setup_grid.GetLength(0), 10, agentGrid, new string[] { "Agent_Weak_Wall", "Agent_Strong_Wall", "Player_Bomberman", "Agent_Bomberman", "Malaquias_Bomberman", "Agent_Bomb", "Agent_Fire"});
+        Grid grid = new Grid(setup_grid.GetLength(1), setup_grid.GetLength(0),
+            10, agentGrid, new string[] { "Malaquias_Bomberman", "PlayerBomberman", "Agent_Bomberman", "Walkable", "Agent_Weak_Wall", "Agent_Strong_Wall", "Agent_Bomb", "Agent_Fire"});
 
         return grid;
     }
