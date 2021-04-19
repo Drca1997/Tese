@@ -6,18 +6,11 @@ public static class SyntheticPlayerUtils
 {
     public enum Tile
     {
-        Player,
-        Enemy,
-        Walkable,
-        Explodable,
-        Unsurpassable,
-        Bomb,
-        PlayerNBomb,
-        EnemyNBomb,
-        Fire,
-        FireNExplodable,
-        FireNPlayer,
-        FireNEnemy
+        Player, PlayerEnemy, AIEnemy, Walkable, Explodable, Unsurpassable, Bomb, Fire,
+        PlayerNBomb, PlayerEnemyNBomb, AIEnemyNBomb,
+        FireNExplodable, FireNPlayer, FireNPlayerEnemy, FireNAIEnemy, FireNBomb,
+        FireNBombNPlayer, FireNBombNPlayerEnemy, FireNBombNAIEnemy,
+        Unknown
     }
 
     public static IEnumerable GridIterator(int[,] grid)
@@ -38,6 +31,7 @@ public static class SyntheticPlayerUtils
             case 0: //move up
                 if (agent.position.y + 1 < grid.GetLength(1)) // se esta dentro dos limites
                 {
+                    Debug.Log("trying UP");
                     if (IsTileWalkable(grid, agent.position.x, agent.position.y + 1)) //Se é walkable
                     {
                         return true;
@@ -47,6 +41,7 @@ public static class SyntheticPlayerUtils
             case 1: //move down
                 if (agent.position.y - 1 >= 0) // se esta dentro dos limites
                 {
+                    Debug.Log("trying DOWN");
                     if (IsTileWalkable(grid, agent.position.x, agent.position.y - 1)) //Se é walkable
                     {
                         return true;
@@ -56,6 +51,7 @@ public static class SyntheticPlayerUtils
             case 2: //move left
                 if (agent.position.x - 1 >= 0) // se esta dentro dos limites
                 {
+                    Debug.Log("trying LEFT");
                     if (IsTileWalkable(grid, agent.position.x - 1, agent.position.y)) //Se é walkable
                     {
                         return true;
@@ -65,6 +61,7 @@ public static class SyntheticPlayerUtils
             case 3: //move right
                 if (agent.position.x + 1 < grid.GetLength(0)) // se esta dentro dos limites
                 {
+                    Debug.Log("trying RIGHT");
                     if (IsTileWalkable(grid, agent.position.x + 1, agent.position.y)) //Se é walkable
                     {
                         return true;
@@ -90,13 +87,18 @@ public static class SyntheticPlayerUtils
 
     public static bool IsTileWalkable(int [,] grid, int x, int y)
     {
+        Debug.Log(x + "," + y);
+        Debug.Log(grid[x,y]);
+        Debug.Log((int)Tile.Walkable);
         if (x >= 0 && x < grid.GetLength(0) && y >= 0 && y < grid.GetLength(1))
         {
             if (grid[x, y] == (int)Tile.Walkable)
             {
+                Debug.Log("true");
                 return true;
             }
         }
+        Debug.Log("false");
         return false;
     }
 }

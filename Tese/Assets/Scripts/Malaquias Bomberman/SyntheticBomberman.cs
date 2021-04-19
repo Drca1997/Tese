@@ -7,6 +7,7 @@ public abstract class SyntheticBombermanPlayer : Agent
 {
     //se plantou uma bomba e esta ainda não explodiu
     private bool plantedBomb;
+    private ABomb bomb;
 
     //representação do Grid que os jogadores sintéticos usam
     private int[,] gridArray;
@@ -51,10 +52,19 @@ public abstract class SyntheticBombermanPlayer : Agent
         //Os inteiros correspondem aos indices que os tipos de agente ocupam em g.agentTypes - podes modificá-los na interface de setup, na criação da nova Grid
 
         //Para mover o agente e criar uma bomba podes consultar o meu codigo em PBomberman.cs na função Logic
-        Debug.Log("UPDATING AGENT");
+        Debug.Log("UPDATING AGENT in " + position.x + ", " + position.y);
+        HasBomb();
         gridArray = ConvertGrid(g);
-        ProcessAction(g, RequestDecision());
+        ProcessAction(g, TakeAction());
 
+    }
+
+    private void HasBomb()
+    {
+        if (bomb != null)
+        {
+            plantedBomb = bomb.exists;
+        }
     }
 
     #region ConvertGrid
@@ -172,7 +182,7 @@ public abstract class SyntheticBombermanPlayer : Agent
     public void ProcessAction(Grid g, int action)
     {
         Vector2Int newPosition = position;
-
+        Debug.Log(action);
         //Calculate the new position/Create a new Abomb Agent acording to the input
         switch (action)
         {
@@ -197,7 +207,8 @@ public abstract class SyntheticBombermanPlayer : Agent
                 MoveAgent(newPosition, this, g);
                 break;
             case 4:
-                PutAgentOnGrid(position, new ABomb(new List<int> { 3 }, position.x, position.y, updateInterface), g);
+                bomb = new ABomb(new List<int> { 3 }, position.x, position.y, updateInterface);
+                PutAgentOnGrid(position, bomb, g);
                 break;
         }
 
@@ -212,6 +223,6 @@ public abstract class SyntheticBombermanPlayer : Agent
         updateInterface.AgentCall(this, g, prng);
     }
 
-    public abstract int RequestDecision();
+    public abstract int TakeAction();
 
 }

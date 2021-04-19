@@ -9,13 +9,15 @@ public class RandomSyntheticPlayer : SyntheticBombermanPlayer
 
     }
 
-    public override int RequestDecision()
+    public override int TakeAction()
     {
         int action = Random.Range(0, 6);
         while (!SyntheticPlayerUtils.IsValidAction(GridArray, this, action))
         {
             action = Random.Range(0, 6);
+
         }
+        Debug.Log(action);
         return action;
     }
 }
