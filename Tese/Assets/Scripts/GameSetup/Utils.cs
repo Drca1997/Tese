@@ -495,7 +495,7 @@ public static class Utils
         trans.localScale = new Vector3(cellSize, cellSize);
         SpriteRenderer sprite = gameObject.GetComponent<SpriteRenderer>();
         //"Textures/um_pixel" is a white image of 1x1 dimensions
-        sprite.sprite = Resources.Load<Sprite>("Textures/um_pixel");
+        sprite.sprite = Resources.Load<Sprite>("um_pixel");
 
         sprite.color = color;
         return gameObject;
