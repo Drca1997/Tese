@@ -6,10 +6,10 @@ public class Bomb
 {
     int countdown;
     int x, y;
-    Grid grid;
+    TempGrid grid;
     private BaseAgent agent;
 
-    public Bomb(Grid grid, int x, int y, ref BaseAgent agent)
+    public Bomb(TempGrid grid, int x, int y, ref BaseAgent agent)
     {
         countdown = 3;
         this.grid = grid;

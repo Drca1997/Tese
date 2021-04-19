@@ -5,7 +5,7 @@ using UnityEngine;
 public class RandomAgent : BaseAgent, IDecisionRequester
 {
 
-    public void GetWorld(Grid grid, int x, int y)
+    public void GetWorld(TempGrid grid, int x, int y)
     {
         this.Grid = grid;
         this.x = x;

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Grid
+public class TempGrid
 {
 
     private int width;
@@ -12,7 +12,7 @@ public class Grid
     private Vector3 origin;
     private float cellSize;
 
-    public Grid(int width, int height, Vector3 origin, float cellSize, bool aleatorio)
+    public TempGrid(int width, int height, Vector3 origin, float cellSize, bool aleatorio)
     {
         this.width = width;
         this.height = height;

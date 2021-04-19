@@ -5,11 +5,11 @@ using UnityEngine;
 public class GraphicsManager
 {
 
-    Grid grid;
+    TempGrid grid;
     Sprite[] sprites;
     List<GameObject> spriteRenderers;
 
-    public GraphicsManager(Grid grid, Sprite [] sprites)
+    public GraphicsManager(TempGrid grid, Sprite [] sprites)
     {
         this.grid = grid;
         this.sprites = sprites;

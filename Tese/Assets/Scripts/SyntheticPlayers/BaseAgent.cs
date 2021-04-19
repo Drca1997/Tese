@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class BaseAgent: MonoBehaviour
 {
-    private Grid grid;
+    private TempGrid grid;
     protected int x;
     protected int y;
     protected bool plantedbomb;
@@ -26,5 +26,5 @@ public abstract class BaseAgent: MonoBehaviour
         set => y = value;
     }
     public bool IsAlive { get => isAlive; set => isAlive = value; }
-    public Grid Grid { get => grid; set => grid = value; }
+    public TempGrid Grid { get => grid; set => grid = value; }
 }

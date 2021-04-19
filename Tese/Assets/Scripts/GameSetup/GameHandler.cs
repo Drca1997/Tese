@@ -19,7 +19,7 @@ public class GameHandler : MonoBehaviour
     private Sprite[] sprites;
     //[SerializeField]
     private int bombRadius; //inutil por agora, ate que faça logica da bomba modular para suportar diferentes radios
-    private Grid grid;
+    private TempGrid grid;
     private List <GameObject> spriteRenderers;
     private List<Bomb> bombs;
     private GraphicsManager graphicsManager;
@@ -29,7 +29,7 @@ public class GameHandler : MonoBehaviour
     private void Awake()
     {
         agents = GameObject.FindGameObjectsWithTag("Agent").ToList();
-        grid = new Grid(width, width, new Vector3(origin[0], origin[1], origin[2]), cellSize, randomizeMap);
+        grid = new TempGrid(width, width, new Vector3(origin[0], origin[1], origin[2]), cellSize, randomizeMap);
         grid.DisplayGrid(false);
         //grid.DebugPrintGrid();
         bombs = new List<Bomb>();
