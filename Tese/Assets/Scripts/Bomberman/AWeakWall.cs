@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Agent of a Bomberman game scenario that represents a breakable wall
-public class AWeakWall : Agent
+public class AWeakWall : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)

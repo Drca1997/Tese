@@ -4,7 +4,7 @@ using UnityEngine;
 
 //Bomberman AgentPlayer controled by the player
 //may move or place a bomb on the grid, i.e. create a new ABomb Agent in its current position
-public class PBomberman : AgentPlayer
+public class PBomberman : GameAgentPlayer
 {
     public MonoBehaviour mono;
     public PBomberman(List<int> states, int x, int y, MonoBehaviour mono, IUpdate updateInterface)

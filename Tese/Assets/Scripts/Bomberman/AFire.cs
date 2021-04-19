@@ -5,7 +5,7 @@ using UnityEngine;
 //Agent of a Bomberman game scenario that represents a fire
 //expiers after a given number of time steps, eleminating itself from the grid
 //destroys some other agent types if in the same position
-public class AFire : Agent
+public class AFire : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
@@ -29,8 +29,8 @@ public class AFire : Agent
     {
         //Will remove Agents of these types if they are in its postion of the agentGrid
         List<string> flamableTypes = new List<string> {"Agent_Weak_Wall", "Malaquias_Bomberman", "Player_Bomberman", "Agent_Bomberman" };
-        List<Agent> sensors = GetSensors(g);
-        foreach (Agent a in sensors)
+        List<GameAgent> sensors = GetSensors(g);
+        foreach (GameAgent a in sensors)
         {
             foreach (string type in flamableTypes)
             {

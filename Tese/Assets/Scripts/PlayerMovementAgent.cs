@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Simple movement Agent controled by the player
-public class PlayerMovementAgent : AgentPlayer
+public class PlayerMovementAgent : GameAgentPlayer
 {
     //Reference for the MonoBehaviour used to start coroutines
     public MonoBehaviour mono;

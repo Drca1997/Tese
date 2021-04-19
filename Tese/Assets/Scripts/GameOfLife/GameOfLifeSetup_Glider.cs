@@ -36,12 +36,12 @@ public class GameOfLifeSetup_Glider : MonoBehaviour, ISetup
         //Creation and initialization of the agentGrid acording to the setupGrid
         //positions with value 1 in the setupGrid have a LifeAgent with a states[1] component with value 1 (meaning its "alive") on the agentGrid
         //positions with value 0 in the setupGrid have a LifeAgent with a states[1] component with value 0 (meaning its "dead") on the agentGrid
-        List<Agent>[,] agentGrid = new List<Agent>[width, height];
+        List<GameAgent>[,] agentGrid = new List<GameAgent>[width, height];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                agentGrid[x, y] = new List<Agent> { };
+                agentGrid[x, y] = new List<GameAgent> { };
                 agentGrid[x, y].Add(new LifeAgent(new List<int> { 0, (setupGrid[x, y] == 1) ? 1 : 0 }, x, y));
                 
             }

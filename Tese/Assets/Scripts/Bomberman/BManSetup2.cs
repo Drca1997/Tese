@@ -34,12 +34,12 @@ public class BManSetup2 : MonoBehaviour, ISetup
                { 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 } ,
              };
 
-        List<Agent>[,] agentGrid = new List<Agent>[setup_grid.GetLength(1), setup_grid.GetLength(0)];
+        List<GameAgent>[,] agentGrid = new List<GameAgent>[setup_grid.GetLength(1), setup_grid.GetLength(0)];
         for (int x = 0; x < setup_grid.GetLength(1); x++)
         {
             for (int y = 0; y < setup_grid.GetLength(0); y++)
             {
-                agentGrid[x, y] = new List<Agent> { };
+                agentGrid[x, y] = new List<GameAgent> { };
                 switch(setup_grid[y,x])
                 {
                     case 1:

@@ -34,9 +34,9 @@ public static class Utils
     //Receives a List<Agent> (aList) and a string (aType) as parametres
     //Returns the first Agent object on the aList that as an typeName component equal to aType 
     //otherwise, null is returned
-    public static Agent AgentListContinesType(List<Agent> aList, string aType)
+    public static GameAgent AgentListContinesType(List<GameAgent> aList, string aType)
     {
-        foreach(Agent a in aList)
+        foreach(GameAgent a in aList)
         {
             if (string.Compare(a.typeName, aType) == 0) return a;
         }
@@ -63,7 +63,7 @@ public static class Utils
     //Function used to check if a given position on the grid contains an Agent with a typeName component contained in the given colliderTypeList
     public static bool CollisionCheck(Vector2Int gridPos, Grid grid, List<string> colliderTypeList)
     {
-        foreach (Agent a in grid.agentGrid[gridPos.x, gridPos.y])
+        foreach (GameAgent a in grid.agentGrid[gridPos.x, gridPos.y])
         {
             if (colliderTypeList.Contains(a.typeName)) return true;
         }
@@ -103,14 +103,14 @@ public static class Utils
 
 
     //Returns a List<Agent> containting all the Agent objects found in the List<Agent>[,] given has a parameter
-    public static List<Agent> PutAgentsInList(List<Agent>[,] agents)
+    public static List<GameAgent> PutAgentsInList(List<GameAgent>[,] agents)
     {
-        List<Agent> listAgents = new List<Agent> { };
+        List<GameAgent> listAgents = new List<GameAgent> { };
         for (int x = 0; x < agents.GetLength(0); x++)
         {
             for (int y = 0; y < agents.GetLength(1); y++)
             {
-                foreach (Agent a in agents[x, y])
+                foreach (GameAgent a in agents[x, y])
                 {
                     listAgents.Add(a);
                 }
@@ -137,7 +137,7 @@ public static class Utils
 
     //Receives a List<Agent> (agentList) and a string[] (priorityList)
     //Returns the first Agent found on agentList with the typeName equal to the highest string on priorityList
-    public static Agent GetAgent(List<Agent> agentList, string[] priorityList)
+    public static GameAgent GetAgent(List<GameAgent> agentList, string[] priorityList)
     {
         if (agentList.Count == 0) return null;
         else if (agentList.Count == 1) return agentList[0];
@@ -145,7 +145,7 @@ public static class Utils
         {
             foreach (string type in priorityList)
             {
-                Agent a = Utils.AgentListContinesType(agentList, type);
+                GameAgent a = Utils.AgentListContinesType(agentList, type);
                 if (a != null) return a;
             }
         }
@@ -153,7 +153,7 @@ public static class Utils
     }
 
     
-    public static void PrintAgentGrid(List<Agent>[,] agentGrid)
+    public static void PrintAgentGrid(List<GameAgent>[,] agentGrid)
     {
         string print = "Agent Grid:\n";
         for (int y = agentGrid.GetLength(1)-1; y >=0 ; y--)
@@ -203,7 +203,7 @@ public static class Utils
     //    List<Vector2Int> pattern = new List<Vector2Int>();
 
 
-    //    return pattern;
+    //    return pattern;e
     //}
 
     //Receives int (size)

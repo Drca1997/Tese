@@ -24,12 +24,12 @@ public class BManSetup : MonoBehaviour, ISetup
     public Grid SetupGrid(System.Random prng)
     {
         //Creation and initialization of the agentGrid, with randomFillPercetn of positions with a Weak Wall Agent
-        List<Agent>[,] agentGrid = new List<Agent>[width, height];
+        List<GameAgent>[,] agentGrid = new List<GameAgent>[width, height];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                agentGrid[x, y] = new List<Agent> { };
+                agentGrid[x, y] = new List<GameAgent> { };
                 if (prng.Next(0, 100) < randomFillPercetn)
                 {
                     agentGrid[x, y].Add(new AWeakWall(new List<int> {}, x, y));
@@ -44,7 +44,7 @@ public class BManSetup : MonoBehaviour, ISetup
         //Bomberman Player Agent positioned on a random location within the grid
         int randx = prng.Next(0, width);
         int randy = prng.Next(0, height);
-        AgentPlayer playerAgent = new PBomberman(new List<int> {}, randx, randy, this, GetComponent<IUpdate>());
+        GameAgentPlayer playerAgent = new PBomberman(new List<int> {}, randx, randy, this, GetComponent<IUpdate>());
         agentGrid[randx, randy].Add(playerAgent);
 
         //Grid constructed with the agentGrid

@@ -16,7 +16,7 @@ public class Grid
 
     //A matrix of lists of Agents
     //Each position of the matrix may contain multiple Agents
-    public List<Agent>[,] agentGrid;
+    public List<GameAgent>[,] agentGrid;
 
     //An Array containting all the agentTypes on the grid
     //Can be used to map a List<Agent>[,] into a List<int>[,]
@@ -36,7 +36,7 @@ public class Grid
     //Receives int (width), int (height), float (cellSize), List<Agent>[,] (agentGrid), string[] (agentTypes)
     //Grid constructor
     //Initiates the objectGrid
-    public Grid (int width, int height, float cellSize, List<Agent>[,] agentGrid, string[] agentTypes)
+    public Grid (int width, int height, float cellSize, List<GameAgent>[,] agentGrid, string[] agentTypes)
     {
         this.width = width;
         this.height = height;
@@ -84,7 +84,7 @@ public class Grid
             for (int y = 0; y < height; y++)
             {
                 convertedGrid[x, y] = new List<int> { };
-                foreach (Agent a in agentGrid[x, y])
+                foreach (GameAgent a in agentGrid[x, y])
                 {
                     convertedGrid[x, y].Add(GetAgentTypeInt(a.typeName));
                 }
