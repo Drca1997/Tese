@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class SyntheticBombermanPlayer : Agent
+public abstract class SyntheticBombermanPlayer : GameAgent
 {
     //se plantou uma bomba e esta ainda não explodiu
     private bool plantedBomb;

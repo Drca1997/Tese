@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ABomberman : Agent
+public class ABomberman : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
@@ -33,8 +33,8 @@ public class ABomberman : Agent
         int[] possible_move = new int[4];
         bool bomb = false;
         bool danger = false;
-        List<Agent> sensors = GetSensors(g);
-        foreach (Agent a in sensors)
+        List<GameAgent> sensors = GetSensors(g);
+        foreach (GameAgent a in sensors)
         {
             if (string.Compare(a.typeName, "Agent_Bomb") == 0 || string.Compare(a.typeName, "Agent_Fire") == 0)
             {
@@ -81,7 +81,7 @@ public class ABomberman : Agent
         if (possible_move[2] == 0) possibleNewPositions.Add(new Vector2Int(-1, 0));
         if (possible_move[3] == 0) possibleNewPositions.Add(new Vector2Int(1, 0));
 
-        Debug.Log(possibleNewPositions.Count);
+        //Debug.Log(possibleNewPositions.Count);
         if (possibleNewPositions.Count != 0)
         {
             Vector2Int newPosition = Utils.GetRealPos(position, possibleNewPositions[prng.Next(0, possibleNewPositions.Count)], g);

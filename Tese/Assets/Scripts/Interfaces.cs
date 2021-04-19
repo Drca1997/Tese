@@ -18,14 +18,14 @@ public interface ISetup
 //May or may not be designed for specific types of agent combinations
 public interface IUpdate
 {
-    void SettupSimulation(Grid g, System.Random prng);
+    void SetupSimulation(Grid g, System.Random prng);
 
     //Receives the Grid object and a System.Random as a parameters
     //The agents contained in the agentGrid component of the Grid object are updated acording with the instrunctions in this function
     //This function is responsible for the order in which the agents are updated, as well as how to handle agents that require player input
     void UpdateGrid(Grid g, System.Random prng);
 
-    void AgentCall(Agent agent, Grid grid, System.Random prng);
+    void AgentCall(GameAgent agent, Grid grid, System.Random prng);
 }
 
 //Interface related with updating the objectGrid component of the Grid object acording with the state of the agentGrid component

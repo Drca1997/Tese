@@ -24,7 +24,7 @@ public class BManVisualize : MonoBehaviour, IVisualize
             for (int j = 0; j < grid.agentGrid.GetLength(1); j++)
             {
                 //returns the highest priority Agent from the i j position on the agentGrid
-                Agent a = Utils.GetAgent(grid.agentGrid[i, j], priorityList);
+                GameAgent a = Utils.GetAgent(grid.agentGrid[i, j], priorityList);
 
                 //if there aren't any agents on this position
                 if (a == null)

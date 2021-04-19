@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Agent that in each update moves randomly
-public class RandomMoveAgent : Agent
+public class RandomMoveAgent : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)

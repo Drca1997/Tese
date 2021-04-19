@@ -12,30 +12,30 @@ public class BManUpdate : MonoBehaviour, IUpdate
     //Bollean that indicates if debug mode is on (using the right mouse button to move the simulation on)
     public bool debug = false;
     //Integer that indicates number of players (includes agent bomberman and synthetic players) currently in the simulation
-    public int numberPlayers;
+    private int numberPlayers;
     //Integer that indicates the minimum number of players (includes agent bomberman and synthetic players) for the simulation to continue
     public int minNumberPlayers = 2;
     //Bollean that indicates if the update loop has ended
-    public bool finishedLoop = true;
+    private bool finishedLoop = true;
     //Bollean that indicates if currently a Player Agent is being updated
-    public bool updatingPlayer = false;
+    private bool updatingPlayer = false;
     //Bollean that indicates if a Player Agent has been eliminated 
-    public bool gameOver = false;
+    private bool gameOver = false;
 
     //List of all Agents contained in the Grid 
     //Agents are updated in the order they appear in this list
     //The list is shuffled before the update cycle begins
-    public List<Agent> randList;
+    private List<GameAgent> randList;
     //The randList may not be fully looped through in one execution of UpdateGrid (if the player input is needed, for example)
     //A reference to the index of the current Agent on randList is stored
-    public int index;
+    private int index;
 
 
-    public void SettupSimulation(Grid grid, System.Random prng)
+    public void SetupSimulation(Grid grid, System.Random prng)
     {
-        List<Agent> agentList = Utils.PutAgentsInList(grid.agentGrid);
+        List<GameAgent> agentList = Utils.PutAgentsInList(grid.agentGrid);
         numberPlayers = 0;
-        foreach(Agent a in agentList)
+        foreach(GameAgent a in agentList)
         {
             switch (a.typeName)
             {
@@ -61,7 +61,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
             //The randlist is rebuilt (since in the last update cycle new Agents may have been added to the grid, or old Agents removed)
             randList = Utils.PutAgentsInList(grid.agentGrid);
             //randList is shuffled in order to update the Agents in a random order
-            Utils.Shuffle<Agent>(randList, prng);
+            Utils.Shuffle<GameAgent>(randList, prng);
             //index is reinitialized
             index = 0;
         }
@@ -72,7 +72,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
             //If currently we are updating a Player Agent 
             if (updatingPlayer)
             {
-                AgentPlayer a = randList[index] as AgentPlayer;
+                GameAgentPlayer a = randList[index] as GameAgentPlayer;
                 //If the Agent as been updated, we exit "Updating Player Agent" state back to "Updating Non-Player Agent" state
                 if (a.updated)
                 {
@@ -102,9 +102,9 @@ public class BManUpdate : MonoBehaviour, IUpdate
 
                         //If the current Agent that was updated is an AgentPlayer (i.e. controlled by a player) and has not finished updating in this frame,
                         //we enter the "Updating Player Agent" state and exit the function (we can't continue the update loop until this agent is fully updated)
-                        if (randList[index] is AgentPlayer)
+                        if (randList[index] is GameAgentPlayer)
                         {
-                            AgentPlayer a = randList[index] as AgentPlayer;
+                            GameAgentPlayer a = randList[index] as GameAgentPlayer;
                             if (!a.updated)
                             {
                                 updatingPlayer = true;
@@ -124,7 +124,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
         }
     }
 
-    public void AgentCall(Agent agent, Grid grid, System.Random prng)
+    public void AgentCall(GameAgent agent, Grid grid, System.Random prng)
     {
         switch (agent.typeName)
         {

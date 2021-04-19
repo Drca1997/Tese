@@ -24,12 +24,12 @@ public class GameOfLifeSetup : MonoBehaviour, ISetup
     {
         //Creation and initialization of the agentGrid, with randomFillPercetn of positions with a LifeAgent with a states[1] component with value 1 (meaning its "alive")
         //Other positions are initialized with a LifeAgent with a states[1] component with value 0 (meaning its "dead")
-        List<Agent>[,] agentGrid = new List<Agent>[width, height];
+        List<GameAgent>[,] agentGrid = new List<GameAgent>[width, height];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                agentGrid[x, y] = new List<Agent> { };
+                agentGrid[x, y] = new List<GameAgent> { };
                 agentGrid[x, y].Add(new LifeAgent(new List<int> { 0, (prng.Next(0, 100) < randomFillPercetn) ? 1 : 0 }, x, y));
             }
         }

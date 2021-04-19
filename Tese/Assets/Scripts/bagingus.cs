@@ -54,7 +54,7 @@ public class bagingus : MonoBehaviour
         }
         //CAMERA SET UP
 
-        UpdateInterface.SettupSimulation(grid, prng);
+        UpdateInterface.SetupSimulation(grid, prng);
 
         //Updating the visuals acording with the IVisualize Interface and the initial state of the grid
         VisualizeInterface.VisualizeGrid(grid);

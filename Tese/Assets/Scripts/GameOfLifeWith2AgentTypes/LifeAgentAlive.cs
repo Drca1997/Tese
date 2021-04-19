@@ -4,7 +4,7 @@ using UnityEngine;
 
 //Agent that represents a "alive" cell of a Game of Life game scenario
 //Used in conjunction with LifeAgentDead
-public class LifeAgentAlive : Agent
+public class LifeAgentAlive : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
@@ -39,9 +39,9 @@ public class LifeAgentAlive : Agent
             //If this function is called on the first stage of an update loop, 
             //the number of LifeAgentAlive neighbours with is tallied and stored in this Agent's states[0] to be used on the second stage of the update loop
             case 0:
-                List<Agent> sensors = GetSensors(g);
+                List<GameAgent> sensors = GetSensors(g);
                 states[0] = 0;
-                foreach (Agent sensor in sensors)
+                foreach (GameAgent sensor in sensors)
                 {
                     if (string.Compare(sensor.typeName, "Live_Agent_Alive")==0) states[0]++;
                 }

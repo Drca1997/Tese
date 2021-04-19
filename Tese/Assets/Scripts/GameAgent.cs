@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 //Abstract class used as a basis for all agent types
-public abstract class Agent 
+public abstract class GameAgent 
 {
     //An identifiying string for the agent type 
     public string typeName;
@@ -47,9 +47,9 @@ public abstract class Agent
 
     //Receives Grid (grid)
     //Returns a list of all Agents contained in the sensor positions on the grid
-    public List<Agent> GetSensors(Grid grid)
+    public List<GameAgent> GetSensors(Grid grid)
     {
-        List<Agent> agentSensors = new List<Agent> { };
+        List<GameAgent> agentSensors = new List<GameAgent> { };
 
         //List of all the positions of the grid used by the Agent as sensors
         List<Vector2Int> total_sensors = new List<Vector2Int> { };
@@ -71,7 +71,7 @@ public abstract class Agent
         foreach (Vector2Int sensorPos in total_sensors)
         {
             //Each Agent on the sensor position is added to the list
-            foreach (Agent a in grid.agentGrid[sensorPos.x, sensorPos.y])
+            foreach (GameAgent a in grid.agentGrid[sensorPos.x, sensorPos.y])
             {
                 agentSensors.Add(a);
             }
@@ -85,7 +85,7 @@ public abstract class Agent
     //Receives Vector2Int (newAgentPos), Agent (newAgent), Grid (grid)
     //Returns bool
     //Adds the given new Agent to the grid on the given position, returning true if it was successful and false otherwise
-    public bool PutAgentOnGrid(Vector2Int newAgentPos, Agent newAgent, Grid grid)
+    public bool PutAgentOnGrid(Vector2Int newAgentPos, GameAgent newAgent, Grid grid)
     {
         //check for collisions
         if (!Utils.CollisionCheck(newAgentPos, grid, newAgent.colliderTypes))
@@ -100,14 +100,14 @@ public abstract class Agent
 
     //Receives Agent (agentToRemove) and Grid (grid)
     //Removes the given Agent from its position on the grid without turning its "exists" component to false
-    public void RemoveAgentOffGrid(Agent agentToRemove, Grid grid)
+    public void RemoveAgentOffGrid(GameAgent agentToRemove, Grid grid)
     {
         grid.agentGrid[agentToRemove.position.x, agentToRemove.position.y].Remove(agentToRemove);
     }
 
     //Receives Agent (agentToEliminate), Grid (grid), int (step_stage), and System.Random (prng)
     //Eliminates the given Agent by calling the RemoveAgentOffGrid function and turning its "exists" component to false
-    public void EliminateAgent(Agent agentToEliminate, Grid grid, int step_stage, System.Random prng)
+    public void EliminateAgent(GameAgent agentToEliminate, Grid grid, int step_stage, System.Random prng)
     {
         agentToEliminate.Epitaph(grid, step_stage, prng);
         agentToEliminate.exists = false;
@@ -118,7 +118,7 @@ public abstract class Agent
     //Returns bool
     //Moves the given Agent from its position on the grid to a new, given, one 
     //Returns true if the operation was successful and false otherwise
-    public bool MoveAgent(Vector2Int newAgentPos, Agent agentToMove, Grid grid)
+    public bool MoveAgent(Vector2Int newAgentPos, GameAgent agentToMove, Grid grid)
     {
         //check for collisions
         if (!Utils.CollisionCheck(newAgentPos, grid, agentToMove.colliderTypes))

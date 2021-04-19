@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Abstract class used as a basis for agents that receive input from the player
-public abstract class AgentPlayer : Agent
+public abstract class GameAgentPlayer : GameAgent
 {
     //boolean that indicates wether the Agent has finnished its update cycle (may or may not require multiple inputs from the palyer)
     public bool updated = true;

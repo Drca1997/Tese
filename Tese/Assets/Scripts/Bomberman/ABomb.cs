@@ -5,7 +5,7 @@ using UnityEngine;
 
 //Agent of a Bomberman game scenario that represents a bomb
 //explodes after a given number of time steps, eleminating itself and creating AFire Agents
-public class ABomb : Agent
+public class ABomb : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
