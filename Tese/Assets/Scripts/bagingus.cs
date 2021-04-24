@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class bagingus : MonoBehaviour
@@ -8,6 +6,10 @@ public class bagingus : MonoBehaviour
     public string seed;
     //if a random seed should be used instead of the given one
     public bool useRandomSeed;
+    //number of times the simulation will be run
+    public int numberOfEpisodes = 1;
+    //number of times the simulation has be run
+    private int episodeNumber = 0;
     //reference to the System.Random used in the simulation
     private System.Random prng;
     //reference to the Grid object used in the simulation
@@ -72,6 +74,24 @@ public class bagingus : MonoBehaviour
             //Utils.PrintIntGrid(grid.ConvertAgentGrid());
             VisualizeInterface.VisualizeGrid(grid);
             grid.updated = false;
+        }
+
+        //if the simulation is over, a new one will be setted up if the number of required episodes hasn't been met
+        if (grid.simOver)
+        {
+            episodeNumber++;
+            
+            if (episodeNumber < numberOfEpisodes)
+            {
+                Debug.Log("starting new episode ("+episodeNumber+")" );
+                grid.deleteContainer();
+                //Initializing the grid acording with the ISetup Interface
+                grid = SetupInterface.SetupGrid(prng);
+                UpdateInterface.SetupSimulation(grid, prng);
+
+                //Updating the visuals acording with the IVisualize Interface and the initial state of the grid
+                VisualizeInterface.VisualizeGrid(grid);
+            }
         }
     }
 }

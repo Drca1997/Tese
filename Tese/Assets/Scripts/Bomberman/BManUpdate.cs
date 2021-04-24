@@ -47,6 +47,9 @@ public class BManUpdate : MonoBehaviour, IUpdate
                 
             }
         }
+        gameOver = false;
+        updatingPlayer = false;
+        finishedLoop = true;
     }
 
     //Receives the Grid object and a System.Random as a parameters
@@ -135,6 +138,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
                 if (numberPlayers < minNumberPlayers)
                 {
                     gameOver = true;
+                    grid.simOver = true;
                     Debug.Log("Game Over man");
                 }
                 break;
