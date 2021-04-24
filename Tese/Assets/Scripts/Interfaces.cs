@@ -38,3 +38,8 @@ public interface IVisualize
     //This function is responsible for defining priorities of representation for different agent types 
     void VisualizeGrid(Grid g);
 }
+
+public interface IGenerateMap
+{
+    List<int>[,] GenerateMap(System.Random prng);
+}
