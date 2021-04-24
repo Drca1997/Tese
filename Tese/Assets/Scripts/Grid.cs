@@ -32,6 +32,9 @@ public class Grid
     //Bollean that indicates if the objectGrid may be updated with new information from the agentGrid
     public bool updated;
 
+    //Bollean that indicates if the simulation has finished 
+    public bool simOver;
+
 
     //Receives int (width), int (height), float (cellSize), List<Agent>[,] (agentGrid), string[] (agentTypes)
     //Grid constructor
@@ -45,6 +48,7 @@ public class Grid
         this.agentTypes = agentTypes;
         this.objectGrid = new GameObject[width, height];
         this.updated = false;
+        this.simOver = false;
 
         container = new GameObject("GridContainer");
 
@@ -96,5 +100,14 @@ public class Grid
     public int GetAgentTypeInt(string type)
     {
         return Array.IndexOf(agentTypes, type);
+    }
+
+    public void deleteContainer()
+    {
+        foreach (Transform child in container.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        GameObject.Destroy(container);
     }
 }
