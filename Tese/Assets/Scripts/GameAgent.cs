@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Linq;
 
 //Abstract class used as a basis for all agent types
-public abstract class GameAgent 
+public abstract class GameAgent
 {
     //An identifiying string for the agent type 
     public string typeName;
@@ -26,10 +26,13 @@ public abstract class GameAgent
     public bool exists = true;
 
     //A list of strings that indicate what other types of Agents this Agent cannot coexist in the same grid position with
-    public List<string> colliderTypes = new List<string> {};
+    public List<string> colliderTypes = new List<string> { };
 
-    //we doin this?
+    //Referance to the UpdateInterface
     public IUpdate updateInterface;
+
+    //Referance to the GameAgent that created this GameAgent (may be null)
+    public GameAgent creator = null;
 
     //Receives Grid (g), int (step_stage), and System.Random (prng)
     //The function that each Agent type must implement
@@ -80,7 +83,7 @@ public abstract class GameAgent
         return agentSensors;
     }
 
-    
+
 
     //Receives Vector2Int (newAgentPos), Agent (newAgent), Grid (grid)
     //Returns bool

@@ -47,7 +47,7 @@ public class PBomberman : GameAgentPlayer
     private IEnumerator Logic(Grid g, int step_stage, System.Random prng)
     {
         //Wait for one of the 4 arrow keys or the spacebar to be pressed
-        yield return mono.StartCoroutine(WaitForKeyDown(new KeyCode[] { KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.RightArrow, KeyCode.LeftArrow, KeyCode.Space}));
+        yield return mono.StartCoroutine(WaitForKeyDown(new KeyCode[] { KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.RightArrow, KeyCode.LeftArrow, KeyCode.Space }));
         Vector2Int newPosition = position;
 
         //Calculate the new position/Create a new Abomb Agent acording to the input
@@ -66,7 +66,7 @@ public class PBomberman : GameAgentPlayer
                 newPosition.x = Utils.LoopInt(0, g.width, newPosition.x + 1);
                 break;
             case KeyCode.Space:
-                PutAgentOnGrid(position, new ABomb(new List<int> {3}, position.x, position.y, updateInterface), g);
+                PutAgentOnGrid(position, new ABomb(new List<int> { 3, 2 }, position.x, position.y, this), g);
                 break;
         }
 

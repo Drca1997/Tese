@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class bagingus : MonoBehaviour
@@ -8,6 +6,10 @@ public class bagingus : MonoBehaviour
     public string seed;
     //if a random seed should be used instead of the given one
     public bool useRandomSeed;
+    //number of times the simulation will be run
+    public int numberOfEpisodes = 1;
+    //number of times the simulation has be run
+    private int episodeNumber = 0;
     //reference to the System.Random used in the simulation
     private System.Random prng;
     //reference to the Grid object used in the simulation
@@ -38,19 +40,19 @@ public class bagingus : MonoBehaviour
         grid = SetupInterface.SetupGrid(prng);
 
         //CAMERA SET UP
-        Camera.main.transform.position = new Vector3(grid.width*grid.cellSize/2, grid.height * grid.cellSize / 2, Camera.main.transform.position.z);
-        Camera.main.orthographicSize = grid.height * grid.cellSize/2;
-        Camera.main.orthographicSize = (grid.width * grid.cellSize+20) * Screen.height / Screen.width  *0.5f;
+        Camera.main.transform.position = new Vector3(grid.width * grid.cellSize / 2, grid.height * grid.cellSize / 2, Camera.main.transform.position.z);
+        Camera.main.orthographicSize = grid.height * grid.cellSize / 2;
+        Camera.main.orthographicSize = (grid.width * grid.cellSize + 20) * Screen.height / Screen.width * 0.5f;
         float screenRatio = (float)Screen.width / (float)Screen.height;
         float targetRatio = (grid.width * grid.cellSize) / (grid.height * grid.cellSize);
-        if(screenRatio >= targetRatio)
+        if (screenRatio >= targetRatio)
         {
             Camera.main.orthographicSize = grid.height * grid.cellSize / 2;
         }
         else
         {
             float differenceInSize = targetRatio / screenRatio;
-            Camera.main.orthographicSize = grid.height * grid.cellSize / 2*differenceInSize;
+            Camera.main.orthographicSize = grid.height * grid.cellSize / 2 * differenceInSize;
         }
         //CAMERA SET UP
 
@@ -58,7 +60,7 @@ public class bagingus : MonoBehaviour
 
         //Updating the visuals acording with the IVisualize Interface and the initial state of the grid
         VisualizeInterface.VisualizeGrid(grid);
-        
+
     }
 
     private void Update()
@@ -72,6 +74,24 @@ public class bagingus : MonoBehaviour
             //Utils.PrintIntGrid(grid.ConvertAgentGrid());
             VisualizeInterface.VisualizeGrid(grid);
             grid.updated = false;
+        }
+
+        //if the simulation is over, a new one will be setted up if the number of required episodes hasn't been met
+        if (grid.simOver)
+        {
+            episodeNumber++;
+
+            if (episodeNumber < numberOfEpisodes)
+            {
+                Debug.Log("starting new episode (" + episodeNumber + ")");
+                grid.deleteContainer();
+                //Initializing the grid acording with the ISetup Interface
+                grid = SetupInterface.SetupGrid(prng);
+                UpdateInterface.SetupSimulation(grid, prng);
+
+                //Updating the visuals acording with the IVisualize Interface and the initial state of the grid
+                VisualizeInterface.VisualizeGrid(grid);
+            }
         }
     }
 }

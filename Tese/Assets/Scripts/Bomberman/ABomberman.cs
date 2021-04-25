@@ -16,7 +16,7 @@ public class ABomberman : GameAgent
         this.colliderTypes.Add("Malaquias_Bomberman");
 
         //timer until next bomb and bomb cooldown
-        this.states = new List<int> {0,6};
+        this.states = new List<int> { 0, 6 };
         this.position = new Vector2Int(x, y);
         this.typeName = "Agent_Bomberman";
         this.updateInterface = updateInterface;
@@ -51,7 +51,7 @@ public class ABomberman : GameAgent
                 else if (a.position.x < position.y) possible_move[2] = 1;
                 else if (a.position.y > position.y) possible_move[3] = 1;
             }
-            if (string.Compare(a.typeName, "Agent_Weak_Wall") == 0 || string.Compare(a.typeName, "Player_Bomberman") == 0 )
+            if (string.Compare(a.typeName, "Agent_Weak_Wall") == 0 || string.Compare(a.typeName, "Player_Bomberman") == 0)
             {
                 bomb = true;
             }
@@ -69,9 +69,9 @@ public class ABomberman : GameAgent
             MoveAgent(newPosition, this, g);
             return;
         }
-        if (bomb && states[0]==0)
+        if (bomb && states[0] == 0)
         {
-            PutAgentOnGrid(position, new ABomb(new List<int> { 3 }, position.x, position.y, updateInterface), g);
+            PutAgentOnGrid(position, new ABomb(new List<int> { 3, 2 }, position.x, position.y, this), g);
             states[0] = states[1];
             return;
         }
@@ -86,8 +86,8 @@ public class ABomberman : GameAgent
         {
             Vector2Int newPosition = Utils.GetRealPos(position, possibleNewPositions[prng.Next(0, possibleNewPositions.Count)], g);
             MoveAgent(newPosition, this, g);
-        }  
-          
+        }
+
     }
 
     public override void Epitaph(Grid g, int step_stage, System.Random prng)

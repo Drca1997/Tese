@@ -9,13 +9,14 @@ public class ABomb : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
-    public ABomb(List<int> states, int x, int y, IUpdate updateInterface)
+    public ABomb(List<int> states, int x, int y, GameAgent creator)
     {
         //states[0] - number of updates until explosion
+        //states[1] - size of explosion
         this.states = states;
         this.position = new Vector2Int(x, y);
         this.typeName = "Agent_Bomb";
-        this.updateInterface = updateInterface;
+        this.creator = creator;
 
         //This Agent's update rules ar not influenced by exterior inputs
         this.relative_sensors = new List<Vector2Int> { };
@@ -44,10 +45,10 @@ public class ABomb : GameAgent
     {
 
         //create new AFire Agents in the positions contained in the cross pattern returned by Utils.PatternCross()
-        foreach (Vector2Int pos in Utils.PatternCross(2,position,g,new List<string> { "Agent_Strong_Wall" }, new List<string> { "Agent_Weak_Wall" }))
+        foreach (Vector2Int pos in Utils.PatternCross(states[1], position, g, new List<string> { "Agent_Strong_Wall" }, new List<string> { "Agent_Weak_Wall" }))
         {
             Vector2Int realPos = Utils.GetRealPos(position, pos, g);
-            PutAgentOnGrid(realPos, new AFire(new List<int> { 0 }, realPos.x, realPos.y), g);
+            PutAgentOnGrid(realPos, new AFire(new List<int> { 0 }, realPos.x, realPos.y, this), g);
         }
     }
 }

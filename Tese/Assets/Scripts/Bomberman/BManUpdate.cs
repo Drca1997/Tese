@@ -145,6 +145,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
                         
                         OnMLAgentWin?.Invoke(this, EventArgs.Empty);
                     }
+                    grid.simOver = true;
                 }
                 break;
             default:

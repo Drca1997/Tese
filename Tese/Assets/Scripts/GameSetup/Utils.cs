@@ -648,9 +648,10 @@ public static class Utils
     }
 
 
-    //Receives a int (size), Vector2Int (direction)
+    //Receives a int (size), Vector2Int (direction), int (step)
     //Returns a a list of relative positions on a straight line acording with the given direction (ex.: (1,0) for right and (-1,1) for left and up) and size
-    public static List<Vector2Int> DirectionalLine(int size, Vector2Int direction)
+    //step 
+    public static List<Vector2Int> DirectionalLine(int size, Vector2Int direction, int step)
     {
         List<Vector2Int> pattern = new List<Vector2Int>();
         for (int i = 0; i < size; i++)

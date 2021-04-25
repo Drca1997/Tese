@@ -5,7 +5,7 @@ using UnityEngine;
 
 //Contains both the agentGrid and objectGrid
 //At each moment represents the current time step of the simulation 
-public class Grid 
+public class Grid
 {
     //Width of both agentGrid and objectGrid
     public int width;
@@ -32,11 +32,14 @@ public class Grid
     //Bollean that indicates if the objectGrid may be updated with new information from the agentGrid
     public bool updated;
 
+    //Bollean that indicates if the simulation has finished 
+    public bool simOver;
+
 
     //Receives int (width), int (height), float (cellSize), List<Agent>[,] (agentGrid), string[] (agentTypes)
     //Grid constructor
     //Initiates the objectGrid
-    public Grid (int width, int height, float cellSize, List<GameAgent>[,] agentGrid, string[] agentTypes)
+    public Grid(int width, int height, float cellSize, List<GameAgent>[,] agentGrid, string[] agentTypes)
     {
         this.width = width;
         this.height = height;
@@ -45,6 +48,7 @@ public class Grid
         this.agentTypes = agentTypes;
         this.objectGrid = new GameObject[width, height];
         this.updated = false;
+        this.simOver = false;
 
         container = new GameObject("GridContainer");
 
@@ -73,7 +77,7 @@ public class Grid
     //Maps and returns the x and y on the grid equivalent to the given game world position
     public Vector2 GetXY(Vector3 worldPosition)
     {
-        return new Vector2(Mathf.FloorToInt((worldPosition- container.transform.position).x/cellSize), Mathf.FloorToInt((worldPosition - container.transform.position).y / cellSize));
+        return new Vector2(Mathf.FloorToInt((worldPosition - container.transform.position).x / cellSize), Mathf.FloorToInt((worldPosition - container.transform.position).y / cellSize));
     }
 
     public List<int>[,] ConvertAgentGrid()
@@ -96,5 +100,14 @@ public class Grid
     public int GetAgentTypeInt(string type)
     {
         return Array.IndexOf(agentTypes, type);
+    }
+
+    public void deleteContainer()
+    {
+        foreach (Transform child in container.transform)
+        {
+            GameObject.Destroy(child.gameObject);
+        }
+        GameObject.Destroy(container);
     }
 }
