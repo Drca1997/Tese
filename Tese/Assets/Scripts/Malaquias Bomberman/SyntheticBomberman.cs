@@ -5,11 +5,11 @@ using UnityEngine;
 
 public abstract class SyntheticBombermanPlayer : GameAgent
 {
-    //se plantou uma bomba e esta ainda não explodiu
+    //se plantou uma bomba e esta ainda nï¿½o explodiu
     private bool plantedBomb;
     private ABomb bomb;
 
-    //representação do Grid que os jogadores sintéticos usam
+    //representaï¿½ï¿½o do Grid que os jogadores sintï¿½ticos usam
     private int[,] gridArray;
 
     public enum Tile
@@ -48,10 +48,10 @@ public abstract class SyntheticBombermanPlayer : GameAgent
     {
         //podes usar g.agentGrid para obter a matriz de List<Agent>
         //g.ConvertAgentGrid() devolve-te uma List<int>[,] correspondente
-        //tem em conta que algumas das listas podem estar vazias ou ter multiplos elementos, visto que há sitios na grelha sem ou com multiplos agentes
-        //Os inteiros correspondem aos indices que os tipos de agente ocupam em g.agentTypes - podes modificá-los na interface de setup, na criação da nova Grid
+        //tem em conta que algumas das listas podem estar vazias ou ter multiplos elementos, visto que hï¿½ sitios na grelha sem ou com multiplos agentes
+        //Os inteiros correspondem aos indices que os tipos de agente ocupam em g.agentTypes - podes modificï¿½-los na interface de setup, na criaï¿½ï¿½o da nova Grid
 
-        //Para mover o agente e criar uma bomba podes consultar o meu codigo em PBomberman.cs na função Logic
+        //Para mover o agente e criar uma bomba podes consultar o meu codigo em PBomberman.cs na funï¿½ï¿½o Logic
         Debug.Log("UPDATING AGENT in " + position.x + ", " + position.y);
         HasBomb();
         gridArray = ConvertGrid(g);
@@ -207,7 +207,7 @@ public abstract class SyntheticBombermanPlayer : GameAgent
                 MoveAgent(newPosition, this, g);
                 break;
             case 4:
-                bomb = new ABomb(new List<int> { 3 }, position.x, position.y, updateInterface);
+                bomb = new ABomb(new List<int> { 3, 2 }, position.x, position.y, this);
                 PutAgentOnGrid(position, bomb, g);
                 break;
         }
@@ -215,11 +215,11 @@ public abstract class SyntheticBombermanPlayer : GameAgent
 
     }
 
-    //usa para algo que querias que o agente faça ao ser removido da grid
-    //de momento meti codigo para o agente avisar a interface de update que "morreu", para se saber quando a simulação deve ser parada
+    //usa para algo que querias que o agente faï¿½a ao ser removido da grid
+    //de momento meti codigo para o agente avisar a interface de update que "morreu", para se saber quando a simulaï¿½ï¿½o deve ser parada
     public override void Epitaph(Grid g, int step_stage, System.Random prng)
     {
-        //na função AgentCall a interface vai lidar com decrementar a sua variável que indica o numero de jogadores
+        //na funï¿½ï¿½o AgentCall a interface vai lidar com decrementar a sua variï¿½vel que indica o numero de jogadores
         updateInterface.AgentCall(this, g, prng);
     }
 

@@ -28,8 +28,11 @@ public abstract class GameAgent
     //A list of strings that indicate what other types of Agents this Agent cannot coexist in the same grid position with
     public List<string> colliderTypes = new List<string> {};
 
-    //we doin this?
+    //Referance to the UpdateInterface
     public IUpdate updateInterface;
+
+    //Referance to the GameAgent that created this GameAgent (may be null)
+    public GameAgent creator = null;
 
     //Receives Grid (g), int (step_stage), and System.Random (prng)
     //The function that each Agent type must implement
