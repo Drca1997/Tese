@@ -197,7 +197,7 @@ public abstract class SyntheticBombermanPlayer : GameAgent
                 MoveAgent(newPosition, this, g);
                 break;
             case 4:
-                PutAgentOnGrid(position, new ABomb(new List<int> { 3 }, position.x, position.y, updateInterface), g);
+                PutAgentOnGrid(position, new ABomb(new List<int> { 3, 2 }, position.x, position.y, this), g);
                 break;
         }
 

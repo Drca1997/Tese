@@ -66,7 +66,7 @@ public class PBomberman : GameAgentPlayer
                 newPosition.x = Utils.LoopInt(0, g.width, newPosition.x + 1);
                 break;
             case KeyCode.Space:
-                PutAgentOnGrid(position, new ABomb(new List<int> {3}, position.x, position.y, updateInterface), g);
+                PutAgentOnGrid(position, new ABomb(new List<int> {3,2}, position.x, position.y, this), g);
                 break;
         }
 

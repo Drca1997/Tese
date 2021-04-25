@@ -9,12 +9,13 @@ public class AFire : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
-    public AFire(List<int> states, int x, int y)
+    public AFire(List<int> states, int x, int y, GameAgent creator)
     {
         //states[0] - number of updates until it expires
         this.states = states;
         this.position = new Vector2Int(x, y);
         this.typeName = "Agent_Fire";
+        this.creator = creator;
 
         //the update rules of this Agent are only concerned with the other Agents on its position
         this.relative_sensors = new List<Vector2Int> { new Vector2Int(0, 0) };
@@ -36,6 +37,10 @@ public class AFire : GameAgent
             {
                 if (string.Compare(a.typeName, type) == 0)
                 {
+                    //DIOGO - podes aqui verificar que tipo de agente foi destruido 
+                    //Este agente AFire tem uma componente creator - a bomba (ABomb) que o criou
+                    //a ABomb tambem tem uma componente creator que referencia o jogador que a colocou - ou seja, creator.creator
+                    //podes a partir disso adicionar-lhe score se for um sintético 
                     EliminateAgent(a, g, step_stage, prng);
                 }
             }

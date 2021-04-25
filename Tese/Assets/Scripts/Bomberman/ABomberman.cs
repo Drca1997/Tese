@@ -71,7 +71,7 @@ public class ABomberman : GameAgent
         }
         if (bomb && states[0]==0)
         {
-            PutAgentOnGrid(position, new ABomb(new List<int> { 3 }, position.x, position.y, updateInterface), g);
+            PutAgentOnGrid(position, new ABomb(new List<int> { 3,2 }, position.x, position.y, this), g);
             states[0] = states[1];
             return;
         }
