@@ -7,9 +7,8 @@ using UnityEngine;
 //a Bomberman Player Agent
 public class BManSetupM : MonoBehaviour, ISetup
 {
-    
 
-    
+
     public Grid SetupGrid(System.Random prng)
     {
         //0-nada
@@ -21,7 +20,7 @@ public class BManSetupM : MonoBehaviour, ISetup
 
         int[,] setup_grid = {
                { 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 } ,
-               { 2 , 5 , 0 , 0 , 1 , 0 , 1 , 1 , 1 , 0 , 0 , 1 , 0 , 5 , 2 } ,
+               { 2 , 6 , 0 , 0 , 1 , 0 , 1 , 1 , 1 , 0 , 0 , 1 , 0 , 5 , 2 } ,
                { 2 , 0 , 2 , 1 , 2 , 1 , 2 , 0 , 2 , 1 , 2 , 1 , 2 , 0 , 2 } ,
                { 2 , 1 , 1 , 0 , 1 , 1 , 0 , 0 , 0 , 1 , 1 , 0 , 1 , 0 , 2 } ,
                { 2 , 1 , 2 , 1 , 2 , 1 , 2 , 1 , 2 , 0 , 2 , 1 , 2 , 0 , 2 } ,
@@ -58,6 +57,10 @@ public class BManSetupM : MonoBehaviour, ISetup
                     case 5:
                         agentGrid[x, y].Add(new RandomSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
                         break;
+                    case 6:
+                        agentGrid[x, y].Add(new MLSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>(), gameObject.GetComponent<MLAgent>()));
+                        break;
+
                 }
             }
         }

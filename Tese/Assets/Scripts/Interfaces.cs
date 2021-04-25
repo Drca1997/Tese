@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,6 +27,8 @@ public interface IUpdate
     void UpdateGrid(Grid g, System.Random prng);
 
     void AgentCall(GameAgent agent, Grid grid, System.Random prng);
+
+    public event EventHandler OnMLAgentWin;
 }
 
 //Interface related with updating the objectGrid component of the Grid object acording with the state of the agentGrid component

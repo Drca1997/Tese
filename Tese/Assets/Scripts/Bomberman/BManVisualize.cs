@@ -39,7 +39,15 @@ public class BManVisualize : MonoBehaviour, IVisualize
                     grid.objectGrid[i, j].name = a.typeName;
                     switch (a.typeName) {
                         case "Malaquias_Bomberman":
-                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
+                            if (a.GetType() == typeof(MLSyntheticPlayer))
+                            {
+                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
+                            }
+                            else if (a.GetType() == typeof(RandomSyntheticPlayer))
+                            {
+                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255/225f, 20/225f, 147/255f);
+                            }
+                            
                             break;
                         case "Player_Bomberman":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.blue;

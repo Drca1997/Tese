@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,6 +31,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
     //A reference to the index of the current Agent on randList is stored
     private int index;
 
+    public event EventHandler OnMLAgentWin;
 
     public void SetupSimulation(Grid grid, System.Random prng)
     {
@@ -113,6 +115,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
                                 return;
                             }
                         }
+                        
                     }
                     index++;
                 }
@@ -136,6 +139,12 @@ public class BManUpdate : MonoBehaviour, IUpdate
                 {
                     gameOver = true;
                     Debug.Log("Game Over man");
+                    if (agent.GetType() == typeof(MLSyntheticPlayer))
+                    {
+                       
+                        
+                        OnMLAgentWin?.Invoke(this, EventArgs.Empty);
+                    }
                 }
                 break;
             default:
