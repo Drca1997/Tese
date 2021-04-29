@@ -241,7 +241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cdae67c673241c4f8362fdc70016118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  debug: 0
   minNumberPlayers: 2
 --- !u!114 &260572032
 MonoBehaviour:
@@ -332,6 +332,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 
   useRandomSeed: 1
+  numberOfEpisodes: 1
 --- !u!4 &260572036
 Transform:
   m_ObjectHideFlags: 0
@@ -369,8 +370,8 @@ MonoBehaviour:
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
-  m_InferenceDevice: 1
-  m_BehaviorType: 0
+  m_InferenceDevice: 0
+  m_BehaviorType: 1
   m_BehaviorName: MLBomberman
   TeamId: 0
   m_UseChildSensors: 1

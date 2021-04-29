@@ -138,13 +138,15 @@ public class BManUpdate : MonoBehaviour, IUpdate
                 if (numberPlayers < minNumberPlayers)
                 {
                     gameOver = true;
-                    Debug.Log("Game Over man");
-                    if (agent.GetType() == typeof(MLSyntheticPlayer))
+                    foreach (GameAgent a in Utils.PutAgentsInList(grid.agentGrid))
                     {
-                       
-                        
-                        OnMLAgentWin?.Invoke(this, EventArgs.Empty);
+                        if (a.GetType() == typeof(MLSyntheticPlayer))
+                        {
+                            OnMLAgentWin?.Invoke(this, EventArgs.Empty);
+                        }
                     }
+
+                    Debug.Log("GAME OVER");
                     grid.simOver = true;
                 }
                 break;

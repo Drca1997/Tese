@@ -4,6 +4,7 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
+using System;
 
 public class MLAgent : Agent
 {
@@ -14,10 +15,16 @@ public class MLAgent : Agent
         FireNExplodable, FireNPlayer, FireNPlayerEnemy, FireNAIEnemy, FireNBomb,
         FireNBombNPlayer, FireNBombNPlayerEnemy, FireNBombNAIEnemy
     }
+    public enum Action
+    {
+        MoveUp,
+        MoveDown,
+        MoveLeft,
+        MoveRight,
+        PlantBomb,
+        DoNothing
+    }
 
-    //private int [,] gameWorld;
-
-    //public int [,] GameWorld { get => gameWorld; set => gameWorld = value; }
 
     private int x;
     private int y;
@@ -25,12 +32,16 @@ public class MLAgent : Agent
     private KeyCode input = KeyCode.None;
     private int[,] grid;
     private MLSyntheticPlayer mlPlayer;
+    private bool start = false;
+
+    public event EventHandler OnInputReceived; 
 
     public int X { get => x; set => x = value; }
     public int Y { get => y; set => y = value; }
     public int RawAction { get => rawAction; }
     public int[,] Grid { get => grid; set => grid = value; }
     public MLSyntheticPlayer MlPlayer { get => mlPlayer; set => mlPlayer = value; }
+    public bool Start { get => start;}
 
     /**
     * Função chamada quando um novo episódio de treino começa
@@ -60,9 +71,9 @@ public class MLAgent : Agent
      * */
     public override void OnActionReceived(ActionBuffers vectorAction)
     {
-        base.OnActionReceived(vectorAction);
+        //Debug.Log("Recebida Açao: " + vectorAction.DiscreteActions[0]);
         rawAction = vectorAction.DiscreteActions[0];
-
+        OnInputReceived?.Invoke(this, EventArgs.Empty);
     }
 
     /**
@@ -73,37 +84,16 @@ public class MLAgent : Agent
         actionMask.WriteMask(0, mlPlayer.GetImpossibleActions());
     }
 
-
+    
     public override void Heuristic(in ActionBuffers actionsOut)
     {
-        base.Heuristic(actionsOut);
+        
         ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
-        if (Input.GetKeyDown(KeyCode.UpArrow)){
-            discreteActions[0] = 0;
-            Debug.Log("UP PRESSED");
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow)){
-            discreteActions[0] = 1;
-            Debug.Log("DOWN PRESSED");
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow)){
-            discreteActions[0] = 2;
-        }
-        else if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            discreteActions[0] = 3;
-        }
-        else if (Input.GetKeyDown(KeyCode.B))
-        {
-            discreteActions[0] = 4;
-        }
-        else if (Input.GetKeyDown(KeyCode.N))
-        {
-            discreteActions[0] = 5;
-        }
-
+        discreteActions[0] = mlPlayer.HeuristicAction;
     }
 
+
+    
 
     //Bernardo's function of GameAgentPlayer
     public IEnumerator WaitForKeyDown(KeyCode[] codes)

@@ -16,7 +16,9 @@ public class BManSetupM : MonoBehaviour, ISetup
         //2-strong
         //3-p
         //4-b
-        //5-m
+        //5-random
+        //6-ml
+        //7-idle
 
         int[,] setup_grid = {
                { 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 } ,
@@ -30,7 +32,7 @@ public class BManSetupM : MonoBehaviour, ISetup
                { 2 , 1 , 2 , 0 , 2 , 0 , 2 , 1 , 2 , 1 , 2 , 0 , 2 , 1 , 2 } ,
                { 2 , 0 , 1 , 1 , 1 , 1 , 1 , 0 , 1 , 1 , 0 , 1 , 1 , 0 , 2 } ,
                { 2 , 0 , 2 , 0 , 2 , 1 , 2 , 0 , 2 , 1 , 2 , 1 , 2 , 0 , 2 } ,
-               { 2 , 5 , 0 , 0 , 1 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 0 , 5 , 2 } ,
+               { 2 , 7 , 0 , 0 , 1 , 1 , 0 , 1 , 1 , 1 , 0 , 1 , 0 , 5 , 2 } ,
                { 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 , 2 } ,
              };
 
@@ -59,6 +61,9 @@ public class BManSetupM : MonoBehaviour, ISetup
                         break;
                     case 6:
                         agentGrid[x, y].Add(new MLSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>(), gameObject.GetComponent<MLAgent>()));
+                        break;
+                    case 7:
+                        agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
                         break;
 
                 }

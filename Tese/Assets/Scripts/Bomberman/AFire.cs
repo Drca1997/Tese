@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,6 +42,22 @@ public class AFire : GameAgent
                     //Este agente AFire tem uma componente creator - a bomba (ABomb) que o criou
                     //a ABomb tambem tem uma componente creator que referencia o jogador que a colocou - ou seja, creator.creator
                     //podes a partir disso adicionar-lhe score se for um sintético 
+                    if (creator.creator.GetType() == typeof(MLSyntheticPlayer))
+                    {
+                        MLSyntheticPlayer mlPlayer = (MLSyntheticPlayer)creator.creator;
+                        Debug.Log(a.GetType());
+                        if (a.GetType() == typeof(AWeakWall))
+                        {
+
+                            mlPlayer.RewardExplodeBlock();
+                        }
+                        else if (a.typeName.Contains("Bomberman"))
+                        {
+                            
+                            mlPlayer.RewardKillEnemy();
+                        }
+                    }
+
                     EliminateAgent(a, g, step_stage, prng);
                 }
             }

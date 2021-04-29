@@ -199,6 +199,7 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
                 newPosition.y = Utils.LoopInt(0, g.height, newPosition.y + 1);
                 //Move the Agent
                 MoveAgent(newPosition, this, g);
+                
                 break;
             case 1:
                 newPosition.y = Utils.LoopInt(0, g.height, newPosition.y - 1);

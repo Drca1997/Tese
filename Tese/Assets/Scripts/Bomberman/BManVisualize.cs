@@ -47,6 +47,10 @@ public class BManVisualize : MonoBehaviour, IVisualize
                             {
                                 grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255/225f, 20/225f, 147/255f);
                             }
+                            else if (a.GetType() == typeof(IdleSyntheticPlayer))
+                            {
+                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(128 / 225f, 0 / 225f, 128 / 255f);
+                            }
                             
                             break;
                         case "Player_Bomberman":

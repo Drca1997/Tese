@@ -118,14 +118,17 @@ public static class SyntheticPlayerUtils
         {
             return false;
         }
+        Debug.Log("Norte e Sul seguros");
         if (!IsEastTilesSafe(grid, tile))
         {
             return false;
         }
+        Debug.Log("Este seguro");
         if (!IsWestTilesSafe(grid, tile))
         {
             return false;
         }
+        Debug.Log("Oeste Seguro");
         return true;
     }
 
@@ -185,7 +188,8 @@ public static class SyntheticPlayerUtils
 
     private static bool IsEastTilesSafe(int[,] grid, int[] tile)
     {
-
+        Debug.Log(tile[0] + 1);
+        Debug.Log(grid[tile[0] + 1, tile[1]]);
         if (tile[0] + 1 < grid.GetLength(0) && bombTiles.Contains(grid[tile[0] + 1, tile[1]])) // se bomba em (x+1, y)
         {
             return false;

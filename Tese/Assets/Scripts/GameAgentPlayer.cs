@@ -17,6 +17,7 @@ public abstract class GameAgentPlayer : GameAgent
     //If the player is pressing one of them, the input component will be updated and the function will finish
     public IEnumerator WaitForKeyDown(KeyCode[] codes)
     {
+        
         bool pressed = false;
         while (!pressed)
         {
