@@ -43,17 +43,17 @@ public static class Utils
         return null;
     }
 
-    //Receives Vector2Int (agentPos), Vector2Int (relativePos), and Grid (grid)
+    //Receives Vector2Int (agentPos), Vector2Int (relativePos), and int (width) and int (height)
     //Returns a Vector2Int
     //The grid loops horizontally and vertically such as the cells at one extreme have the cells at the other extreme as neighbors
     //This function receives a relative position to the Agent and returns the real position on the grid 
-    public static Vector2Int GetRealPos(Vector2Int agentPos, Vector2Int relativePos, Grid grid)
+    public static Vector2Int GetRealPos(Vector2Int agentPos, Vector2Int relativePos, int width, int height)
     {
         Vector2Int realPos = agentPos + relativePos;
 
         //Constraining the position on both axis
-        realPos.x = Utils.LoopInt(0, grid.width, realPos.x);
-        realPos.y = Utils.LoopInt(0, grid.height, realPos.y);
+        realPos.x = Utils.LoopInt(0, width, realPos.x);
+        realPos.y = Utils.LoopInt(0, height, realPos.y);
 
         return realPos;
     }
@@ -198,13 +198,110 @@ public static class Utils
     }
 
 
-    //public static List<Vector2Int> PatternBox(int width, int height, bool fill, float fillPercent)
-    //{
-    //    List<Vector2Int> pattern = new List<Vector2Int>();
+    public static void PutOnGrid(List<int>[,] grid, List<Vector2Int> pattern, int filler)
+    {
+        foreach(Vector2Int pos in pattern)
+        {
+            Vector2Int realPos = GetRealPos(pos, new Vector2Int(0, 0), grid.GetLength(0), grid.GetLength(1));
+            grid[realPos.x, realPos.y].Add(filler);
+        }
+    }
+
+    public static void PutOnGrid(int[,] grid, List<Vector2Int> pattern, int filler)
+    {
+        foreach (Vector2Int pos in pattern)
+        {
+            Vector2Int realPos = GetRealPos(pos, new Vector2Int(0, 0), grid.GetLength(0), grid.GetLength(1));
+            grid[realPos.x, realPos.y] = filler;
+        }
+    }
+
+    public static void PutOnGrid(List<int>[,] grid, int[,] matrix)
+    {
+        for(int i = 0; i < matrix.GetLength(0); i++)
+        {
+            for (int j = 0; j < matrix.GetLength(1); j++)
+            {
+                if (matrix[i, j] != 0)
+                {
+                    grid[i, j].Add(matrix[i, j]);
+                }
+            }
+        }
+    }
 
 
-    //    return pattern;e
-    //}
+    //Receives int (width) and int (height)
+    //Returns a list of relative positions on a pattern of the frame of a box with the indicated dimensions
+    public static List<Vector2Int> PatternBox(int width, int height)
+    {
+        List<Vector2Int> pattern = new List<Vector2Int>();
+        List<Vector2Int> sideW1 = PatternDirectionalLine(width, new Vector2Int(1, 0));
+        List<Vector2Int> sideW2 = OffsetPattern(new List<Vector2Int>(sideW1), new Vector2Int(0, height-1));
+        List<Vector2Int> sideH1 = PatternDirectionalLine(height, new Vector2Int(0, 1));
+        List<Vector2Int> sideH2 = OffsetPattern(new List<Vector2Int>(sideH1), new Vector2Int(width-1, 0));
+        pattern = MergePatterns(MergePatterns(MergePatterns(sideW1, sideW2), sideH1), sideH2);
+
+        return pattern;
+    }
+
+    //Receives int (width) and int (height)
+    //Returns a list of relative positions on a pattern of a filled box with the indicated dimensions
+    public static List<Vector2Int> PatternFilledBox(int width, int height)
+    {
+        List<Vector2Int> pattern = new List<Vector2Int>();
+        for(int i = 0; i < width; i++)
+        {
+            for(int j = 0; j< height; j++)
+            {
+                pattern.Add(new Vector2Int(i, j));
+            }
+        }
+
+        return pattern;
+    }
+
+    //Variant of the previous function
+    //Receives int (width) and int (height), int (stepSkipWidth, int (stepFillWidth), int (stepSkipHeight) and int (stepFillHeight)
+    //Returns a list of relative positions on a pattern of a filled box with the indicated dimensions
+    //The stepSkip and stepFill are used for cases when we don't want a continuously filled box
+    //the pattern is repeated, containing stepFill poisitions and skipping the next stepSkip positions
+    public static List<Vector2Int> PatternFilledBox(int width, int height, int stepSkipWidth, int stepFillWidth, int stepSkipHeight, int stepFillHeight)
+    {
+        List<Vector2Int> pattern = new List<Vector2Int>();
+
+        bool filling = true;
+        int filled = 0;
+        int skipped = 0;
+
+        for (int i = 0; i < height; i++)
+        {
+            if (filling || stepSkipHeight == 0)
+            {
+                //Directional Line
+                List<Vector2Int> newLine = OffsetPattern(PatternDirectionalDiscontinuousLine(width, new Vector2Int(1, 0), stepSkipWidth, stepFillWidth), new Vector2Int(0, i));
+                pattern = MergePatterns(pattern, newLine);
+
+                filled++;
+                if (filled >= stepFillHeight)
+                {
+                    filling = false;
+                    skipped = 0;
+                }
+            }
+            else
+            {
+                skipped++;
+                if (skipped >= stepSkipHeight)
+                {
+                    filling = true;
+                    filled = 0;
+                }
+            }
+        }
+
+        return pattern;
+    }
 
     //Receives int (size)
     //Returns a list of relative positions on a cross pattern in which each "hand" extends size units
@@ -239,7 +336,7 @@ public static class Utils
         for (int i = 0; i < 4; i++)
         {
             //run along the hand until a collider is found, or the hand is at max size
-            List<Vector2Int> hand = DirectionalLine(size, new Vector2Int(xDirection[i], yDirection[i]), center + new Vector2Int(xDirection[i], yDirection[i]), grid, colliderTypes, stoppingTypes);
+            List<Vector2Int> hand = PatternDirectionalLine(size, new Vector2Int(xDirection[i], yDirection[i]), center + new Vector2Int(xDirection[i], yDirection[i]), grid, colliderTypes, stoppingTypes);
             hand = OffsetPattern(hand, new Vector2Int(xDirection[i], yDirection[i]));
             pattern = MergePatterns(hand, pattern);
         }
@@ -247,10 +344,9 @@ public static class Utils
     }
 
 
-    //Receives a int (size), Vector2Int (direction), int (step)
+    //Receives a int (size), Vector2Int (direction)
     //Returns a a list of relative positions on a straight line acording with the given direction (ex.: (1,0) for right and (-1,1) for left and up) and size
-    //step 
-    public static List<Vector2Int> DirectionalLine(int size, Vector2Int direction, int step)
+    public static List<Vector2Int> PatternDirectionalLine(int size, Vector2Int direction)
     {
         List<Vector2Int> pattern = new List<Vector2Int>();
         for (int i = 0; i < size; i++)
@@ -265,13 +361,13 @@ public static class Utils
     //It will also return a list of relative positions on a line pattern
     //However, the line will be stopped short if an Agent contained in colliderTypes is in the way 
     //If the Agent is contained in stopingTypes, on the other hand, the position will sitll be added to the pattern
-    public static List<Vector2Int> DirectionalLine(int size, Vector2Int direction, Vector2Int center, Grid grid, List<string> colliderTypes, List<string> stoppingTypes)
+    public static List<Vector2Int> PatternDirectionalLine(int size, Vector2Int direction, Vector2Int center, Grid grid, List<string> colliderTypes, List<string> stoppingTypes)
     {
         List<Vector2Int> pattern = new List<Vector2Int>();
         for(int i = 0; i < size; i++)
         {
             Vector2Int newPos = direction * i;
-            Vector2Int realPos = GetRealPos(center, newPos, grid);
+            Vector2Int realPos = GetRealPos(center, newPos, grid.width, grid.height);
             //If this checks, then don't add more positions
             if (CollisionCheck(realPos, grid, colliderTypes))
             {
@@ -289,6 +385,96 @@ public static class Utils
         return pattern;
     }
 
+
+    //Receives a int (size), Vector2Int (direction), int (stepSkip), int (stepFill)
+    //Returns a a list of relative positions on a straight line acording with the given direction (ex.: (1,0) for right and (-1,1) for left and up) and size
+    //stepSkip and stepFill are used for when we don't want a continous line
+    //stepSkip and stepFill characterize the resulting repeating pattern - how many positions are skipped and how many are included before the next skip
+    //The pattern will start by including the first stepFill positions and then skip the next stepSkip positions, repeating until size is met
+    public static List<Vector2Int> PatternDirectionalDiscontinuousLine(int size, Vector2Int direction, int stepSkip, int stepFill)
+    {
+        bool filling = true;
+        int filled = 0;
+        int skipped = 0;
+        List<Vector2Int> pattern = new List<Vector2Int>();
+        for (int i = 0; i < size; i++)
+        {
+            if (filling || stepSkip == 0)
+            {
+                pattern.Add(direction * i);
+                filled++;
+                if (filled >= stepFill) {
+                    filling = false;
+                    skipped = 0;
+                }
+            }
+            else
+            {
+                skipped++;
+                if(skipped >= stepSkip)
+                {
+                    filling = true;
+                    filled = 0;
+                }
+            }
+        }
+        return pattern;
+    }
+
+
+    //Variant of the previous function
+    //Receives a int (size), Vector2Int (direction), int (stepSkip), int (stepFill), Vector2Int (center), Grid (grid), List<string> (colliderTypes), List<string> (stoppingTypes)
+    //It will also return a list of relative positions on a line pattern
+    //However, the line will be stopped short if an Agent contained in colliderTypes is in the way 
+    //If the Agent is contained in stopingTypes, on the other hand, the position will sitll be added to the pattern
+    public static List<Vector2Int> PatternDirectionalDiscontinuousLine(int size, Vector2Int direction, int stepSkip, int stepFill, Vector2Int center, Grid grid, List<string> colliderTypes, List<string> stoppingTypes)
+    {
+        bool filling = true;
+        int filled = 0;
+        int skipped = 0;
+        List<Vector2Int> pattern = new List<Vector2Int>();
+        for (int i = 0; i < size; i++)
+        {
+            Vector2Int newPos = direction * i;
+            Vector2Int realPos = GetRealPos(center, newPos, grid.width, grid.height);
+            if (filling || stepSkip == 0)
+            {
+                //If this checks, then don't add more positions
+                if (CollisionCheck(realPos, grid, colliderTypes))
+                {
+                    break;
+                }
+                //If this checks, then add this position, but no more
+                else if (CollisionCheck(realPos, grid, stoppingTypes))
+                {
+                    pattern.Add(direction * i);
+                    break;
+                }
+                //If none check, add this position and check the next
+                pattern.Add(direction * i);
+
+                filled++;
+                if (filled >= stepFill)
+                {
+                    filling = false;
+                    skipped = 0;
+                }
+            }
+            else
+            {
+                if (CollisionCheck(realPos, grid, colliderTypes) || CollisionCheck(realPos, grid, stoppingTypes)) { break; }
+                skipped++;
+                if (skipped >= stepSkip)
+                {
+                    filling = true;
+                    filled = 0;
+                }
+            }
+        }
+        return pattern;
+    }
+
+
     //Receives List<Vector2Int> (pattern) and Vector2Int (offset)
     //Returns a List<Vector2Int> - the given pattern offseted by offset
     public static List<Vector2Int> OffsetPattern(List<Vector2Int> pattern, Vector2Int offset)
@@ -301,9 +487,10 @@ public static class Utils
         return offseted_pattern;
     }
 
+
     //Receives List<Vector2Int> (pattern1) and List<Vector2Int> (pattern2)
     //Returns a List<Vector2Int> - the result of the merging of the two List<Vector2Int> given as parameters
-    //There are no duplicate Vector2Int in the returned List<Vector2Int> 
+    //There are no duplicate Vector2Int in the returned List<Vector2Int>, its the union of the two patterns
     public static List<Vector2Int> MergePatterns(List<Vector2Int> pattern1, List<Vector2Int> pattern2)
     {
         List<Vector2Int> merged_pattern = new List<Vector2Int>(pattern1);
@@ -313,4 +500,20 @@ public static class Utils
 
         return merged_pattern;
     }
+
+    //Receives List<Vector2Int> (pattern), float (percent) and System.Random (prng)
+    //Returns a List<Vector2Int> - the result of removing randomly percent% of the positions on the pattern
+    public static List<Vector2Int> RandomizePattern(List<Vector2Int> pattern, int percent, System.Random prng)
+    {
+        List<Vector2Int> rando_pattern = new List<Vector2Int>();
+        for (int i = 0; i < pattern.Count; i++)
+        {
+            if (prng.Next(0, 100) < percent)
+            {
+                rando_pattern.Add(pattern[i]);
+            }
+        }
+        return rando_pattern;
+    }
+
 }

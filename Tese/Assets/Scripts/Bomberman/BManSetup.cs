@@ -16,7 +16,7 @@ public class BManSetup : MonoBehaviour, ISetup
 
     //percentage of cells with a Weak Wall Agent, by default 20%
     [Range(0, 100)]
-    public int randomFillPercetn = 20;
+    public int randomFillPercent = 20;
 
     //Receives a System.Random as a parameter that may be used for randomization
     //Returns a Grid object, setted up for the start of the simulation
@@ -30,11 +30,11 @@ public class BManSetup : MonoBehaviour, ISetup
             for (int y = 0; y < height; y++)
             {
                 agentGrid[x, y] = new List<GameAgent> { };
-                if (prng.Next(0, 100) < randomFillPercetn)
+                if (prng.Next(0, 100) < randomFillPercent)
                 {
                     agentGrid[x, y].Add(new AWeakWall(new List<int> {}, x, y));
                 }
-                else if (prng.Next(0, 100) < randomFillPercetn)
+                else if (prng.Next(0, 100) < randomFillPercent)
                 {
                     agentGrid[x, y].Add(new AStrongWall(new List<int> { }, x, y));
                 }

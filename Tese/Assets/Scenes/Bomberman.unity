@@ -220,6 +220,7 @@ GameObject:
   - component: {fileID: 260572034}
   - component: {fileID: 260572031}
   - component: {fileID: 260572032}
+  - component: {fileID: 260572037}
   m_Layer: 0
   m_Name: teste
   m_TagString: Untagged
@@ -239,10 +240,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cdae67c673241c4f8362fdc70016118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  finishedLoop: 1
-  updatingPlayer: 0
-  gameOver: 0
-  index: 0
+  debug: 0
+  minNumberPlayers: 2
 --- !u!114 &260572032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,6 +331,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 
   useRandomSeed: 1
+  numberOfEpisodes: 3
 --- !u!4 &260572036
 Transform:
   m_ObjectHideFlags: 0
@@ -346,3 +346,15 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &260572037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260572030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddd7d1c4fabd19b469dba66a1eb33106, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
