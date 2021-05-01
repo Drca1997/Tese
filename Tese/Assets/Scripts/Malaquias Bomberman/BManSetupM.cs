@@ -48,7 +48,7 @@ public class BManSetupM : MonoBehaviour, ISetup
         
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(setup_grid.GetLength(1), setup_grid.GetLength(0),
+        Grid grid = new Grid(setup_grid.GetLength(0), setup_grid.GetLength(1),
             10, agentGrid, new string[] { "Malaquias_Bomberman", "PlayerBomberman", "Agent_Bomberman", "Walkable", "Agent_Weak_Wall", "Agent_Strong_Wall", "Agent_Bomb", "Agent_Fire"});
 
         return grid;
