@@ -14,6 +14,7 @@ public class PBomberman : GameAgentPlayer
         this.colliderTypes.Add("Agent_Strong_Wall");
         this.colliderTypes.Add("Agent_Bomb");
         this.colliderTypes.Add("Agent_Bomberman");
+        this.colliderTypes.Add("Player_Bomberman");
         this.colliderTypes.Add("Malaquias_Bomberman");
         this.states = states;
         this.position = new Vector2Int(x, y);

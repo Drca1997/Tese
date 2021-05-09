@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class bagingus : MonoBehaviour
@@ -21,6 +22,10 @@ public class bagingus : MonoBehaviour
     IUpdate UpdateInterface;
     //Interface used to update the GameObjects contained on the objectGrid component of the Grid object (visual representation of the agentGrid)
     IVisualize VisualizeInterface;
+
+    public event EventHandler OnEpisodeEnd;
+    public event EventHandler OnRestart;
+    public int EpisodeNumber { get => episodeNumber; }
 
     private void Start()
     {
@@ -81,16 +86,23 @@ public class bagingus : MonoBehaviour
         {
             episodeNumber++;
 
-            if (episodeNumber < numberOfEpisodes)
+            if (EpisodeNumber < numberOfEpisodes)
             {
-                Debug.Log("starting new episode (" + episodeNumber + ")");
+                Debug.Log("starting new episode (" + EpisodeNumber + ")");
                 grid.deleteContainer();
+
+                OnEpisodeEnd?.Invoke(this, EventArgs.Empty);
+
                 //Initializing the grid acording with the ISetup Interface
                 grid = SetupInterface.SetupGrid(prng);
                 UpdateInterface.SetupSimulation(grid, prng);
 
+                OnRestart?.Invoke(this, EventArgs.Empty);
+
                 //Updating the visuals acording with the IVisualize Interface and the initial state of the grid
                 VisualizeInterface.VisualizeGrid(grid);
+
+                
             }
         }
     }

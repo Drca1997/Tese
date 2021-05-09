@@ -30,6 +30,8 @@ public class BManUpdate : MonoBehaviour, IUpdate
     //The randList may not be fully looped through in one execution of UpdateGrid (if the player input is needed, for example)
     //A reference to the index of the current Agent on randList is stored
     private int index;
+    private int turnos = 0;
+    public int maximoNumeroTurnos;
 
     public event EventHandler OnMLAgentWin;
 
@@ -49,6 +51,9 @@ public class BManUpdate : MonoBehaviour, IUpdate
                 
             }
         }
+        gameOver = false;
+        updatingPlayer = false;
+        finishedLoop = true;
     }
 
     //Receives the Grid object and a System.Random as a parameters
@@ -66,6 +71,13 @@ public class BManUpdate : MonoBehaviour, IUpdate
             Utils.Shuffle<GameAgent>(randList, prng);
             //index is reinitialized
             index = 0;
+            turnos++;
+            if (turnos > maximoNumeroTurnos)
+            {
+                turnos = 0;
+                gameOver = true;
+                grid.simOver = true;
+            }
         }
         
         //While the update cycle isn't over (i.e. there are still Agents that need to be updated)
@@ -140,13 +152,18 @@ public class BManUpdate : MonoBehaviour, IUpdate
                     gameOver = true;
                     foreach (GameAgent a in Utils.PutAgentsInList(grid.agentGrid))
                     {
-                        if (a.GetType() == typeof(MLSyntheticPlayer))
+                        if (a.GetType() == typeof(MLSyntheticPlayer) && a!= agent)
                         {
                             OnMLAgentWin?.Invoke(this, EventArgs.Empty);
                         }
                     }
 
                     Debug.Log("GAME OVER");
+                    grid.simOver = true;
+                }
+                if (agent.GetType() == typeof(MLSyntheticPlayer))
+                {
+                    gameOver = true;
                     grid.simOver = true;
                 }
                 break;

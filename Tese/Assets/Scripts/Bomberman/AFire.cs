@@ -45,7 +45,7 @@ public class AFire : GameAgent
                     if (creator.creator.GetType() == typeof(MLSyntheticPlayer))
                     {
                         MLSyntheticPlayer mlPlayer = (MLSyntheticPlayer)creator.creator;
-                        Debug.Log(a.GetType());
+                        
                         if (a.GetType() == typeof(AWeakWall))
                         {
 
@@ -53,8 +53,10 @@ public class AFire : GameAgent
                         }
                         else if (a.typeName.Contains("Bomberman"))
                         {
-                            
-                            mlPlayer.RewardKillEnemy();
+                            if (a != mlPlayer)
+                            {
+                                mlPlayer.RewardKillEnemy();
+                            }
                         }
                     }
 

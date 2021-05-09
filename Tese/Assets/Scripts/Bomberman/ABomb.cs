@@ -47,7 +47,7 @@ public class ABomb : GameAgent
         //create new AFire Agents in the positions contained in the cross pattern returned by Utils.PatternCross()
         foreach (Vector2Int pos in Utils.PatternCross(states[1], position, g, new List<string> { "Agent_Strong_Wall" }, new List<string> { "Agent_Weak_Wall" }))
         {
-            Vector2Int realPos = Utils.GetRealPos(position, pos, g);
+            Vector2Int realPos = Utils.GetRealPos(position, pos, g.width, g.height);
             PutAgentOnGrid(realPos, new AFire(new List<int> { 0 }, realPos.x, realPos.y, this), g);
         }
     }

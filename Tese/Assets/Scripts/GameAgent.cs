@@ -61,7 +61,7 @@ public abstract class GameAgent
         foreach (Vector2Int sensorPos in relative_sensors)
         {
             //The real position is added to the total sensors list
-            Vector2Int realPos = Utils.GetRealPos(position, sensorPos, grid);
+            Vector2Int realPos = Utils.GetRealPos(position, sensorPos, grid.width, grid.height);
             total_sensors.Add(realPos);
         }
 

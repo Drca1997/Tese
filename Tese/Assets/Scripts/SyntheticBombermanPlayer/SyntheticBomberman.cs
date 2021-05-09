@@ -43,6 +43,7 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
         this.colliderTypes.Add("Agent_Bomb");
         this.colliderTypes.Add("Player_Bomberman");
         this.colliderTypes.Add("Agent_Bomberman");
+        this.colliderTypes.Add("Malaquias_Bomberman");
 
         this.states = states;
         this.position = new Vector2Int(x, y);
@@ -75,13 +76,19 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
         {
             plantedBomb = bomb.exists;
         }
+        else
+        {
+            plantedBomb = false;
+        }
     }
+
 
     #region ConvertGrid
     protected int[,] ConvertGrid(Grid g)
     {
         List<int>[,] agentGrid = g.ConvertAgentGrid();
         int[,] array = new int[g.width, g.height];
+        DistinguishBetweenSyntheticPlayers(g, agentGrid);
         for (int i = 0; i < agentGrid.GetLength(0); i++)
         {
             for (int j = 0; j < agentGrid.GetLength(1); j++)
@@ -92,8 +99,8 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
                     case 0:
                         array[i, j] = (int)Tile.Walkable;
                         break;
-                    case 1:
-                        array[i, j] = agentGrid[i,j][0];
+                    case 1: 
+                        array[i, j] = agentGrid[i, j][0];
                         break;
                     case 2:
                         array[i, j] = DetermineTwoAgentsTileConfig(agentGrid[i,j]);
@@ -108,8 +115,40 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
                 
             }
         }
+        //Debug.Log(SyntheticPlayerUtils.DebugGrid(array));
         return array;
     }
+
+    private void DistinguishBetweenSyntheticPlayers(Grid grid, List<int>[,] agentGrid)
+    {
+        for (int i = 0; i < agentGrid.GetLength(0); i++)
+        {
+            for (int j = 0; j < agentGrid.GetLength(1); j++)
+            {
+                for(int agent = 0; agent < agentGrid[i, j].Count; agent++)
+                {
+                    if (agentGrid[i,j][agent] == 0)
+                    {
+                        foreach(GameAgent a in grid.agentGrid[i, j])
+                        {
+                            if (a.typeName.Equals("Malaquias_Bomberman"))
+                            {
+                                if (a.GetType() == typeof(MLSyntheticPlayer))
+                                {
+                                    agentGrid[i,j][agent] = (int)Tile.Player;
+                                }
+                                else
+                                {
+                                    agentGrid[i,j][agent] = (int)Tile.AIEnemy;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private int DetermineTwoAgentsTileConfig(List<int> agentsInTile)
     {
         if (agentsInTile.Contains((int)Tile.Bomb))
@@ -187,6 +226,9 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
         }
         return -1;
     }
+
+    
+
     #endregion
 
     public void ProcessAction(Grid g, int action)
@@ -195,34 +237,88 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
         //Calculate the new position/Create a new Abomb Agent acording to the input
         switch (action)
         {
-            case 0:
+            case (int)Action.MoveUp:
+                UpdateTileInGrid(action, position.x, position.y);
                 newPosition.y = Utils.LoopInt(0, g.height, newPosition.y + 1);
                 //Move the Agent
                 MoveAgent(newPosition, this, g);
-                
+                UpdateTileInGrid(action, position.x, position.y);
                 break;
-            case 1:
+            case (int)Action.MoveDown:
+                UpdateTileInGrid(action, position.x, position.y);
                 newPosition.y = Utils.LoopInt(0, g.height, newPosition.y - 1);
                 //Move the Agent
                 MoveAgent(newPosition, this, g);
+                UpdateTileInGrid(action, position.x, position.y);
                 break;
-            case 2:
+            case (int)Action.MoveLeft:
+                UpdateTileInGrid(action, position.x, position.y);
                 newPosition.x = Utils.LoopInt(0, g.width, newPosition.x - 1);
                 //Move the Agent
                 MoveAgent(newPosition, this, g);
+                UpdateTileInGrid(action, position.x, position.y);
                 break;
-            case 3:
+            case (int)Action.MoveRight:
+                UpdateTileInGrid(action, position.x, position.y);
                 newPosition.x = Utils.LoopInt(0, g.width, newPosition.x + 1);
                 //Move the Agent
                 MoveAgent(newPosition, this, g);
+                UpdateTileInGrid(action, position.x, position.y);
                 break;
-            case 4:
+            case (int)Action.PlantBomb:
                 bomb = new ABomb(new List<int> { 3, 2 }, position.x, position.y, this);
                 PutAgentOnGrid(position, bomb, g);
+                UpdateTileInGrid(action, position.x, position.y);
                 break;
         }
 
 
+    }
+
+    private void UpdateTileInGrid(int action, int x, int y)
+    {
+        switch (action)
+        {
+            case (int)Action.MoveUp:
+            case (int)Action.MoveDown:
+            case (int)Action.MoveLeft:
+            case (int)Action.MoveRight:
+                UpdateTileAfterMovement(x, y);
+                break;
+            case (int)Action.PlantBomb:
+                UpdateTileAfterPlantingBomb(x, y);
+                break;
+        }
+    }
+
+    private void UpdateTileAfterMovement(int x, int y)
+    {
+        switch(gridArray[x, y])
+        {
+            case (int)Tile.Player:
+                gridArray[x, y] = (int)Tile.Walkable;
+                break;
+            case (int)Tile.PlayerNBomb:
+                gridArray[x, y] = (int)Tile.Bomb;
+                break;
+            case (int)Tile.FireNBombNPlayer:
+                gridArray[x, y] = (int)Tile.FireNBomb;
+                break;
+            
+        }
+    }
+
+    private void UpdateTileAfterPlantingBomb(int x, int y)
+    {
+        switch (gridArray[x, y])
+        {
+            case (int)Tile.Player:
+                gridArray[x, y] = (int)Tile.PlayerNBomb;
+                break;
+            case (int)Tile.FireNPlayer:
+                gridArray[x, y] = (int)Tile.FireNBombNPlayer;
+                break;
+        }
     }
 
     public abstract int TakeAction();

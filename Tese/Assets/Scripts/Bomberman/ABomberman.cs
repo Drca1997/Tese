@@ -13,6 +13,7 @@ public class ABomberman : GameAgent
         this.colliderTypes.Add("Agent_Strong_Wall");
         this.colliderTypes.Add("Agent_Bomb");
         this.colliderTypes.Add("Player_Bomberman");
+        this.colliderTypes.Add("Agent_Bomberman");
         this.colliderTypes.Add("Malaquias_Bomberman");
 
         //timer until next bomb and bomb cooldown
@@ -84,7 +85,7 @@ public class ABomberman : GameAgent
         //Debug.Log(possibleNewPositions.Count);
         if (possibleNewPositions.Count != 0)
         {
-            Vector2Int newPosition = Utils.GetRealPos(position, possibleNewPositions[prng.Next(0, possibleNewPositions.Count)], g);
+            Vector2Int newPosition = Utils.GetRealPos(position, possibleNewPositions[prng.Next(0, possibleNewPositions.Count)], g.width, g.height);
             MoveAgent(newPosition, this, g);
         }
 

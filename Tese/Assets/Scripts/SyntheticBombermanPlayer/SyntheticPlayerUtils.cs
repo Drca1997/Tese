@@ -11,7 +11,7 @@ public static class SyntheticPlayerUtils
         FireNExplodable, FireNPlayer, FireNPlayerEnemy, FireNAIEnemy, FireNBomb,
         FireNBombNPlayer, FireNBombNPlayerEnemy, FireNBombNAIEnemy
     }
-    public static int[] bombTiles = new int[6] { (int)Tile.Bomb, (int)Tile.AIEnemyNBomb, (int)Tile.PlayerEnemy, (int)Tile.FireNBomb, (int)Tile.FireNBombNAIEnemy, (int)Tile.FireNBombNPlayerEnemy };
+    public static int[] bombTiles = new int[8] { (int)Tile.Bomb, (int)Tile.PlayerNBomb, (int)Tile.AIEnemyNBomb, (int)Tile.PlayerEnemyNBomb, (int)Tile.FireNBomb, (int)Tile.FireNBombNPlayer ,(int)Tile.FireNBombNAIEnemy, (int)Tile.FireNBombNPlayerEnemy };
     public static int[] coverTiles = new int[3] { (int)Tile.Explodable, (int)Tile.Unsurpassable, (int)Tile.FireNExplodable };
     public enum Action
     {
@@ -105,7 +105,6 @@ public static class SyntheticPlayerUtils
 
     public static bool IsTileSafe(int[,] grid, int[] tile)
     {
-        
         if (bombTiles.Contains(grid[tile[0], tile[1]])) // se esta uma bomba na tile
         {
             return false;
@@ -118,17 +117,14 @@ public static class SyntheticPlayerUtils
         {
             return false;
         }
-        Debug.Log("Norte e Sul seguros");
         if (!IsEastTilesSafe(grid, tile))
         {
             return false;
         }
-        Debug.Log("Este seguro");
         if (!IsWestTilesSafe(grid, tile))
         {
             return false;
         }
-        Debug.Log("Oeste Seguro");
         return true;
     }
 
@@ -188,8 +184,6 @@ public static class SyntheticPlayerUtils
 
     private static bool IsEastTilesSafe(int[,] grid, int[] tile)
     {
-        Debug.Log(tile[0] + 1);
-        Debug.Log(grid[tile[0] + 1, tile[1]]);
         if (tile[0] + 1 < grid.GetLength(0) && bombTiles.Contains(grid[tile[0] + 1, tile[1]])) // se bomba em (x+1, y)
         {
             return false;
@@ -207,12 +201,11 @@ public static class SyntheticPlayerUtils
     public static int GetDistToClosestEnemy(int[,] gridArray, int[] agentPos, int[] tilesWithAgents)
     {
         int closestDist = int.MaxValue;
-
-        foreach (int[] tile in SyntheticPlayerUtils.GridIterator(gridArray))
+        foreach (int[] tile in GridIterator(gridArray))
         {
             if (tilesWithAgents.Contains(gridArray[tile[0], tile[1]]))
             {
-                int dist = SyntheticPlayerUtils.CalculateManhattanDistance(agentPos, tile);
+                int dist = CalculateManhattanDistance(agentPos, tile);
                 if (dist < closestDist)
                 {
                     closestDist = dist;
@@ -245,5 +238,20 @@ public static class SyntheticPlayerUtils
 
         }
         return null;
+    }
+
+    public static string DebugGrid(int[,] grid)
+    {
+        string result = null;
+
+        for (int i = grid.GetLength(1) - 1; i >= 0; i--)
+        {
+            result += "\n";
+            for (int j = 0; j < grid.GetLength(0); j++)
+            {
+                result += grid[j, i] + "|";
+            }
+        }
+        return result;
     }
 }

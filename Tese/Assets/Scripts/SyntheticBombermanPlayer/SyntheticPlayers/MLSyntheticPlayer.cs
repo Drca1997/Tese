@@ -15,13 +15,19 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
     private int beforeFirstTurn;
     private int heuristicAction;
     private bool finishedHeuristic;
+    public static int nextId = 0;
+    public int id;
 
     public MLAgent MlAgentRef { get => mlAgentRef; set => mlAgentRef = value; }
     public int HeuristicAction { get => heuristicAction; set => heuristicAction = value; }
 
+    private Recompensas recompensas;
     public MLSyntheticPlayer(List<int> states, int x, int y, IUpdate updateInterface, MLAgent agentRef) : base(states, x, y, updateInterface)
     {
         MlAgentRef = agentRef;
+        id = nextId;
+        //Debug.Log("Criado ML " + id);
+        nextId++;
         mlAgentRef.OnInputReceived += OnInput;
         MlAgentRef.X = position.x;
         MlAgentRef.Y = position.y;
@@ -29,11 +35,14 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         updateInterface.OnMLAgentWin += OnWin;
         heuristicMode = MlAgentRef.gameObject.GetComponent<BehaviorParameters>().IsInHeuristicMode();
         MlAgentRef.MlPlayer = this;
+        //Debug.Log("New Ref:" + mlAgentRef.MlPlayer.id);
+        
         tilesWithAgents = new int[6] { (int)Tile.PlayerEnemy, (int)Tile.AIEnemy, (int)Tile.PlayerEnemyNBomb, (int)Tile.AIEnemyNBomb, (int)Tile.FireNBombNPlayerEnemy, (int)Tile.FireNBombNAIEnemy};
         formerClosestDistToEnemy = int.MaxValue;
         currentClosestDistToEnemy = int.MaxValue;
         beforeFirstTurn = 0;
         finishedHeuristic = false;
+        recompensas = mlAgentRef.gameObject.GetComponent<Recompensas>();
         //updated = false;
     }
     
@@ -49,14 +58,12 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         Debug.Log("Turn: " + beforeFirstTurn);
         if (heuristicMode)
         {
-            //Debug.Log("HEURISTIC MODE ON");
+            Debug.Log("HEURISTIC MODE ON");
             if (updated)
             {
-                
                 //This boolean will only return true once the agent has been fully updated
                 updated = false;
                 mlAgentRef.StartCoroutine(InputLogic(g, step_stage, prng));
-                
             }
         }
         else
@@ -159,10 +166,16 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
     #region Recompensas
     private void CalculateReward(int action)
     {
-        RewardGetCloserToEnemy(action); //Deteta se agente se moveu para mais perto de um inimigo e dá recompensa
-        RewardIsNotSafe(action);
-        Debug.Log("Penalização de Iteração: -0.1");
-        MlAgentRef.SetReward(-0.1f); //PENALIZACAO por cada iteração: -0.1
+        if (recompensas.GetCloserToEnemyReward)
+            RewardGetCloserToEnemy(action); //Deteta se agente se moveu para mais perto de um inimigo e dá recompensa
+        if (recompensas.NotSafePenalty)
+            RewardIsNotSafe(action);
+        if (recompensas.IterationPenalty)
+        {
+            //Debug.Log("Penalização de Iteração: " + recompensas.IterationPenaltyValue);
+            MlAgentRef.SetReward(recompensas.IterationPenaltyValue); //PENALIZACAO por cada iteração: -0.01
+        }
+       
     }
 
     //Deteta se agente se moveu para mais perto de um inimigo e dá recompensa
@@ -171,57 +184,69 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         if (action < (int)Action.PlantBomb) //se acção for de movimento
         {
             currentClosestDistToEnemy = SyntheticPlayerUtils.GetDistToClosestEnemy(gridArray, new int[2] { position.x, position.y }, tilesWithAgents);
+            //Debug.Log("Current Dist: " + currentClosestDistToEnemy);
+            //Debug.Log("Former Dist: " + formerClosestDistToEnemy);
             if (currentClosestDistToEnemy < formerClosestDistToEnemy)
             {
-                MlAgentRef.SetReward(0.002f); //RECOMPENSA por se ter aproximado de inimigo: 0.002
+                MlAgentRef.SetReward(recompensas.GetCloserToEnemyRewardValue); //RECOMPENSA por se ter aproximado de inimigo: 0.002
                 formerClosestDistToEnemy = currentClosestDistToEnemy;
-                Debug.Log("Recompensa por se ter aproximado de inimigo: 0.002");
+                Debug.Log("Recompensa por se ter aproximado de inimigo: " + recompensas.GetCloserToEnemyRewardValue);
             }
             else if(currentClosestDistToEnemy > formerClosestDistToEnemy)
             {
-                MlAgentRef.SetReward(-0.002f); //PENALIZAÇAO por se ter afastado de inimigo: -0.002
+                MlAgentRef.SetReward(recompensas.GetAwayFromEnemyPenaltyValue); //PENALIZAÇAO por se ter afastado de inimigo: -0.002
                 formerClosestDistToEnemy = currentClosestDistToEnemy;
-                Debug.Log("Penalização por se ter afastado de inimigo: -0.002");
+                Debug.Log("Penalização por se ter afastado de inimigo: " + recompensas.GetAwayFromEnemyPenaltyValue);
             }
         }
     }
+
     private void RewardIsNotSafe(int action)
     {
-        if (action < (int)Action.PlantBomb) //se acção for de movimento
+        if (!SyntheticPlayerUtils.IsTileSafe(gridArray, new int[2] { position.x, position.y }))
         {
-            if (!SyntheticPlayerUtils.IsTileSafe(gridArray, new int[2] { position.x, position.y }))
-            {
-                MlAgentRef.SetReward(-0.0001f); //PENALIZAÇÃO  por estar numa tile ao alcance de uma bomba: -0.0001
-                Debug.Log("PENALIZAÇÃO  por estar numa tile ao alcance de uma bomba: -0.0001");
-            }
-        }
+            MlAgentRef.SetReward(recompensas.NotSafePenaltyValue); //PENALIZAÇÃO  por estar numa tile ao alcance de uma bomba: -0.0001
+            Debug.Log("PENALIZAÇÃO  por estar numa tile ao alcance de uma bomba: " + recompensas.NotSafePenaltyValue);
+        }   
     }
 
     public void RewardExplodeBlock()
     {
-        mlAgentRef.SetReward(0.1f); //RECOMPENSA de destruir bloco: 0.1 
-        Debug.Log("RECOMPENSA de destruir bloco: 0.1 ");
+        if (recompensas.ExplodeBlockReward)
+        {
+            mlAgentRef.SetReward(recompensas.ExplodeBlockRewardValue); //RECOMPENSA de destruir bloco: 0.1 
+            Debug.Log("RECOMPENSA de destruir bloco:  " + recompensas.ExplodeBlockRewardValue);
+        }
+       
     }
 
     public void RewardKillEnemy()
     {
-        mlAgentRef.SetReward(0.75f); //RECOMPENSA de matar inimigo: 0.75
-        Debug.Log("RECOMPENSA de matar inimigo: 0.75");
+        if (recompensas.KillEnemyReward)
+        {
+            mlAgentRef.SetReward(recompensas.KillEnemyRewardValue); //RECOMPENSA de matar inimigo: 0.75
+            Debug.Log("RECOMPENSA de matar inimigo: " + recompensas.KillEnemyRewardValue);
+        }
+        
     }
 
     private void OnWin(object sender, EventArgs e)
     {
-        MlAgentRef.SetReward(1f); //RECOMPENSA por ganhar: 1
-        Debug.Log("MLAgent Ganhou Jogo! Reward: +1.0");
+        if (recompensas.OnWinReward)
+        {
+            MlAgentRef.SetReward(recompensas.OnWinRewardValue); //RECOMPENSA por ganhar: 1
+            Debug.Log("MLAgent Ganhou Jogo! Reward: " + recompensas.OnWinRewardValue);
+        }
+       
         updateInterface.OnMLAgentWin -= OnWin;
-        MlAgentRef.EndEpisode();
+        //MlAgentRef.EndEpisode();
     }
 
     private void OnDeath()
     {
-        MlAgentRef.SetReward(-1f); //PENALIZACAO por morrer: -1
-        Debug.Log("Penalização por morrer: -1");
-        MlAgentRef.EndEpisode();
+        MlAgentRef.SetReward(recompensas.OnDeathPenaltyValue); //PENALIZACAO por morrer: -1
+        Debug.Log("Penalização por morrer: " + recompensas.OnDeathPenaltyValue);
+        //MlAgentRef.EndEpisode();
     }
 
     #endregion
@@ -252,7 +277,8 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
     //de momento meti codigo para o agente avisar a interface de update que "morreu", para se saber quando a simulação deve ser parada
     public override void Epitaph(Grid g, int step_stage, System.Random prng)
     {
-        OnDeath();
+        if (recompensas.OnDeathPenalty)
+            OnDeath();
 
         //na função AgentCall a interface vai lidar com decrementar a sua variável que indica o numero de jogadores
         updateInterface.AgentCall(this, g, prng);
