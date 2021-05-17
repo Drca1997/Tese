@@ -163,8 +163,21 @@ public class BManUpdate : MonoBehaviour, IUpdate
                 }
                 if (agent.GetType() == typeof(MLSyntheticPlayer))
                 {
-                    gameOver = true;
-                    grid.simOver = true;
+                    SelfPlayManager manager = gameObject.GetComponent<SelfPlayManager>();
+                    if (manager.selfPlay)
+                    {
+                        manager.numberOfMLAgents--;
+                        if (manager.numberOfMLAgents == 0)
+                        {
+                            gameOver = true;
+                            grid.simOver = true;
+                        }
+                    }
+                    else
+                    {
+                        gameOver = true;
+                        grid.simOver = true;
+                    }
                 }
                 break;
             default:

@@ -31,7 +31,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         mlAgentRef.OnInputReceived += OnInput;
         MlAgentRef.X = position.x;
         MlAgentRef.Y = position.y;
-       
+        Debug.Log("TEAM ID: " + MlAgentRef.gameObject.GetComponent<BehaviorParameters>().TeamId);
         updateInterface.OnMLAgentWin += OnWin;
         heuristicMode = MlAgentRef.gameObject.GetComponent<BehaviorParameters>().IsInHeuristicMode();
         MlAgentRef.MlPlayer = this;
@@ -42,7 +42,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         currentClosestDistToEnemy = int.MaxValue;
         beforeFirstTurn = 0;
         finishedHeuristic = false;
-        recompensas = mlAgentRef.gameObject.GetComponent<Recompensas>();
+        recompensas = mlAgentRef.Recompensas;
         //updated = false;
     }
     

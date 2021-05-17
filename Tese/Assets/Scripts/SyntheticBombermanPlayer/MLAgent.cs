@@ -26,6 +26,7 @@ public class MLAgent : Agent
     }
 
 
+
     private int x;
     private int y;
     private int rawAction;
@@ -34,7 +35,8 @@ public class MLAgent : Agent
     private MLSyntheticPlayer mlPlayer;
     private bool start = false;
     private bool restart = false;
-    private bagingus gameHandler;
+    public bagingus gameHandler;
+    public Recompensas Recompensas;
     private const int tileVectorObservationSize = 5;
     private const int bombermanObsIndex = 0;
     private const int explodableObsIndex = 1;
@@ -42,15 +44,16 @@ public class MLAgent : Agent
     private const int bombObsIndex = 3;
     private const int fireObsIndex = 4;
 
-    public event EventHandler OnInputReceived; 
-
+    public event EventHandler OnInputReceived;
+    
+    
     public int X { get => x; set => x = value; }
     public int Y { get => y; set => y = value; }
     public int RawAction { get => rawAction; }
     public int[,] Grid { get => grid; set => grid = value; }
     public MLSyntheticPlayer MlPlayer { get => mlPlayer; set => mlPlayer = value; }
     public bool Start { get => start;}
-    
+
 
     /**
     * Função chamada quando um novo episódio de treino começa
@@ -60,7 +63,7 @@ public class MLAgent : Agent
         base.OnEpisodeBegin();
 
         
-        gameHandler = gameObject.GetComponent<bagingus>();
+        //gameHandler = gameObject.GetComponent<bagingus>();
         gameHandler.OnEpisodeEnd += OnEpisodeEnd;
         if (gameHandler.EpisodeNumber > 0)
         {
