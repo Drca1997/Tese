@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackEnemyGoal : AttackEntityGoal
+public class ExplodeBlockGoal : AttackEntityGoal
 {
-
     public override bool IsPossible()
     {
-        Debug.Log("Verificando se é possível atacar inimigo");
-        if (RefTile != null && PlanningAgent.GridArray[RefTile[0], RefTile[1]] != (int)Tile.AIEnemy) //Update RefTile
+        Debug.Log("Verificando se é possível explodir bloco");
+        if (RefTile != null && PlanningAgent.GridArray[RefTile[0], RefTile[1]] != (int)Tile.Explodable) //Update RefTile
         {
             RefTile = null;
         }
-        else if (RefTile != null && (PlanningAgent.GridArray[RefTile[0], RefTile[1]]  == (int)Tile.AIEnemy || PlanningAgent.GridArray[RefTile[0], RefTile[1]] == (int)Tile.FireNAIEnemy || PlanningAgent.GridArray[RefTile[0], RefTile[1]] == (int)Tile.FireNBombNAIEnemy)) //Caso RefTile ainda referencie a posição do inimigo
+        else if (RefTile != null && (PlanningAgent.GridArray[RefTile[0], RefTile[1]] == (int)Tile.Explodable || PlanningAgent.GridArray[RefTile[0], RefTile[1]] == (int)Tile.FireNExplodable)) //Caso RefTile ainda referencie a posição do inimigo
         {
             this.TargetTiles = SyntheticPlayerUtils.GetAdjacentTiles(PlanningAgent.GridArray, RefTile);
             foreach (int[] tile in TargetTiles)
@@ -24,9 +23,9 @@ public class AttackEnemyGoal : AttackEntityGoal
             }
         }
 
-        if (RefTile == null) //Caso RefTile seja nula, Procurar por inimigos
+        if (RefTile == null) //Caso RefTile seja nula, Procurar por blocos
         {
-            Debug.Log("Procurando por inimigos...");
+            Debug.Log("Procurando por blocos para explodir");
             GetEntityPos();
             if (RefTile != null)
             {
@@ -48,7 +47,9 @@ public class AttackEnemyGoal : AttackEntityGoal
 
 
         }
-        Debug.Log("Possível atacar inimigo em " + RefTile[0] + ", " + RefTile[1]);
+        Debug.Log("Possível explodir bloco em " + RefTile[0] + ", " + RefTile[1]);
         return true;
     }
 }
+
+   

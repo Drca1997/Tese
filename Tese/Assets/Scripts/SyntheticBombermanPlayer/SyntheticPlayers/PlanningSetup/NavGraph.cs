@@ -40,7 +40,8 @@ public static class NavGraph
                         graph.EdgesAdjacencyListVector[i].Add(new GraphEdge(i, neighboursIndexes[k], 1));
                         break;
                     case (int)Tile.Explodable:
-                        //graph.EdgesAdjacencyListVector[i].Add(new GraphEdge(i, neighboursIndexes[k], 5));
+                        if (goal.GetType() == typeof(ExplodeBlockGoal))
+                            graph.EdgesAdjacencyListVector[i].Add(new GraphEdge(i, neighboursIndexes[k], 1));
                         break;
                     case (int)Tile.AIEnemy:
                         if (goal.GetType() == typeof(AttackEnemyGoal))
@@ -90,6 +91,16 @@ public static class NavGraph
 
             }*/
 
+        }
+        else if (goal.GetType() == typeof(ExplodeBlockGoal))
+        {
+            foreach (int[] tile in SyntheticPlayerUtils.GridIterator(grid))
+            {
+                if (grid[tile[0], tile[1]] == (int)Tile.Explodable)
+                {
+                    goals.Add(graph.Nodes[tile[0] * grid.GetLength(0) + tile[1]]);
+                }
+            }
         }
         else if (goal.GetType() == typeof(BeSafeGoal))
         {

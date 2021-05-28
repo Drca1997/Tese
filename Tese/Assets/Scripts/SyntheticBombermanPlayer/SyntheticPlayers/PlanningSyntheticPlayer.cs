@@ -145,6 +145,7 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         }
 
         List<GraphNode> pathfindingNodes = NavGraph.GetPath(GridArray, position.x, position.y, goal);
+        Debug.LogWarning("NODES: " + pathfindingNodes.Count);
         if (pathfindingNodes == null)
         {
             return null;
@@ -182,8 +183,8 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
     }
 
     private int GetGoalNodeIndex(Goal goal, List<GraphNode> list)
-    {
-        if (goal.GetType() == typeof(AttackEnemyGoal))
+    { 
+        if (goal.GetType() == typeof(AttackEnemyGoal) || goal.GetType() == typeof(ExplodeBlockGoal))
         {
             if (list.Count >= 2)
             {
