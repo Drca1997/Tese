@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class AStar
+public static class AStarClass
 {
     public static List<GraphNode> AStarPathFinding(Graph graph, GraphNode start, List<GraphNode> possibleGoals, Func<GraphNode, List<GraphNode>, double> heuristic)
     {
@@ -82,7 +82,7 @@ public static class AStar
         Debug.Log("Falha a encontrar caminho");
         return null; //se já se visitou todos os nós possíveis e nenhum deles é objetivo
     }
-    public static List<Action> AStarForPlanning(PlanningAgent agent, GraphNode start, GraphNode end, Action[] possibleActions, Goal goal)
+    public static List<Action> AStarForPlanning(PlanningAgent agent, GraphNode start, GraphNode end, Action[] possibleActions, GoalTemplate goal)
     {
         List<GraphNode> expandableList = new List<GraphNode> { start }; //pega-se no primeiro nó
         List<GraphNode> visitedList = new List<GraphNode>();
@@ -293,10 +293,10 @@ public static class AStar
         return best;
     }
 
-    private static List<Action> GetPossibleActions(Goal goal, ActionStateGraphNode node, Action[] possibleActions)
+    private static List<Action> GetPossibleActions(GoalTemplate goal, ActionStateGraphNode node, Action[] possibleActions)
     {
         List<Action> res = new List<Action>();
-        if (goal.GetType() == typeof(AttackEnemyGoal))
+        if (goal.GetType() == typeof(GoalAttackEnemy))
         {
             if (node.Grid[node.AgentPos[0], node.AgentPos[1]] == 5)
             {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackEnemyGoal : Goal
+public class GoalAttackEnemy : GoalTemplate
 {
     
     public override void Init()
@@ -60,7 +60,7 @@ public class AttackEnemyGoal : Goal
     {
         int[] start = new int[2] { state.Agent.SimulatedX, goal.Agent.SimulatedY };
         int[] end = new int[2] { goal.Agent.X, goal.Agent.Y };
-        return AStar.CalculateManhattanDistance(start, end); 
+        return AStarClass.CalculateManhattanDistance(start, end); 
     }
 
     public override bool IsObjective(ActionStateGraphNode node)

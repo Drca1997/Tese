@@ -23,6 +23,60 @@ public static class SyntheticPlayerUtils
         DoNothing
     }
 
+    public const int beSafeGoalPriority = 1;
+    public const int attackEnemyGoalPriority = 2;
+    public const int gridWidth = 11;
+    public const double explodibleBlockCost = 5.0;
+
+    public static int[,] deepCopyWorld(int[,] world)
+    {
+        int[,] deepCopy = new int[world.GetLength(0), world.GetLength(1)];
+        for (int i = 0; i < world.GetLength(0); i++)
+        {
+            for (int j = 0; j < world.GetLength(1); j++)
+            {
+                deepCopy[i, j] = world[i, j];
+            }
+        }
+        return deepCopy;
+    }
+
+    public static int[] GetTileFromIndex(int index, int width)
+    {
+        int x = index / width;
+        int y = index % width;
+        return new int[2] { x, y };
+    }
+
+
+    public static List<int> GetNeighbouringTilesIndexes(int[,] grid, int index)
+    {
+        int[] tempIndexes = new int[4];
+        tempIndexes[0] = index - grid.GetLength(0);
+        tempIndexes[1] = index - 1;
+        tempIndexes[2] = index + 1;
+        tempIndexes[3] = index + grid.GetLength(0);
+        List<int> validIndexes = new List<int>();
+        if (tempIndexes[0] >= 0) //north neighbour
+        {
+            validIndexes.Add(tempIndexes[0]);
+        }
+        if (index % grid.GetLength(0) != 0) //EastNeighbour-> 1ºelem de cada linha é multiplo da largura do grid
+        {
+            validIndexes.Add(tempIndexes[1]);
+        }
+        if (tempIndexes[2] % grid.GetLength(0) != 0)//West Neighbour-> ultimo elem de cada linha nao pode ser multiplo da largura do grid
+        {
+            validIndexes.Add(tempIndexes[2]);
+        }
+        if (tempIndexes[3] < grid.GetLength(0) * grid.GetLength(1)) //south neighbour
+        {
+            validIndexes.Add(tempIndexes[3]);
+        }
+        return validIndexes;
+
+    }
+
     public static IEnumerable GridIterator(int[,] grid)
     {
         for (int i = 0; i < grid.GetLength(0); i++)
@@ -32,6 +86,46 @@ public static class SyntheticPlayerUtils
                 yield return new int[2] { i, j };
             }
         }
+    }
+
+    public static List<int[]> GetAdjacentTiles(int[,] grid, int[] tile)
+    {
+        List<int[]> adjacentTiles = new List<int[]>();
+        if (tile[1] + 1 < grid.GetLength(1))
+        {
+            adjacentTiles.Add(new int[2] { tile[0], tile[1] + 1 });
+
+            if (tile[1] + 2 < grid.GetLength(1))
+            {
+                adjacentTiles.Add(new int[2] { tile[0], tile[1] + 2 });
+            }
+        }
+        if (tile[1] - 1 >= 0)
+        {
+            adjacentTiles.Add(new int[2] { tile[0], tile[1] - 1 });
+            if (tile[1] - 2 >= 0)
+            {
+                adjacentTiles.Add(new int[2] { tile[0], tile[1] - 2 });
+            }
+
+        }
+        if (tile[0] + 1 < grid.GetLength(0))
+        {
+            adjacentTiles.Add(new int[2] { tile[0] + 1, tile[1] });
+            if (tile[0] + 2 < grid.GetLength(0))
+            {
+                adjacentTiles.Add(new int[2] { tile[0] + 2, tile[1] });
+            }
+        }
+        if (tile[0] - 1 >= 0)
+        {
+            adjacentTiles.Add(new int[2] { tile[0] - 1, tile[1] });
+            if (tile[0] - 2 >= 0)
+            {
+                adjacentTiles.Add(new int[2] { tile[0] - 2, tile[1] });
+            }
+        }
+        return adjacentTiles;
     }
 
     public static bool IsValidAction(int [,] grid, SyntheticBombermanPlayer agent, int action)
@@ -102,6 +196,19 @@ public static class SyntheticPlayerUtils
         }
         return false;
     }
+
+    public static bool IsTileWalkableSim(int[,] grid, int x, int y)
+    {
+        if (x >= 0 && x < grid.GetLength(0) && y >= 0 && y < grid.GetLength(1))
+        {
+            if (grid[x, y] == (int)Tile.Walkable || grid[x,y] == (int)Tile.Bomb)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
 
     public static bool IsTileSafe(int[,] grid, int[] tile)
     {
@@ -198,6 +305,57 @@ public static class SyntheticPlayerUtils
         }
         return true;
     }
+
+    public static bool[,] dangerMap(int[,] grid)
+    {
+        bool[,] dangerMap = new bool[grid.GetLength(0), grid.GetLength(1)];
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                if (!IsTileSafe(grid, new int[2] { i, j }))
+                {
+                    dangerMap[i, j] = true;
+                }
+                else
+                {
+                    dangerMap[i, j] = false;
+                }
+            }
+        }
+
+        return dangerMap;
+    }
+
+    public static List<int[]> dangerTiles(bool[,] dangerMap, bool reverse) //reverse indica se devolve dangerTiles(false) ou safeTiles(true)
+    {
+        List<int[]> dangerTiles = new List<int[]>();
+        for (int i = 0; i < dangerMap.GetLength(0); i++)
+        {
+            for (int j = 0; j < dangerMap.GetLength(1); j++)
+            {
+                if (reverse)
+                {
+                    if (!dangerMap[i, j])
+                    {
+                        dangerTiles.Add(new int[2] { i, j });
+                    }
+
+                }
+                else
+                {
+                    if (dangerMap[i, j])
+                    {
+                        dangerTiles.Add(new int[2] { i, j });
+                    }
+                }
+
+            }
+        }
+        return dangerTiles;
+    }
+
+
     public static int GetDistToClosestEnemy(int[,] gridArray, int[] agentPos, int[] tilesWithAgents)
     {
         int closestDist = int.MaxValue;

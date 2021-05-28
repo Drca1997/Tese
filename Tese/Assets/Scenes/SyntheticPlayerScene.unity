@@ -217,6 +217,7 @@ GameObject:
   - component: {fileID: 260572036}
   - component: {fileID: 260572033}
   - component: {fileID: 260572035}
+  - component: {fileID: 260572043}
   - component: {fileID: 260572032}
   - component: {fileID: 260572039}
   - component: {fileID: 260572034}
@@ -245,7 +246,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cdae67c673241c4f8362fdc70016118, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debug: 1
+  debug: 0
   minNumberPlayers: 2
   maximoNumeroTurnos: 2000
 --- !u!114 &260572032
@@ -376,7 +377,7 @@ MonoBehaviour:
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 5022602860645237092, guid: cb0222d0448b3d241a85f8489bc756fa, type: 3}
   m_InferenceDevice: 1
-  m_BehaviorType: 2
+  m_BehaviorType: 1
   m_BehaviorName: MLBomberman
   TeamId: 0
   m_UseChildSensors: 1
@@ -389,7 +390,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 260572030}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c0348bc90c1edc4fbb53f82dcb2d0fd, type: 3}
   m_Name: 
@@ -414,7 +415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 11
   height: 11
-  wallPercent: 30
+  wallPercent: 10
 --- !u!114 &260572040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,6 +475,167 @@ MonoBehaviour:
   mlagent: {fileID: 900127075}
   numberOfMLAgents: 2
   selfPlay: 0
+--- !u!114 &260572043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 260572030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67f7431c404a94e40870c6108a21cf93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  planningSettings: {fileID: 292442731}
+--- !u!1 &292442731
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 292442732}
+  - component: {fileID: 292442740}
+  - component: {fileID: 292442739}
+  - component: {fileID: 292442738}
+  - component: {fileID: 292442737}
+  - component: {fileID: 292442736}
+  - component: {fileID: 292442735}
+  - component: {fileID: 292442734}
+  - component: {fileID: 292442733}
+  m_Layer: 0
+  m_Name: PlanningSettings
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &292442732
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.0248356, y: 0.10056865, z: -0.010414737}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &292442733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c3b18f654f03734482d7faa923d923f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 1
+  oppositeAction: {fileID: 0}
+--- !u!114 &292442734
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4782a6baa5c0cc3479d914feaf0c0038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 1
+  oppositeAction: {fileID: 0}
+--- !u!114 &292442735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dba4bae572d5a414b8ad2ece080da302, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 1
+  oppositeAction: {fileID: 292442736}
+--- !u!114 &292442736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0bc600fb2cec2c4aaf4ff1b79fc608e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 1
+  oppositeAction: {fileID: 292442735}
+--- !u!114 &292442737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f59cf042aa1d94db87f506382b656b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 1
+  oppositeAction: {fileID: 292442738}
+--- !u!114 &292442738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72edae38629789547958d7e500ad9267, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 1
+  oppositeAction: {fileID: 292442737}
+--- !u!114 &292442739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bcd384dcdebb9c74ebc17775c2e3abfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 1
+--- !u!114 &292442740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292442731}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12d58f19a5fe2be45906cc400504be41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  priority: 0
 --- !u!1 &900127075
 GameObject:
   m_ObjectHideFlags: 0

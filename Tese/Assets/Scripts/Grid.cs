@@ -104,6 +104,7 @@ public class Grid
 
     public void deleteContainer()
     {
+        Debug.Log("DELETE!");
         foreach (Transform child in container.transform)
         {
             GameObject.Destroy(child.gameObject);

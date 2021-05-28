@@ -5,11 +5,11 @@ using UnityEngine;
 public static class NavigationGraph
 {
 
-    public static List<GraphNode> GetPath(int[,] grid, int agentX, int agentY, Goal goal)
+    public static List<GraphNode> GetPath(int[,] grid, int agentX, int agentY, GoalTemplate goal)
     {
         Graph graph = CreateGraph(grid);
         //DebugGraph(graph);
-        return AStar.AStarPathFinding(graph, GetStart(graph, grid.GetLength(0), agentX, agentY), GetGoals(grid, agentX, agentY, graph, goal), AStar.ManhattanDistanceHeuristic);
+        return AStarClass.AStarPathFinding(graph, GetStart(graph, grid.GetLength(0), agentX, agentY), GetGoals(grid, agentX, agentY, graph, goal), AStarClass.ManhattanDistanceHeuristic);
         
     }
 
@@ -48,11 +48,11 @@ public static class NavigationGraph
     }
 
 
-    public static List<GraphNode> GetGoals(int[,] grid,  int agentX, int agentY, Graph graph, Goal goal)
+    public static List<GraphNode> GetGoals(int[,] grid,  int agentX, int agentY, Graph graph, GoalTemplate goal)
     {
         List<GraphNode> goals = new List<GraphNode>();
         
-        if (goal.GetType() == typeof(AttackEnemyGoal))
+        if (goal.GetType() == typeof(GoalAttackEnemy))
         {
             if (goal.RefTile == null)
             {
@@ -71,7 +71,7 @@ public static class NavigationGraph
             }
             
         }
-        else if (goal.GetType() == typeof(BeSafeGoal))
+        else if (goal.GetType() == typeof(GoalBeSafe))
         {
             //todas as tiles que nao sao dangerTiles
             //List<int[]> safeTiles = Utils.dangerTiles(Utils.dangerMap(grid), true);

@@ -10,9 +10,9 @@ public class DebugGraph : MonoBehaviour
         List<GraphNode> goals = new List<GraphNode>();
         goals.Add(graph.Nodes[6]);
         goals.Add(graph.Nodes[7]);
-        List<GraphNode> path = AStar.AStarPathFinding(graph, graph.Nodes[0], goals, ExampleHeuristic2);
+        List<GraphNode> path = AStarClass.AStarPathFinding(graph, graph.Nodes[0], goals, ExampleHeuristic2);
         Debug.Log("CAMINHO ENCONTRADO");
-        AStar.DebugAStarList(path);
+        AStarClass.DebugAStarList(path);
     }
 
     public Graph CreateGraph(int n)

@@ -99,11 +99,20 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
                     case 0:
                         array[i, j] = (int)Tile.Walkable;
                         break;
-                    case 1: 
-                        array[i, j] = agentGrid[i, j][0];
+                    case 1:
+                        
+                        if (agentGrid[i,j][0] == (int)Tile.PlayerEnemy)
+                        {
+                            array[i, j] = (int)Tile.AIEnemy; //diminuir numero de configuraçoes, juntar PlayerEnemy e AIEnemy
+                        }
+                        else
+                        {
+                            array[i, j] = agentGrid[i, j][0];
+                        }
+                       
                         break;
                     case 2:
-                        array[i, j] = DetermineTwoAgentsTileConfig(agentGrid[i,j]);
+                        array[i, j] = DetermineTwoAgentsTileConfig(agentGrid[i, j]);
                         break;
                     case 3:
                         array[i, j] = DetermineThreeAgentsTileConfig(agentGrid[i, j]);
@@ -112,10 +121,9 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
                         array[i, j] = -1;
                         break;
                 }
-                
+
             }
         }
-        //Debug.Log(SyntheticPlayerUtils.DebugGrid(array));
         return array;
     }
 
@@ -125,23 +133,25 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
         {
             for (int j = 0; j < agentGrid.GetLength(1); j++)
             {
-                for(int agent = 0; agent < agentGrid[i, j].Count; agent++)
+                for (int agent = 0; agent < agentGrid[i, j].Count; agent++)
                 {
-                    if (agentGrid[i,j][agent] == 0)
+                    if (agentGrid[i, j][agent] == 0)
                     {
-                        foreach(GameAgent a in grid.agentGrid[i, j])
+                        foreach (GameAgent a in grid.agentGrid[i, j])
                         {
                             if (a.typeName.Equals("Malaquias_Bomberman"))
                             {
-                                if (a.GetType() == typeof(MLSyntheticPlayer))
+                                
+                                      
+                                if (a.position.x == position.x && a.position.y == position.y)
                                 {
-                                    agentGrid[i,j][agent] = (int)Tile.Player;
+                                    agentGrid[i, j][agent] = (int)Tile.Player;
                                 }
                                 else
                                 {
-                                    agentGrid[i,j][agent] = (int)Tile.AIEnemy;
+                                    agentGrid[i, j][agent] = (int)Tile.AIEnemy;
                                 }
-                            }
+                            }  
                         }
                     }
                 }
@@ -149,13 +159,15 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
         }
     }
 
+  
     private int DetermineTwoAgentsTileConfig(List<int> agentsInTile)
     {
         if (agentsInTile.Contains((int)Tile.Bomb))
         {
             return DetermineBombTile(agentsInTile);
         }
-        else if (agentsInTile.Contains((int)Tile.Fire)){
+        else if (agentsInTile.Contains((int)Tile.Fire))
+        {
             return DetermineFireTile(agentsInTile);
         }
         return -1;
@@ -208,7 +220,8 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
     {
         if (agentsInTile.Contains((int)Tile.Bomb))
         {
-            if (agentsInTile.Contains((int)Tile.Fire)){
+            if (agentsInTile.Contains((int)Tile.Fire))
+            {
 
                 if (agentsInTile.Contains((int)Tile.Player))
                 {
@@ -227,7 +240,7 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
         return -1;
     }
 
-    
+
 
     #endregion
 

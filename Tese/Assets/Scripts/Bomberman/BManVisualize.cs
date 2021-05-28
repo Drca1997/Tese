@@ -43,6 +43,10 @@ public class BManVisualize : MonoBehaviour, IVisualize
                             {
                                 grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
                             }
+                            else if(a.GetType() == typeof(PlanningSyntheticPlayer))
+                            {
+                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255 / 255f, 215 / 255f, 0 / 255f);
+                            }
                             else if (a.GetType() == typeof(RandomSyntheticPlayer))
                             {
                                 grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255/225f, 20/225f, 147/255f);
