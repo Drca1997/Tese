@@ -32,7 +32,7 @@ public static class NavGraph
             for (int k = 0; k < neighboursIndexes.Count; k++) //cria edges
             {
                 int[] tile = SyntheticPlayerUtils.GetTileFromIndex(neighboursIndexes[k], width);
-                switch (grid[tile[0], tile[1]]) //PERCEBER BEM QUE EDGES É QUE DEVEM SER FEITOS
+                switch (grid[tile[0], tile[1]])
                 {
                     case (int)Tile.Walkable:
                     case (int)Tile.Bomb:
@@ -41,7 +41,22 @@ public static class NavGraph
                         break;
                     case (int)Tile.Explodable:
                         if (goal.GetType() == typeof(ExplodeBlockGoal))
-                            graph.EdgesAdjacencyListVector[i].Add(new GraphEdge(i, neighboursIndexes[k], 1));
+                        {
+                            int[] currentTile = SyntheticPlayerUtils.GetTileFromIndex(i, width);
+                            switch(grid[currentTile[0], currentTile[1]])
+                            {
+                                case (int)Tile.Walkable:
+                                case (int)Tile.Player:
+                                case (int)Tile.AIEnemy:
+                                case (int)Tile.PlayerNBomb:
+                                case (int)Tile.AIEnemyNBomb:
+                                case (int)Tile.FireNBombNPlayer:
+                                case (int)Tile.FireNBombNAIEnemy:
+                                    graph.EdgesAdjacencyListVector[i].Add(new GraphEdge(i, neighboursIndexes[k], 1));
+                                    break;
+                            }
+                            
+                        }
                         break;
                     case (int)Tile.AIEnemy:
                         if (goal.GetType() == typeof(AttackEnemyGoal))

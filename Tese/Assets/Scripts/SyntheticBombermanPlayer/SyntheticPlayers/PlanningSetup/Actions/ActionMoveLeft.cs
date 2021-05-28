@@ -64,6 +64,13 @@ public class ActionMoveLeft : SymbolicAction
 
     public override bool IsPossible(int [,] grid)
     {
-        return SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x - 1, Agent.position.y);
+        if (SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x - 1, Agent.position.y))
+        {
+            if (SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x - 1, Agent.position.y}))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

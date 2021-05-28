@@ -6,7 +6,7 @@ using UnityEngine;
 public static class AStar
 {
     private static bool pathfindingVerbose = false;
-    private static bool planningVerbose = false;
+    private static bool planningVerbose = true;
 
     #region Pathfinding
     public static List<GraphNode> AStarPathFinding(Graph graph, GraphNode start, List<GraphNode> possibleGoals, Func<GraphNode, List<GraphNode>, double> heuristic)

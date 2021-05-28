@@ -145,7 +145,6 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         }
 
         List<GraphNode> pathfindingNodes = NavGraph.GetPath(GridArray, position.x, position.y, goal);
-        Debug.LogWarning("NODES: " + pathfindingNodes.Count);
         if (pathfindingNodes == null)
         {
             return null;

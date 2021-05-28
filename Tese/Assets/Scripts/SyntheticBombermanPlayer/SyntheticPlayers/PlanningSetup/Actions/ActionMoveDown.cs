@@ -60,6 +60,13 @@ public class ActionMoveDown : SymbolicAction
 
     public override bool IsPossible(int[,] grid)
     {
-        return SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x, Agent.position.y - 1);
+        if (SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x, Agent.position.y - 1))
+        {
+            if (SyntheticPlayerUtils.IsTileSafe(grid, new int[2] {Agent.position.x, Agent.position.y - 1 }))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

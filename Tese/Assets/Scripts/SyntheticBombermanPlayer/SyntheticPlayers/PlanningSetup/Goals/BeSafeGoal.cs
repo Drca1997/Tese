@@ -32,14 +32,7 @@ public class BeSafeGoal : Goal
 
     public override bool IsObjective(WorldNode node)
     {
-        
-        if (node.Agent.SimulatedX == node.Agent.position.x && node.Agent.SimulatedY == node.Agent.position.y)
-        {
-          
-            return true;
-        }
-        Debug.Log("NOT GOAL: Nó " + node.Index + ": " + node.Agent.SimulatedX + ", " + node.Agent.SimulatedY);
-        return false;
+        return node.Agent.SimulatedX == node.Agent.position.x && node.Agent.SimulatedY == node.Agent.position.y;
     }
 
     public override bool IsPossible()

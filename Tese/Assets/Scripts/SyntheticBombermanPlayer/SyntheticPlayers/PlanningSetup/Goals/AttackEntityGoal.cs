@@ -10,14 +10,18 @@ public abstract class AttackEntityGoal : Goal
         int[] goalTile = SyntheticPlayerUtils.GetTileFromIndex(index, currentGrid.GetLength(0));
         
         goalGrid[goalTile[0], goalTile[1]] = (int)Tile.PlayerNBomb;
-        if (goalGrid[agent.position.x, agent.position.y] == (int)Tile.Player)
+        if (goalTile[0] != agent.position.x || goalTile[1] != agent.position.y)
         {
-            goalGrid[agent.position.x, agent.position.y] = (int)Tile.Walkable;
+            if (goalGrid[agent.position.x, agent.position.y] == (int)Tile.Player)
+            {
+                goalGrid[agent.position.x, agent.position.y] = (int)Tile.Walkable;
+            }
+            else if (goalGrid[agent.position.x, agent.position.y] == (int)Tile.PlayerNBomb)
+            {
+                goalGrid[agent.position.x, agent.position.y] = (int)Tile.Bomb;
+            }
         }
-        else if (goalGrid[agent.position.x, agent.position.y] == (int)Tile.PlayerNBomb)
-        {
-            goalGrid[agent.position.x, agent.position.y] = (int)Tile.Bomb;
-        }
+        
 
         agent.SimulatedX = goalTile[0];
         agent.SimulatedY = goalTile[1];
@@ -46,7 +50,11 @@ public abstract class AttackEntityGoal : Goal
 
     public override bool IsObjective(WorldNode node)
     {
-        return node.Agent.SimulatedX == node.Agent.position.x && node.Agent.SimulatedY == node.Agent.position.y;
+        if (node.Grid[node.Agent.SimulatedX, node.Agent.SimulatedY] == (int)Tile.Player)
+        {
+            return node.Agent.SimulatedX == node.Agent.position.x && node.Agent.SimulatedY == node.Agent.position.y;
+        }
+        return false;
     }
 
     public abstract override bool IsPossible();
