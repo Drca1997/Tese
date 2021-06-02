@@ -338,7 +338,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 
   useRandomSeed: 1
-  numberOfEpisodes: 42000
+  numberOfEpisodes: 100000
 --- !u!4 &260572036
 Transform:
   m_ObjectHideFlags: 0
@@ -375,9 +375,9 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: cb0222d0448b3d241a85f8489bc756fa, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 23ba76f2fa8e94a41bc8b43765f5dd84, type: 3}
   m_InferenceDevice: 1
-  m_BehaviorType: 1
+  m_BehaviorType: 0
   m_BehaviorName: MLBomberman
   TeamId: 0
   m_UseChildSensors: 1
@@ -390,7 +390,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 260572030}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1c0348bc90c1edc4fbb53f82dcb2d0fd, type: 3}
   m_Name: 
@@ -415,7 +415,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 11
   height: 11
-  wallPercent: 60
+  wallPercent: 0
 --- !u!114 &260572040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -430,7 +430,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Record: 0
   NumStepsToRecord: 0
-  DemonstrationName: Demo100Eps60Walls
+  DemonstrationName: 100EpsvsPlan0Walls
   DemonstrationDirectory: Demos
 --- !u!114 &260572041
 MonoBehaviour:

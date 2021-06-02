@@ -36,14 +36,15 @@ public class BManSetupM : MonoBehaviour, ISetup
                             agentGrid[x, y].Add(new AStrongWall(new List<int> { }, x, y));
                             break;
                         case 3:
-                            if (!manager.selfPlay)
-                            {
-                                agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
-                            }
+
+                            //agentGrid[x, y].Add(new PBomberman(new List<int> { }, x, y, this, GetComponent<IUpdate>()));
+                            agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
+
                             break;
                         case 4:
                             //agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
-                            agentGrid[x, y].Add(new PBomberman(new List<int> { }, x, y, this, GetComponent<IUpdate>()));
+                            
+                            agentGrid[x, y].Add(new MLSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>(), gameObject.GetComponent<MLAgent>()));
                             break;
                         case 5:
                             if (manager.selfPlay)
@@ -53,10 +54,11 @@ public class BManSetupM : MonoBehaviour, ISetup
                             }
                             else
                             {
-                                //agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
-                                agentGrid[x, y].Add(new RandomSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
+                                agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
+                                //agentGrid[x, y].Add(new RandomSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
+                                
                             }
-                            
+
                             break;
                         case 6:
 
