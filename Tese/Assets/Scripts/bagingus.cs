@@ -40,20 +40,7 @@ public class bagingus : MonoBehaviour
         grid = SetupInterface.SetupGrid(prng);
 
         //CAMERA SET UP
-        Camera.main.transform.position = new Vector3(grid.width*grid.cellSize/2, grid.height * grid.cellSize / 2, Camera.main.transform.position.z);
-        Camera.main.orthographicSize = grid.height * grid.cellSize/2;
-        Camera.main.orthographicSize = (grid.width * grid.cellSize+20) * Screen.height / Screen.width  *0.5f;
-        float screenRatio = (float)Screen.width / (float)Screen.height;
-        float targetRatio = (grid.width * grid.cellSize) / (grid.height * grid.cellSize);
-        if(screenRatio >= targetRatio)
-        {
-            Camera.main.orthographicSize = grid.height * grid.cellSize / 2;
-        }
-        else
-        {
-            float differenceInSize = targetRatio / screenRatio;
-            Camera.main.orthographicSize = grid.height * grid.cellSize / 2*differenceInSize;
-        }
+        Utils.SetupCameraToGrid(Camera.main, grid);
         //CAMERA SET UP
 
         UpdateInterface.SetupSimulation(grid, prng);

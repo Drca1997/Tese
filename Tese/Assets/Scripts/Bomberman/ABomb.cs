@@ -13,7 +13,11 @@ public class ABomb : GameAgent
     {
         //states[0] - number of updates until explosion
         //states[1] - size of explosion
-        this.states = states;
+        if (states.Count == 2)
+        {
+            this.states = states;
+        }
+        else this.states = new List<int> { 3, 2 };
         this.position = new Vector2Int(x, y);
         this.typeName = "Agent_Bomb";
         this.creator = creator;

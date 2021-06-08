@@ -43,3 +43,8 @@ public interface IGenerateMap
 {
     List<int>[,] GenerateMap(System.Random prng);
 }
+
+public interface IWFC
+{
+    bool WFC(int[,] input_grid, int[,] output_grid, int pattern_size, int max_iter, bool nLoop, bool includeInput, Vector2Int inputStart, bool WFCRotate90, bool WFCRotate180, bool WFCRotate270, bool WFCMirrorVert, bool WFCMirrorHor);
+}

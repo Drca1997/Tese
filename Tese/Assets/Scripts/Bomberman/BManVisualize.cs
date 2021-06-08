@@ -11,7 +11,7 @@ using UnityEngine;
 public class BManVisualize : MonoBehaviour, IVisualize
 {
     //If more than one Agent is in a position of the agentGrid, this priority list will dictate which one shall be represented in the objectGrid
-    string[] priorityList = new string[] { "Malaquias_Bomberman", "Player_Bomberman", "Agent_Bomberman", "Agent_Bomb", "Agent_Fire", "Agent_Strong_Wall", "Agent_Weak_Wall" };
+    string[] priorityList = new string[] { "Malaquias_Bomberman", "Player_Bomberman", "Agent_Bomberman", "Agent_Bushman", "Agent_Bomb", "Agent_Fire", "Agent_Bush", "Agent_Strong_Wall", "Agent_Weak_Wall" };
 
     //Receives the Grid object as a parameter
     //The GameObjects contained in the objectGrid component of the Grid object are updated in order to indicate what agent types are dontained in that same position on the agentGrid
@@ -58,6 +58,12 @@ public class BManVisualize : MonoBehaviour, IVisualize
                             break;
                         case "Agent_Weak_Wall":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.grey;
+                            break;
+                        case "Agent_Bush":
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color((float)112/255, (float)220 / 255, (float)90/ 255);
+                            break;
+                        case "Agent_Bushman":
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color((float)174 / 255, (float)90 / 255, (float)220 / 255);
                             break;
                         default:
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.magenta;

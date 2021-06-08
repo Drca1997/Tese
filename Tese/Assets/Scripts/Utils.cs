@@ -34,7 +34,7 @@ public static class Utils
     //Receives a List<Agent> (aList) and a string (aType) as parametres
     //Returns the first Agent object on the aList that as an typeName component equal to aType 
     //otherwise, null is returned
-    public static GameAgent AgentListContinesType(List<GameAgent> aList, string aType)
+    public static GameAgent AgentListContainesType(List<GameAgent> aList, string aType)
     {
         foreach(GameAgent a in aList)
         {
@@ -42,6 +42,16 @@ public static class Utils
         }
         return null;
     }
+
+    public static GameAgent AgentListContainsTypes(List<GameAgent> agents, List<string> types)
+    {
+        foreach (GameAgent a in agents)
+        {
+            if (types.Contains(a.typeName)) return a;
+        }
+        return null;
+    }
+
 
     //Receives Vector2Int (agentPos), Vector2Int (relativePos), and int (width) and int (height)
     //Returns a Vector2Int
@@ -69,6 +79,8 @@ public static class Utils
         }
         return false;
     }
+
+    
 
     //Receives a string (text) and a Vector3 (position) as parameters
     //Creates a GameObject with a TextMesh component on the position given as parameter and with the given text
@@ -135,6 +147,37 @@ public static class Utils
         }
     }
 
+    //ROTATE AND MIRROR INT[,] GRIDS
+
+    //Rotates a int[x,x] grid 90º n times
+    //https://www.geeksforgeeks.org/rotate-a-matrix-by-90-degree-in-clockwise-direction-without-using-any-extra-space/
+    public static int[,] RotateGrid(int[,]grid, int n)
+    {
+        int[,] newgrid = grid;
+        int dim = grid.GetLength(1);
+
+        for (int z = 0; z < n; z++)
+        {
+            // Traverse each cycle
+            for (int i = 0; i < dim / 2; i++)
+            {
+                for (int j = i; j < dim - i - 1; j++)
+                {
+
+                    // Swap elements of each cycle
+                    // in clockwise direction
+                    int temp = newgrid[j, i];
+                    newgrid[j, i] = newgrid[i, dim - 1 - j];
+                    newgrid[i, dim - 1 - j] = newgrid[dim - 1 - i, dim - 1 - j];
+                    newgrid[dim - 1 - j, dim - 1 - i] = newgrid[dim - 1 - i, j];
+                    newgrid[dim - 1 - i, j] = temp;
+                }
+            }
+        }
+
+        return newgrid;
+    }
+
     //Receives a List<Agent> (agentList) and a string[] (priorityList)
     //Returns the first Agent found on agentList with the typeName equal to the highest string on priorityList
     public static GameAgent GetAgent(List<GameAgent> agentList, string[] priorityList)
@@ -145,14 +188,81 @@ public static class Utils
         {
             foreach (string type in priorityList)
             {
-                GameAgent a = Utils.AgentListContinesType(agentList, type);
+                GameAgent a = Utils.AgentListContainesType(agentList, type);
                 if (a != null) return a;
             }
         }
         return null;
     }
 
-    
+    //Receives a Camera parameter
+    //Returns the position of the mouse cursor in the world with z at 0f
+    public static Vector3 GetMouseWorldPosition(Camera cam)
+    {
+        Vector3 pos = cam.ScreenToWorldPoint(Input.mousePosition);
+        pos.z = 0f;
+        return pos;
+    }
+
+    //REVER
+    public static void SetupCameraToGrid(Camera cam, Grid grid)
+    {
+        cam.transform.position = new Vector3(grid.width * grid.cellSize / 2, grid.height * grid.cellSize / 2, cam.transform.position.z);
+        cam.orthographicSize = grid.height * grid.cellSize / 2;
+        cam.orthographicSize = (grid.width * grid.cellSize + 20) * Screen.height / Screen.width * 0.5f;
+        float screenRatio = (float)Screen.width * cam.rect.width / (float)Screen.height * cam.rect.height;
+        float targetRatio = (grid.width * grid.cellSize) / (grid.height * grid.cellSize);
+        if (screenRatio >= targetRatio)
+        {
+            cam.orthographicSize = grid.height * grid.cellSize / 2;
+        }
+        else
+        {
+            float differenceInSize = targetRatio / screenRatio;
+            cam.orthographicSize = grid.height * grid.cellSize / 2 * differenceInSize;
+        }
+    }
+
+    public static void SetupCameraToMinDimensions(Camera cam, float width, float height)
+    {
+        cam.transform.position = new Vector3(width/ 2, height / 2, cam.transform.position.z);
+        cam.orthographicSize = height/ 2;
+        cam.orthographicSize = (width + 20) * Screen.height / Screen.width * 0.5f;
+        float screenRatio = (float)Screen.width * cam.rect.width / (float)Screen.height * cam.rect.height;
+        //Debug.Log(Screen.width + " " + Screen.height);
+        //Debug.Log(cam.rect.width + " " + cam.rect.height);
+        //Debug.Log(Screen.width* cam.rect.width + " " + Screen.height* cam.rect.height);
+        float targetRatio = (width) / (height);
+        if (screenRatio >= targetRatio)
+        {
+            cam.orthographicSize = height  / 2;
+        }
+        else
+        {
+            float differenceInSize = targetRatio / screenRatio;
+            cam.orthographicSize = height / 2 * differenceInSize;
+        }
+    }
+    //REVER
+
+
+    public static Grid SetupEmptyGrid(int width, int height, int cellSize, string[] agentTypes)
+    {
+        List<GameAgent>[,] agentGrid = new List<GameAgent>[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                agentGrid[x, y] = new List<GameAgent> { };
+            }
+        }
+
+
+        //Grid constructed with the agentGrid
+        Grid grid = new Grid(width, height, cellSize, agentGrid, agentTypes);
+
+        return grid;
+    }
     public static void PrintAgentGrid(List<GameAgent>[,] agentGrid)
     {
         string print = "Agent Grid:\n";
@@ -197,6 +307,20 @@ public static class Utils
         Debug.Log(print);
     }
 
+    public static void PrintIntGrid(int[,] intGrid)
+    {
+        string print = "Int Grid:\n";
+        for (int y = intGrid.GetLength(1) - 1; y >= 0; y--)
+        {
+            string line = "";
+            for (int x = 0; x < intGrid.GetLength(0); x++)
+            {
+                line += intGrid[x, y] + " | ";
+            }
+            print += line + "\n";
+        }
+        Debug.Log(print);
+    }
 
     public static void PutOnGrid(List<int>[,] grid, List<Vector2Int> pattern, int filler)
     {
@@ -515,5 +639,8 @@ public static class Utils
         }
         return rando_pattern;
     }
+
+
+
 
 }

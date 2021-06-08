@@ -158,6 +158,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 
   useRandomSeed: 1
+  numberOfEpisodes: 1
 --- !u!4 &249840270
 Transform:
   m_ObjectHideFlags: 0
@@ -247,12 +248,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105fb38a40ae0fe4fb5ae477787c35d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 20
-  height: 10
-  numberRandomMovingAgents: 1
-  numberPlayerAgents: 10
+  width: 200
+  height: 100
   cellSize: 10
-  randomFillPercetn: 20
+  numberRandomMovingAgents: 0
+  numberPlayerAgents: 0
+  randomFillPercetn: 33
 --- !u!114 &249840274
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,7 +12,11 @@ public class AFire : GameAgent
     public AFire(List<int> states, int x, int y, GameAgent creator)
     {
         //states[0] - number of updates until it expires
-        this.states = states;
+        if (states.Count == 1)
+        {
+            this.states = states;
+        }
+        else this.states = new List<int> {0};
         this.position = new Vector2Int(x, y);
         this.typeName = "Agent_Fire";
         this.creator = creator;
@@ -29,7 +33,7 @@ public class AFire : GameAgent
     public override void UpdateAgent(Grid g, int step_stage, System.Random prng)
     {
         //Will remove Agents of these types if they are in its postion of the agentGrid
-        List<string> flamableTypes = new List<string> {"Agent_Weak_Wall", "Malaquias_Bomberman", "Player_Bomberman", "Agent_Bomberman" };
+        List<string> flamableTypes = new List<string> {"Agent_Weak_Wall", "Agent_Bush", "Malaquias_Bomberman", "Player_Bomberman", "Agent_Bomberman", "Agent_Bushman" };
         List<GameAgent> sensors = GetSensors(g);
         foreach (GameAgent a in sensors)
         {
@@ -43,6 +47,16 @@ public class AFire : GameAgent
                     //podes a partir disso adicionar-lhe score se for um sintético 
                     EliminateAgent(a, g, step_stage, prng);
                 }
+            }
+        }
+
+        List<Vector2Int> spread_directions = new List<Vector2Int> { new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1) };
+        foreach (Vector2Int pos in spread_directions)
+        {
+            Vector2Int realPos = Utils.GetRealPos(position, pos, g.width, g.height);
+            if (Utils.AgentListContainesType(g.agentGrid[realPos.x,realPos.y], "Agent_Fire") == null && Utils.AgentListContainesType(g.agentGrid[realPos.x, realPos.y], "Agent_Bush") != null && prng.Next(0, 100) < 50)
+            {
+                PutAgentOnGrid(realPos, new AFire(new List<int> { 0 }, realPos.x, realPos.y, this), g);
             }
         }
 

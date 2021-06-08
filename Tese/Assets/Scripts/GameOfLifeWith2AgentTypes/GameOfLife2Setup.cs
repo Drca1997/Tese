@@ -61,7 +61,7 @@ public class GameOfLife2Setup : MonoBehaviour, ISetup
             randx = prng.Next(0, width);
             randy = prng.Next(0, height);
             //RandomMoveAgent are positioned on points of the agentGrid without other RandomMoveAgent
-            if (Utils.AgentListContinesType(agentGrid[randx, randy], "Random_Move_Agent") == null)
+            if (Utils.AgentListContainesType(agentGrid[randx, randy], "Random_Move_Agent") == null)
             {
                 GameAgent moveAgent = new RandomMoveAgent(new List<int> { prng.Next(0, 4), 10, 5 }, randx, randy);
                 agentGrid[randx, randy].Add(moveAgent);
@@ -76,7 +76,7 @@ public class GameOfLife2Setup : MonoBehaviour, ISetup
             randx = prng.Next(0, width);
             randy = prng.Next(0, height);
             //PlayerMovementAgent are positioned on points of the agentGrid without other PlayerMovementAgent
-            if (Utils.AgentListContinesType(agentGrid[randx, randy], "Player_Movement_Agent") == null)
+            if (Utils.AgentListContainesType(agentGrid[randx, randy], "Player_Movement_Agent") == null)
             {
                 GameAgentPlayer playerAgent = new PlayerMovementAgent(new List<int> { prng.Next(0, 4) }, randx, randy, this);
                 agentGrid[randx, randy].Add(playerAgent);

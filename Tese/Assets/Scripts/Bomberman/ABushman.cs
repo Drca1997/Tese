@@ -2,26 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ABomberman : GameAgent
+public class ABushman : GameAgent
 {
     //Constructor
     //Receives List<int> (states), int (x), and int (y)
-    public ABomberman(List<int> states, int x, int y, IUpdate updateInterface)
+    public ABushman(List<int> states, int x, int y, IUpdate updateInterface)
     {
         //This agent cannot be placed in the same position of the agentGrid with the Agent types on this list
         this.colliderTypes.Add("Agent_Weak_Wall");
         this.colliderTypes.Add("Agent_Strong_Wall");
         this.colliderTypes.Add("Agent_Bomb");
-        this.colliderTypes.Add("Agent_Bush");
         this.colliderTypes.Add("Agent_Bomberman");
         this.colliderTypes.Add("Agent_Bushman");
         this.colliderTypes.Add("Player_Bomberman");
         this.colliderTypes.Add("Malaquias_Bomberman");
 
-        //timer until next bomb and bomb cooldown
-        this.states = new List<int> {0,6};
+        //timer until next bush and bush cooldown
+        this.states = new List<int> { 0, 10 };
         this.position = new Vector2Int(x, y);
-        this.typeName = "Agent_Bomberman";
+        this.typeName = "Agent_Bushman";
         this.updateInterface = updateInterface;
 
         this.relative_sensors = new List<Vector2Int> { new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, -1) };
@@ -34,7 +33,7 @@ public class ABomberman : GameAgent
 
         //0-up 1-down 2-left 3-right
         int[] possible_move = new int[4];
-        bool bomb = false;
+        bool bush = false;
         bool danger = false;
         List<GameAgent> sensors = GetSensors(g);
         foreach (GameAgent a in sensors)
@@ -54,13 +53,12 @@ public class ABomberman : GameAgent
                 else if (a.position.x < position.y) possible_move[2] = 1;
                 else if (a.position.y > position.y) possible_move[3] = 1;
             }
-            if (string.Compare(a.typeName, "Agent_Weak_Wall") == 0 || string.Compare(a.typeName, "Player_Bomberman") == 0 || string.Compare(a.typeName, "Agent_Bush") == 0 || string.Compare(a.typeName, "Player_Bushman") == 0)
+            if (prng.Next(0, 100)<20)
             {
-                bomb = true;
+                bush = true;
             }
         }
         //see bomb in way - run
-        //see weak wall/player - put bomb next to it
         //default - walk
         if (danger)
         {
@@ -72,9 +70,9 @@ public class ABomberman : GameAgent
             MoveAgent(newPosition, this, g);
             return;
         }
-        if (bomb && states[0]==0)
+        if (bush && states[0] == 0)
         {
-            PutAgentOnGrid(position, new ABomb(new List<int> { 3,2 }, position.x, position.y, this), g);
+            PutAgentOnGrid(position, new ABush(new List<int> { 50, 50 }, position.x, position.y), g);
             states[0] = states[1];
             return;
         }
@@ -89,8 +87,8 @@ public class ABomberman : GameAgent
         {
             Vector2Int newPosition = Utils.GetRealPos(position, possibleNewPositions[prng.Next(0, possibleNewPositions.Count)], g.width, g.height);
             MoveAgent(newPosition, this, g);
-        }  
-          
+        }
+
     }
 
     public override void Epitaph(Grid g, int step_stage, System.Random prng)

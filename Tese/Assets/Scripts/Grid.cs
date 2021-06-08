@@ -75,9 +75,15 @@ public class Grid
     //Receives Vector3 (worldPosition)
     //Returns Vector2
     //Maps and returns the x and y on the grid equivalent to the given game world position
-    public Vector2 GetXY(Vector3 worldPosition)
+    public Vector2Int GetXY(Vector3 worldPosition)
     {
-        return new Vector2(Mathf.FloorToInt((worldPosition- container.transform.position).x/cellSize), Mathf.FloorToInt((worldPosition - container.transform.position).y / cellSize));
+        return new Vector2Int(Mathf.FloorToInt((worldPosition- container.transform.position).x/cellSize), Mathf.FloorToInt((worldPosition - container.transform.position).y / cellSize));
+    }
+
+    public Boolean PosInGrid(Vector2Int pos)
+    {
+        if (pos.x < 0 || pos.x >= width || pos.y < 0 || pos.y >= height) return false;
+        return true;
     }
 
     public List<int>[,] ConvertAgentGrid()
@@ -95,6 +101,21 @@ public class Grid
             }
         }
         return convertedGrid;
+    }
+
+    public int[,] ConvertAgentGrid2()
+    {
+        List<int>[,] convertedGrid = ConvertAgentGrid();
+        int[,] convertedGrid2 = new int[width, height];
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                if (convertedGrid[x, y].Count == 0) convertedGrid2[x, y] = -1;
+                else convertedGrid2[x, y] = convertedGrid[x, y][0];
+            }
+        }
+        return convertedGrid2;
     }
 
     public int GetAgentTypeInt(string type)
