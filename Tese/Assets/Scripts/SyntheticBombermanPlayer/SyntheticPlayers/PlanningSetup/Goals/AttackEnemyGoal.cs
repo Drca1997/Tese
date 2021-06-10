@@ -8,12 +8,16 @@ public class AttackEnemyGoal : AttackEntityGoal
     public override bool IsPossible()
     {
         Debug.Log("Verificando se é possível atacar inimigo");
+       
         if (RefTile != null && PlanningAgent.GridArray[RefTile[0], RefTile[1]] != (int)Tile.AIEnemy) //Update RefTile
         {
+            Debug.Log("UPDATE REFTILE");
             RefTile = null;
         }
         else if (RefTile != null && (PlanningAgent.GridArray[RefTile[0], RefTile[1]]  == (int)Tile.AIEnemy || PlanningAgent.GridArray[RefTile[0], RefTile[1]] == (int)Tile.FireNAIEnemy || PlanningAgent.GridArray[RefTile[0], RefTile[1]] == (int)Tile.FireNBombNAIEnemy)) //Caso RefTile ainda referencie a posição do inimigo
         {
+            Debug.Log("REFTILE REFERENCIA INIMIGO AINDA");
+            Debug.Log("REFTILE: " + RefTile[0] +  ", " + RefTile[1]);
             this.TargetTiles = SyntheticPlayerUtils.GetAdjacentTiles(PlanningAgent.GridArray, RefTile);
             foreach (int[] tile in TargetTiles)
             {

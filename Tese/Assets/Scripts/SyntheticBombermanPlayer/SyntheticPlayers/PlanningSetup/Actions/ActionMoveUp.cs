@@ -68,8 +68,10 @@ public class ActionMoveUp : SymbolicAction
     {
         if (SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x, Agent.position.y + 1))
         {
-            if (SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x, Agent.position.y + 1}))
+            if (!SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x, Agent.position.y }) || 
+                SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x, Agent.position.y + 1}))
             {
+                Debug.Log("SAFE TILE: " + Agent.position.x + "," + Agent.position.y);
                 return true;
             }
         }

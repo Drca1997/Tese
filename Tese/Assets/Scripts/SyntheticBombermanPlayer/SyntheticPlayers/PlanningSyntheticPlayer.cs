@@ -67,6 +67,7 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
 
     }
 
+    /*
     public override int TakeAction()
     {
         Debug.Log("REQUESTING DECISION");
@@ -75,22 +76,29 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         {
             if (currentGoal != null)
             {
-                Debug.Log("Verificando plano existente");
-
-                if (currentGoal.IsPossible() && currentPlan[0].IsPossible(gridArray))
+                if (GetMoreImportantObjectives(currentGoal)== null) 
                 {
-                    Debug.Log("Possível de avançar para a próxima ação do plano");
-                    nextAction = AdvancePlan();
+                    Debug.Log("Verificando plano existente");
 
+                    
+                    if (currentGoal.IsPossible() && currentPlan[0].IsPossible(gridArray))
+                    {
+                        Debug.Log("Possível de avançar para a próxima ação do plano");
+                        nextAction = AdvancePlan(); //Efetua Primeira Ação do Plano
+
+                    }
+                    else
+                    {
+                        Replanning();
+                        nextAction = CheckMoveSafeness(currentPlan[0]);
+                    }
                 }
-                else
+                else //Se houver objetivos mais prioritários passíveis de perseguir
                 {
-                    Debug.Log("Impossível seguir com plano em frente. A gerar um novo plano...");
-                    currentPlan = Plan(); //Gera Novo Plan
+                    Replanning();
                     nextAction = AdvancePlan(); //Efetua Primeira Ação do Plano
-                    ResetSim(); //reset agents' planning sim atributes 
-
                 }
+                
             }
             else
             {
@@ -100,12 +108,54 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         }
         else
         {
-
-            currentPlan = Plan(); //Gera Novo Plano
-            nextAction = AdvancePlan(); //Efetua Primeira Ação do Plano
-            ResetSim(); //reset agents' planning sim atributes 
+            Replanning();
+            nextAction = CheckMoveSafeness(currentPlan[0]);
+            
         }
         return nextAction;
+    }*/
+   
+    public override int TakeAction()
+    {
+        Debug.Log("REQUESTING DECISION");
+        int nextAction;
+        if (HasPlan() && GetMoreImportantObjectives(currentGoal) == null && currentGoal != null && currentGoal.IsPossible())
+        {
+            nextAction = MoveCheck(currentPlan[0]);
+        }
+        else
+        {
+            Replanning();
+            if (currentPlan != null)
+            {
+                nextAction = MoveCheck(currentPlan[0]);
+            }
+            else
+            {
+                nextAction = (int)Action.DoNothing;
+            }
+            
+        }
+        return nextAction;
+    }
+
+
+
+
+    private Goal GetMoreImportantObjectives(Goal currentgoal)
+    {
+        foreach (Goal goal in allGoals)
+        {
+            if (goal.Priority > currentGoal.Priority)
+            {
+                return goal;
+            }
+            else if (goal == currentgoal)
+            {
+                return null;
+            }
+        }
+        return null;
     }
 
     public int AdvancePlan()
@@ -130,6 +180,27 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         }
         Debug.Log("Plano contém " + currentPlan.Count + " acções");
         return true;
+    }
+
+    private void Replanning()
+    {
+        Debug.Log("Impossível seguir com plano em frente. A gerar um novo plano...");
+        currentPlan = Plan(); //Gera Novo Plan
+        ResetSim(); //reset agents' planning sim atributes 
+    }
+
+    private int MoveCheck(SymbolicAction action)
+    {
+
+        if (action.IsPossible(gridArray))
+        {
+            return AdvancePlan(); //Efetua Primeira Ação do Plano
+        }
+        else
+        {
+            return (int)Action.DoNothing; //caso tenha plano mas a 1ª ação neste timestep não pode ser executada.
+                                          //Por exemplo, quando quer perseguir um inimigo mas a primeira tile pelo caminho não é segura
+        }
     }
 
     private List<SymbolicAction> Plan()

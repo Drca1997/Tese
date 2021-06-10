@@ -38,6 +38,7 @@ public abstract class Goal: MonoBehaviour
     public void GetPlayerRef(PlanningSyntheticPlayer agent)
     {
         PlanningAgent = agent;
+        RefTile = null;
     }
 
     public abstract bool IsPossible();

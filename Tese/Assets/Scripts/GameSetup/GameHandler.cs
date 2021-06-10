@@ -202,7 +202,7 @@ public class GameHandler : MonoBehaviour
         if (agents.Count == 1)
         {
             Debug.Log(agents[0].name + " é o vencedor!");
-            UnityEditor.EditorApplication.isPlaying = false;
+            //UnityEditor.EditorApplication.isPlaying = false;
         }
         
     }

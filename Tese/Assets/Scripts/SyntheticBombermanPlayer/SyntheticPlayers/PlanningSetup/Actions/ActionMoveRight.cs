@@ -64,7 +64,8 @@ public class ActionMoveRight : SymbolicAction
     {
         if (SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x + 1, Agent.position.y))
         {
-            if (SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x + 1, Agent.position.y}))
+            if (!SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x, Agent.position.y }) ||
+                SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x + 1, Agent.position.y }))
             {
                 return true;
             }

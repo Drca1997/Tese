@@ -161,6 +161,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
                     Debug.Log("GAME OVER");
                     grid.simOver = true;
                 }
+                /*
                 if (agent.GetType() == typeof(MLSyntheticPlayer))
                 {
                     SelfPlayManager manager = gameObject.GetComponent<SelfPlayManager>();
@@ -178,7 +179,7 @@ public class BManUpdate : MonoBehaviour, IUpdate
                         gameOver = true;
                         grid.simOver = true;
                     }
-                }
+                }*/
                 break;
             default:
                 Debug.Log("unknown Agent called");
