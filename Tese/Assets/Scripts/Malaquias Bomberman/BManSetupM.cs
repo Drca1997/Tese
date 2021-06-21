@@ -7,15 +7,12 @@ using UnityEngine;
 //a Bomberman Player Agent
 public class BManSetupM : MonoBehaviour, ISetup
 {
-    
-
-    
-    public Grid SetupGrid(System.Random prng)
+    public Grid SetupGrid(System.Random prng, int width, int height)
     {
 
         IGenerateMap MapGenerator = GetComponent<IGenerateMap>();
 
-        List<int>[,] setup_grid = MapGenerator.GenerateMap(prng);
+        List<int>[,] setup_grid = MapGenerator.GenerateMap(prng, width, height);
 
 
         List<GameAgent>[,] agentGrid = new List<GameAgent>[setup_grid.GetLength(0), setup_grid.GetLength(1)];
@@ -52,5 +49,15 @@ public class BManSetupM : MonoBehaviour, ISetup
             10, agentGrid, new string[] { "Malaquias_Bomberman", "PlayerBomberman", "Agent_Bomberman", "Walkable", "Agent_Weak_Wall", "Agent_Strong_Wall", "Agent_Bomb", "Agent_Fire"});
 
         return grid;
+    }
+
+    public string ReturnSet()
+    {
+        return "Bomberman";
+    }
+
+    public string ReturnName()
+    {
+        return "Glider";
     }
 }

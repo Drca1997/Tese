@@ -7,10 +7,6 @@ using UnityEngine;
 //a "glider" structure setted up from the beginning
 public class GameOfLife2SetupGlider : MonoBehaviour, ISetup
 {
-    //width of the simulation grid, by default 20 units
-    public int width = 20;
-    //height of the simulation grid, by default 10 units
-    public int height = 10;
     //cell size of the simulation grid, by default 10f units
     public float cellSize = 10f;
 
@@ -18,7 +14,7 @@ public class GameOfLife2SetupGlider : MonoBehaviour, ISetup
     //Receives a System.Random as a parameter that may be used for randomization
     //Returns a Grid object, setted up for the start of the simulation
     //This function is responsible for the creation of the Grid object, the dimensions of the grid, and the initial distribution of agents in the agentGrid
-    public Grid SetupGrid(System.Random prng)
+    public Grid SetupGrid(System.Random prng, int width, int height)
     {
 
         //Creation of a setup matrix with the structure of a "glider"
@@ -54,8 +50,18 @@ public class GameOfLife2SetupGlider : MonoBehaviour, ISetup
         }
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Live_Agent_Dead", "Live_Agent_Alive", "Random_Move_Agent", "Player_Movement_Agent" });
+        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Life_Agent_Dead", "Life_Agent_Alive", "Player_Movement_Agent", "Random_Move_Agent" });
         return grid;
+    }
+
+    public string ReturnSet()
+    {
+        return "Game of Life v2";
+    }
+
+    public string ReturnName()
+    {
+        return "Glider";
     }
 
 }

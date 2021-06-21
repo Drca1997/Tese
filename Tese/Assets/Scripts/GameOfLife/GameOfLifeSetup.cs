@@ -6,10 +6,6 @@ using UnityEngine;
 //a random distribution of "alive" LifeAgents
 public class GameOfLifeSetup : MonoBehaviour, ISetup
 {
-    //width of the simulation grid, by default 20 units
-    public int width = 20;
-    //height of the simulation grid, by default 10 units
-    public int height = 10;
     //cell size of the simulation grid, by default 10f units
     public float cellSize = 10f;
 
@@ -20,7 +16,7 @@ public class GameOfLifeSetup : MonoBehaviour, ISetup
     //Receives a System.Random as a parameter that may be used for randomization
     //Returns a Grid object, setted up for the start of the simulation
     //This function is responsible for the creation of the Grid object, the dimensions of the grid, and the initial distribution of agents in the agentGrid
-    public Grid SetupGrid(System.Random prng)
+    public Grid SetupGrid(System.Random prng, int width, int height)
     {
         //Creation and initialization of the agentGrid, with randomFillPercetn of positions with a LifeAgent with a states[1] component with value 1 (meaning its "alive")
         //Other positions are initialized with a LifeAgent with a states[1] component with value 0 (meaning its "dead")
@@ -35,8 +31,18 @@ public class GameOfLifeSetup : MonoBehaviour, ISetup
         }
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Live_Agent" });
+        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Life_Agent" });
 
         return grid;
+    }
+
+    public string ReturnSet()
+    {
+        return "Game of Life v1";
+    }
+
+    public string ReturnName()
+    {
+        return "Random";
     }
 }

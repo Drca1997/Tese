@@ -4,14 +4,10 @@ using UnityEngine;
 
 public class BManMap1 : MonoBehaviour, IGenerateMap
 {
-    [MinAttribute (5)]
-    public int width = 15;
-    [MinAttribute (5)]
-    public int height = 13;
     [Range(0,100)]
     public int wallPercent = 60;
 
-    public List<int>[,] GenerateMap(System.Random prng) {
+    public List<int>[,] GenerateMap(System.Random prng, int width, int height) {
 
         List<int>[,] setup_grid = new List<int>[width, height];
 

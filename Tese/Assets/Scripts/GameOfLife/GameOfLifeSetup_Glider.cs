@@ -17,7 +17,7 @@ public class GameOfLifeSetup_Glider : MonoBehaviour, ISetup
     //Receives a System.Random as a parameter that may be used for randomization
     //Returns a Grid object, setted up for the start of the simulation
     //This function is responsible for the creation of the Grid object, the dimensions of the grid, and the initial distribution of agents in the agentGrid
-    public Grid SetupGrid(System.Random prng)
+    public Grid SetupGrid(System.Random prng, int width, int height)
     {
 
         //Creation of a setup matrix with the structure of a "glider"
@@ -48,8 +48,18 @@ public class GameOfLifeSetup_Glider : MonoBehaviour, ISetup
         }
 
         //Grid constructed with the agentGrid
-        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Live_Agent" });
+        Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] { "Life_Agent" });
         return grid;
+    }
+
+    public string ReturnSet()
+    {
+        return "Game of Life v1";
+    }
+
+    public string ReturnName()
+    {
+        return "Glider";
     }
 
 }

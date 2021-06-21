@@ -38,8 +38,8 @@ public class MapEditorProto : MonoBehaviour
     public bool WFCRotate90 = false;
     public bool WFCRotate180 = false;
     public bool WFCRotate270 = false;
-    public bool WFCMirrorVert = false;
-    public bool WFCMirrorHor = false;
+    public bool WFCFlipVert = false;
+    public bool WFCFlipHor = false;
 
     private string[] agentTypes = new string[] { "Agent_Weak_Wall", "Agent_Strong_Wall", "Player_Bomberman", "Agent_Bomberman", "Agent_Bomb", "Agent_Fire", "Agent_Bush", "Agent_Bushman" };
 
@@ -72,8 +72,8 @@ public class MapEditorProto : MonoBehaviour
 
         //Initializing the grid acording with the ISetup Interface
         //grid = SetupInterface.SetupGrid(prng);
-        mainGrid = Utils.SetupEmptyGrid(mainWidth, mainHeight, 10, agentTypes);
-        wfcGrid = Utils.SetupEmptyGrid(wfcWidth, wfcHeight, 10, agentTypes);
+        mainGrid = Utils.SetupEmptyGrid(mainWidth, mainHeight, 10, agentTypes, (x, y, grid) => {});
+        wfcGrid = Utils.SetupEmptyGrid(wfcWidth, wfcHeight, 10, agentTypes, (x, y, grid) => {});
 
         wfcGrid.container.transform.position = new Vector3(wfcGrid.container.transform.position.x + 10, wfcGrid.container.transform.position.y, wfcGrid.container.transform.position.z);
         mainGrid.container.transform.position = new Vector3(mainGrid.container.transform.position.x + wfcGrid.width * wfcGrid.cellSize + 30, mainGrid.container.transform.position.y, mainGrid.container.transform.position.z);
@@ -144,7 +144,7 @@ public class MapEditorProto : MonoBehaviour
                     int[,] output_grid = new int[mainGrid.width, mainGrid.height];
                     if (includeInput)
                     {
-                        while (!WFCInterface.WFC(input_grid, output_grid, pattern_size, maxWFCIterations, loopWFCNeighbours, true, new Vector2Int(Mathf.Min(selectionPosition1.x, selectionPosition2.x), Mathf.Min(selectionPosition1.y, selectionPosition2.y)), WFCRotate90, WFCRotate180, WFCRotate270, WFCMirrorVert, WFCMirrorHor))
+                        while (!WFCInterface.WFC(input_grid, output_grid, pattern_size,  loopWFCNeighbours, true, new Vector2Int(Mathf.Min(selectionPosition1.x, selectionPosition2.x), Mathf.Min(selectionPosition1.y, selectionPosition2.y)), WFCRotate90, WFCRotate180, WFCRotate270, WFCFlipVert, WFCFlipHor))
                         {
                             output_grid = new int[mainGrid.width, mainGrid.height];
                             max_tries--;
@@ -158,7 +158,7 @@ public class MapEditorProto : MonoBehaviour
                     }
                     else
                     {
-                        while (!WFCInterface.WFC(input_grid, output_grid, pattern_size, maxWFCIterations, loopWFCNeighbours, false, Vector2Int.zero, WFCRotate90, WFCRotate180, WFCRotate270, WFCMirrorVert, WFCMirrorHor))
+                        while (!WFCInterface.WFC(input_grid, output_grid, pattern_size,  loopWFCNeighbours, false, Vector2Int.zero, WFCRotate90, WFCRotate180, WFCRotate270, WFCFlipVert, WFCFlipHor))
                         {
                             output_grid = new int[mainGrid.width, mainGrid.height];
                             max_tries--;
@@ -186,6 +186,31 @@ public class MapEditorProto : MonoBehaviour
                     }
                     selectingStage = 0;
                 }
+                else if (Input.GetKeyDown(KeyCode.Z))
+                {
+                    SetupGrid(wfcGrid, Utils.RotateGrid90(wfcGrid.ConvertAgentGrid2()));
+                    VisualizeInterface.VisualizeGrid(wfcGrid);
+                }
+                else if (Input.GetKeyDown(KeyCode.X))
+                {
+                    SetupGrid(wfcGrid, Utils.RotateGrid180(wfcGrid.ConvertAgentGrid2()));
+                    VisualizeInterface.VisualizeGrid(wfcGrid);
+                }
+                else if (Input.GetKeyDown(KeyCode.C))
+                {
+                    SetupGrid(wfcGrid, Utils.RotateGrid270(wfcGrid.ConvertAgentGrid2()));
+                    VisualizeInterface.VisualizeGrid(wfcGrid);
+                }
+                else if (Input.GetKeyDown(KeyCode.V))
+                {
+                    SetupGrid(wfcGrid, Utils.FlipGridVertically(wfcGrid.ConvertAgentGrid2()));
+                    VisualizeInterface.VisualizeGrid(wfcGrid);
+                }
+                else if (Input.GetKeyDown(KeyCode.B))
+                {
+                    SetupGrid(wfcGrid, Utils.FlipGridHorizontally(wfcGrid.ConvertAgentGrid2()));
+                    VisualizeInterface.VisualizeGrid(wfcGrid);
+                }
                 else if (mainGrid.PosInGrid(mainPos))
                 {
                     EditGrid(mainGrid, mainPos);
@@ -204,7 +229,7 @@ public class MapEditorProto : MonoBehaviour
                 editing = true;
             }
             //Every frame the IUpdate Interface function UpdateGrid is run
-            UpdateInterface.UpdateGrid(mainGrid, prng);
+            UpdateInterface.UpdateGrid(mainGrid, prng, 0.01f, false);
 
             //If the updated component of the Grid object is true than the visuals are updated
             if (mainGrid.updated)

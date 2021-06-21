@@ -37,7 +37,7 @@ public class bagingus : MonoBehaviour
         prng = new System.Random(seed.GetHashCode());
 
         //Initializing the grid acording with the ISetup Interface
-        grid = SetupInterface.SetupGrid(prng);
+        grid = SetupInterface.SetupGrid(prng, 50, 50);
 
         //CAMERA SET UP
         Utils.SetupCameraToGrid(Camera.main, grid);
@@ -53,7 +53,7 @@ public class bagingus : MonoBehaviour
     private void Update()
     {
         //Every frame the IUpdate Interface function UpdateGrid is run
-        UpdateInterface.UpdateGrid(grid, prng);
+        UpdateInterface.UpdateGrid(grid, prng, 0.5f, true);
 
         //If the updated component of the Grid object is true than the visuals are updated
         if (grid.updated)
@@ -73,7 +73,7 @@ public class bagingus : MonoBehaviour
                 Debug.Log("starting new episode ("+episodeNumber+")" );
                 grid.deleteContainer();
                 //Initializing the grid acording with the ISetup Interface
-                grid = SetupInterface.SetupGrid(prng);
+                grid = SetupInterface.SetupGrid(prng, 50, 50);
                 UpdateInterface.SetupSimulation(grid, prng);
 
                 //Updating the visuals acording with the IVisualize Interface and the initial state of the grid

@@ -10,7 +10,7 @@ using UnityEngine;
 public class GameOfLife2Visualize : MonoBehaviour, IVisualize
 {
     //If more than one Agent is in a position of the agentGrid, this priority list will dictate which one shall be represented in the objectGrid
-    string[] priorityList = new string[] { "Player_Movement_Agent", "Random_Move_Agent", "Live_Agent_Alive", "Live_Agent_Dead" };
+    string[] priorityList = new string[] { "Player_Movement_Agent", "Random_Move_Agent", "Life_Agent_Alive", "Life_Agent_Dead" };
 
     //Receives the Grid object as a parameter
     //The GameObjects contained in the objectGrid component of the Grid object are updated in order to indicate what agent types are dontained in that same position on the agentGrid
@@ -44,10 +44,10 @@ public class GameOfLife2Visualize : MonoBehaviour, IVisualize
                         case "Random_Move_Agent":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.red;
                             break;
-                        case "Live_Agent_Alive":
+                        case "Life_Agent_Alive":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.black;
                             break;
-                        case "Live_Agent_Dead":
+                        case "Life_Agent_Dead":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.white;
                             break;
                         default:
@@ -57,5 +57,10 @@ public class GameOfLife2Visualize : MonoBehaviour, IVisualize
                 }
             }
         }
+    }
+
+    public string ReturnSet()
+    {
+        return "Game of Life";
     }
 }

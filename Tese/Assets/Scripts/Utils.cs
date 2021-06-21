@@ -147,34 +147,125 @@ public static class Utils
         }
     }
 
-    //ROTATE AND MIRROR INT[,] GRIDS
+    //ROTATE AND FLIP INT[,] GRIDS
 
-    //Rotates a int[x,x] grid 90º n times
+    //Rotates a int[x,x] grid 90º
     //https://www.geeksforgeeks.org/rotate-a-matrix-by-90-degree-in-clockwise-direction-without-using-any-extra-space/
-    public static int[,] RotateGrid(int[,]grid, int n)
+    public static int[,] RotateGrid90(int[,]grid)
     {
-        int[,] newgrid = grid;
         int dim = grid.GetLength(1);
-
-        for (int z = 0; z < n; z++)
+        int[,] newgrid = new int[dim, dim];
+        if (dim % 2 != 0)
         {
-            // Traverse each cycle
-            for (int i = 0; i < dim / 2; i++)
+            newgrid[dim / 2, dim / 2] = grid[dim / 2, dim / 2];
+        }
+        // Traverse each cycle
+        for (int i = 0; i < dim / 2; i++)
             {
                 for (int j = i; j < dim - i - 1; j++)
                 {
-
                     // Swap elements of each cycle
                     // in clockwise direction
-                    int temp = newgrid[j, i];
-                    newgrid[j, i] = newgrid[i, dim - 1 - j];
-                    newgrid[i, dim - 1 - j] = newgrid[dim - 1 - i, dim - 1 - j];
-                    newgrid[dim - 1 - j, dim - 1 - i] = newgrid[dim - 1 - i, j];
-                    newgrid[dim - 1 - i, j] = temp;
+                    newgrid[i, j] = grid[dim - 1 - j, i];
+                    newgrid[dim - 1 - j, i] = grid[dim - 1 - i, dim - 1 - j];
+                    newgrid[dim - 1 - i, dim - 1 - j] = grid[j, dim - 1 - i];
+                    newgrid[j, dim - 1 - i] = grid[i, j];
                 }
             }
-        }
+        return newgrid;
+    }
 
+    //Rotates a int[x,x] grid 180º
+    public static int[,] RotateGrid180(int[,] grid)
+    {
+        int dim = grid.GetLength(1);
+        int[,] newgrid = new int[dim, dim];
+        if (dim % 2 != 0)
+        {
+            newgrid[dim / 2, dim / 2] = grid[dim / 2, dim / 2];
+        }
+        // Traverse each cycle
+        for (int i = 0; i < dim / 2; i++)
+        {
+            for (int j = i; j < dim - i - 1; j++)
+            {
+                // Swap elements of each cycle
+                // in clockwise direction
+                newgrid[i,j] = grid[dim - 1 - i, dim - 1 - j];
+                newgrid[dim - 1 - i, dim - 1 - j] = grid[i, j];
+                newgrid[dim - 1 - j, i] = grid[j, dim - 1 - i];
+                newgrid[j, dim - 1 - i] = grid[dim - 1 - j, i];
+            }
+        }
+        return newgrid;
+    }
+
+    //Rotates a int[x,x] grid 270º
+    public static int[,] RotateGrid270(int[,] grid)
+    {
+        int dim = grid.GetLength(1);
+        int[,] newgrid = new int[dim, dim];
+        if (dim % 2 != 0)
+        {
+            newgrid[dim / 2, dim / 2] = grid[dim / 2, dim / 2];
+        }
+        // Traverse each cycle
+        for (int i = 0; i < dim / 2; i++)
+        {
+            for (int j = i; j < dim - i - 1; j++)
+            {
+                // Swap elements of each cycle
+                // in clockwise direction
+                newgrid[i, j] = grid[j, dim - 1 - i];
+                newgrid[j, dim - 1 - i] = grid[dim - 1 - i, dim - 1 - j];
+                newgrid[dim - 1 - i, dim - 1 - j] = grid[dim - 1 - j, i];
+                newgrid[dim - 1 - j, i] = grid[i, j];
+            }
+        }
+        return newgrid;
+    }
+
+    public static int[,] FlipGridHorizontally(int[,] grid)
+    {
+        int dim = grid.GetLength(1);
+        int[,] newgrid = new int[dim, dim];
+        if (dim % 2 != 0)
+        {
+            for (int j = 0; j < dim; j++)
+            {
+                newgrid[dim/2, j] = grid[dim / 2, j];
+            }
+        }
+        for (int i = 0; i < dim / 2; i++)
+        {
+            for (int j = 0; j < dim; j++)
+            {
+                newgrid[i, j] = grid[dim - 1 - i, j];
+                newgrid[dim - 1 - i, j] = grid[i, j];
+            }
+        }
+        return newgrid;
+    }
+
+    public static int[,] FlipGridVertically(int[,] grid)
+    {
+        int dim = grid.GetLength(1);
+        int[,] newgrid = new int[dim,dim];
+        if (dim % 2 != 0)
+        {
+            for (int i = 0; i < dim; i++)
+            {
+                newgrid[i, dim/2] = grid[i, dim/2];
+            }
+        }
+        for (int i = 0; i < dim; i++)
+        {
+            for (int j = 0; j < dim/2; j++)
+            {
+                newgrid[i, j] = grid[i, dim - 1 - j];
+                newgrid[i, dim - 1 - j] = grid[i, j];
+            }
+        }
         return newgrid;
     }
 
@@ -246,7 +337,7 @@ public static class Utils
     //REVER
 
 
-    public static Grid SetupEmptyGrid(int width, int height, int cellSize, string[] agentTypes)
+    public static Grid SetupEmptyGrid(int width, int height, int cellSize, string[] agentTypes, System.Action<int, int, List<GameAgent>[,]> action)
     {
         List<GameAgent>[,] agentGrid = new List<GameAgent>[width, height];
         for (int x = 0; x < width; x++)
@@ -254,6 +345,7 @@ public static class Utils
             for (int y = 0; y < height; y++)
             {
                 agentGrid[x, y] = new List<GameAgent> { };
+                action(x, y, agentGrid);
             }
         }
 
@@ -304,7 +396,6 @@ public static class Utils
             }
             print += line + "\n";
         }
-        Debug.Log(print);
     }
 
     public static void PrintIntGrid(int[,] intGrid)

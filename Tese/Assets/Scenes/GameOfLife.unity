@@ -248,12 +248,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 105fb38a40ae0fe4fb5ae477787c35d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 200
-  height: 100
   cellSize: 10
   numberRandomMovingAgents: 0
   numberPlayerAgents: 0
-  randomFillPercetn: 33
+  randomFillPercetn: 30
 --- !u!114 &249840274
 MonoBehaviour:
   m_ObjectHideFlags: 0

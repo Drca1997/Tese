@@ -22,6 +22,9 @@ public class BManUpdate : MonoBehaviour, IUpdate
     //Bollean that indicates if a Player Agent has been eliminated 
     private bool gameOver = false;
 
+    private float lastTime = 0f;
+    private bool updateTime = false;
+
     //List of all Agents contained in the Grid 
     //Agents are updated in the order they appear in this list
     //The list is shuffled before the update cycle begins
@@ -55,11 +58,18 @@ public class BManUpdate : MonoBehaviour, IUpdate
     //Receives the Grid object and a System.Random as a parameters
     //The agents contained in the agentGrid component of the Grid object are updated acording with the instrunctions in this function
     //This function is responsible for the order in which the agents are updated, as well as how to handle agents that require player input
-    public void UpdateGrid(Grid grid, System.Random prng)
+    public void UpdateGrid(Grid grid, System.Random prng, float delay, bool debug)
     {
-        //If the last update cycle is over and the Agent Player is still on the grid, then we start a new one
-        if (finishedLoop && !gameOver && (!debug || Input.GetMouseButtonDown(1)))
+        float currentTime = Time.time;
+        if (currentTime - lastTime >= delay)
         {
+            lastTime = currentTime;
+            updateTime = true;
+        }
+        //If the last update cycle is over and the Agent Player is still on the grid, then we start a new one
+        if (finishedLoop && !gameOver && (!debug || Input.GetMouseButtonDown(0))&&(debug || updateTime))
+        {
+            updateTime = false;
             finishedLoop = false;
             //The randlist is rebuilt (since in the last update cycle new Agents may have been added to the grid, or old Agents removed)
             randList = Utils.PutAgentsInList(grid.agentGrid);
@@ -146,5 +156,10 @@ public class BManUpdate : MonoBehaviour, IUpdate
                 Debug.Log("unknown Agent called");
                 break;
         }
+    }
+
+    public string[] ReturnSet()
+    {
+        return new string[] { "Bomberman" };
     }
 }

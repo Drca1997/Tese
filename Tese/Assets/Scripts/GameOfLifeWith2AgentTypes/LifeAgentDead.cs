@@ -14,7 +14,7 @@ public class LifeAgentDead : GameAgent
         //states[0] - number of alive neighours 
         this.states = states;
         this.position = new Vector2Int(x, y);
-        this.typeName = "Live_Agent_Dead";
+        this.typeName = "Life_Agent_Dead";
 
         //relative locations of neighbours
         this.relative_sensors = new List<Vector2Int> {
@@ -43,7 +43,7 @@ public class LifeAgentDead : GameAgent
                 states[0] = 0;
                 foreach (GameAgent sensor in sensors)
                 {
-                    if (string.Compare(sensor.typeName, "Live_Agent_Alive")==0) states[0]++;
+                    if (string.Compare(sensor.typeName, "Life_Agent_Alive")==0) states[0]++;
                 }
                 break;
 

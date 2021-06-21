@@ -15,7 +15,7 @@ public class LifeAgent : GameAgent
         this.states = states;
 
         this.position = new Vector2Int(x,y);
-        this.typeName = "Live_Agent";
+        this.typeName = "Life_Agent";
 
         //relative locations of neighbours
         this.relative_sensors = new List<Vector2Int> {

@@ -45,7 +45,7 @@ public class BManVisualize : MonoBehaviour, IVisualize
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.blue;
                             break;
                         case "Agent_Bomberman":
-                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.green;
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color((float)0 / 255, (float)255 / 255, (float)255 / 255);
                             break;
                         case "Agent_Bomb":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.red;
@@ -60,10 +60,10 @@ public class BManVisualize : MonoBehaviour, IVisualize
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.grey;
                             break;
                         case "Agent_Bush":
-                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color((float)112/255, (float)220 / 255, (float)90/ 255);
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.green;
                             break;
                         case "Agent_Bushman":
-                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color((float)174 / 255, (float)90 / 255, (float)220 / 255);
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color((float)102 / 255, (float)51 / 255, (float)153 / 255);
                             break;
                         default:
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.magenta;
@@ -73,6 +73,9 @@ public class BManVisualize : MonoBehaviour, IVisualize
             }
         }
     }
+    public string ReturnSet()
+    {
+        return "Bomberman";
+    }
 
-    
 }

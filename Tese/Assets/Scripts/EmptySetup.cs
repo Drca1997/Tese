@@ -4,13 +4,9 @@ using UnityEngine;
 
 public class EmptySetup: MonoBehaviour, ISetup
 {
-    //width of the simulation grid, by default 20 units
-    public int width = 20;
-    //height of the simulation grid, by default 10 units
-    public int height = 10;
     //cell size of the simulation grid, by default 10f units
     public float cellSize = 10f;
-    public Grid SetupGrid(System.Random prng)
+    public Grid SetupGrid(System.Random prng, int width, int height)
     {
         List<GameAgent>[,] agentGrid = new List<GameAgent>[width, height];
         for (int x = 0; x < width; x++)
@@ -26,6 +22,16 @@ public class EmptySetup: MonoBehaviour, ISetup
         Grid grid = new Grid(width, height, cellSize, agentGrid, new string[] {});
 
         return grid;
+    }
+
+    public string ReturnSet()
+    {
+        return "Empty";
+    }
+
+    public string ReturnName()
+    {
+        return "Empty";
     }
 
 }

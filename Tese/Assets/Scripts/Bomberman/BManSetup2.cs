@@ -9,7 +9,7 @@ public class BManSetup2 : MonoBehaviour, ISetup
     
 
     
-    public Grid SetupGrid(System.Random prng)
+    public Grid SetupGrid(System.Random prng, int width, int height)
     {
         //0-nada
         //1-weak
@@ -61,7 +61,7 @@ public class BManSetup2 : MonoBehaviour, ISetup
 
         IGenerateMap MapGenerator = GetComponent<IGenerateMap>();
 
-        List<int>[,] setup_grid = MapGenerator.GenerateMap(prng);
+        List<int>[,] setup_grid = MapGenerator.GenerateMap(prng, width, height);
 
 
         List<GameAgent>[,] agentGrid = new List<GameAgent>[setup_grid.GetLength(0), setup_grid.GetLength(1)];
@@ -98,5 +98,15 @@ public class BManSetup2 : MonoBehaviour, ISetup
         Grid grid = new Grid(setup_grid.GetLength(0), setup_grid.GetLength(1), 10, agentGrid, new string[] { "Agent_Weak_Wall", "Agent_Strong_Wall", "Player_Bomberman", "Agent_Bomberman", "Agent_Bomb", "Agent_Fire"});
 
         return grid;
+    }
+
+    public string ReturnSet()
+    {
+        return "Bomberman";
+    }
+
+    public string ReturnName()
+    {
+        return "Classic";
     }
 }

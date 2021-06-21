@@ -18,4 +18,9 @@ public class GameOfLifeVisualize : MonoBehaviour, IVisualize
             }
         }
     }
+
+    public string ReturnSet()
+    {
+        return "Game of Life v1";
+    }
 }

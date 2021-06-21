@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class WaveFunctionCollapse : MonoBehaviour, IWFC
 {
-    public bool WFC(int[,] input_grid, int[,] output_grid, int pattern_size, int max_iter, bool nLoop, bool includeInput, Vector2Int inputStart, bool WFCRotate90, bool WFCRotate180, bool WFCRotate270, bool WFCMirrorVert, bool WFCMirrorHor)
+    public bool WFC(int[,] input_grid, int[,] output_grid, int pattern_size, bool nLoop, bool includeInput, Vector2Int inputStart, bool WFCRotate90, bool WFCRotate180, bool WFCRotate270, bool WFCFlipVert, bool WFCFlipHor)
     {
         if (pattern_size > output_grid.GetLength(0) || pattern_size > output_grid.GetLength(1))
         {
@@ -23,6 +23,8 @@ public class WaveFunctionCollapse : MonoBehaviour, IWFC
         List<Pattern> patterns = new List<Pattern>();
         //list of frequences of the patterns
         List<int> freqs = new List<int>();
+        //Sum of occurences of patterns 
+        int sum = 0;
 
         //creation of the pattern grid
         int[,] pattern_grid = new int[input_grid.GetLength(0), input_grid.GetLength(1)];
@@ -39,12 +41,84 @@ public class WaveFunctionCollapse : MonoBehaviour, IWFC
                 }
                 pattern_grid[x, y] = patterns.IndexOf(p);
                 freqs[patterns.IndexOf(p)] += 1;
+                sum += 1;
+            }
+        }
+
+        int num_original_pat = patterns.Count;
+        //Rotação e/ou Flip dos padrões
+        if (pattern_size >= 2)
+        {
+            if (WFCRotate90)
+            {
+                for(int i=0;i< num_original_pat; i++)
+                {
+                    Pattern p = new Pattern(Utils.RotateGrid90(patterns[i].grid));
+                    if (!patterns.Contains(p))
+                    {
+                        PrintPattern(p.grid);
+                        patterns.Add(p);
+                        freqs.Add(freqs[i]);
+                        sum += freqs[i];
+                    }
+                }
+            }
+            if (WFCRotate180)
+            {
+                for (int i = 0; i < num_original_pat; i++)
+                {
+                    Pattern p = new Pattern(Utils.RotateGrid180(patterns[i].grid));
+                    if (!patterns.Contains(p))
+                    {
+                        patterns.Add(p);
+                        freqs.Add(freqs[i]);
+                        sum += freqs[i];
+                    }
+                }
+            }
+            if (WFCRotate270)
+            {
+                for (int i = 0; i < num_original_pat; i++)
+                {
+                    Pattern p = new Pattern(Utils.RotateGrid270(patterns[i].grid));
+                    if (!patterns.Contains(p))
+                    {
+                        patterns.Add(p);
+                        freqs.Add(freqs[i]);
+                        sum += freqs[i];
+                    }
+                }
+            }
+            if (WFCFlipVert)
+            {
+                for (int i = 0; i < num_original_pat; i++)
+                {
+                    Pattern p = new Pattern(Utils.FlipGridVertically(patterns[i].grid));
+                    if (!patterns.Contains(p))
+                    {
+                        patterns.Add(p);
+                        freqs.Add(freqs[i]);
+                        sum += freqs[i];
+                    }
+                }
+            }
+            if (WFCFlipHor)
+            {
+                for (int i = 0; i < num_original_pat; i++)
+                {
+                    Pattern p = new Pattern(Utils.FlipGridHorizontally(patterns[i].grid));
+                    if (!patterns.Contains(p))
+                    {
+                        patterns.Add(p);
+                        freqs.Add(freqs[i]);
+                        sum += freqs[i];
+                    }
+                }
             }
         }
 
         //Obtaining the relative frequences of the patterns
         float[] rel_freqs = new float[freqs.Count];
-        int sum = input_grid.GetLength(0) * input_grid.GetLength(1);
         for (int i = 0; i < freqs.Count; i++)
         {
             rel_freqs[i] = (float)freqs[i] / sum;
@@ -98,27 +172,6 @@ public class WaveFunctionCollapse : MonoBehaviour, IWFC
         }
         else if (pattern_size >= 2)
         {
-            if (WFCRotate90)
-            {
-
-            }
-            if (WFCRotate180)
-            {
-
-            }
-            if (WFCRotate270)
-            {
-
-            }
-            if (WFCMirrorVert)
-            {
-
-            }
-            if (WFCMirrorHor)
-            {
-
-            }
-
             for (int i = 0; i < patterns.Count; i++)
             {
                 for (int j = i; j < patterns.Count; j++)
@@ -153,31 +206,31 @@ public class WaveFunctionCollapse : MonoBehaviour, IWFC
             }
 
             //DEBUG - PARA REMOVER
-            Debug.Log("num patterns = " + patterns.Count);
-            for (int i = 0; i < patterns.Count; i++)
-            {
-                PrintPattern(patterns[i].grid);
-                //Debug.Log("num Up Neighbours = " + nUp[i].Count);
-                //for (int j = 0; j < nUp[i].Count; j++)
-                //{
-                //    Debug.Log(nUp[i][j]);
-                //}
-                //Debug.Log("num Down Neighbours = " + nDown[i].Count);
-                //for (int j = 0; j < nDown[i].Count; j++)
-                //{
-                //    Debug.Log(nDown[i][j]);
-                //}
-                //Debug.Log("num Left Neighbours = " + nLeft[i].Count);
-                //for (int j = 0; j < nLeft[i].Count; j++)
-                //{
-                //    Debug.Log(nLeft[i][j]);
-                //}
-                //Debug.Log("num Right Neighbours = " + nRight[i].Count);
-                //for (int j = 0; j < nRight[i].Count; j++)
-                //{
-                //    Debug.Log(nRight[i][j]);
-                //}
-            }
+            //Debug.Log("num patterns = " + patterns.Count);
+            //for (int i = 0; i < patterns.Count; i++)
+            //{
+            //    PrintPattern(patterns[i].grid);
+            //    //Debug.Log("num Up Neighbours = " + nUp[i].Count);
+            //    //for (int j = 0; j < nUp[i].Count; j++)
+            //    //{
+            //    //    Debug.Log(nUp[i][j]);
+            //    //}
+            //    //Debug.Log("num Down Neighbours = " + nDown[i].Count);
+            //    //for (int j = 0; j < nDown[i].Count; j++)
+            //    //{
+            //    //    Debug.Log(nDown[i][j]);
+            //    //}
+            //    //Debug.Log("num Left Neighbours = " + nLeft[i].Count);
+            //    //for (int j = 0; j < nLeft[i].Count; j++)
+            //    //{
+            //    //    Debug.Log(nLeft[i][j]);
+            //    //}
+            //    //Debug.Log("num Right Neighbours = " + nRight[i].Count);
+            //    //for (int j = 0; j < nRight[i].Count; j++)
+            //    //{
+            //    //    Debug.Log(nRight[i][j]);
+            //    //}
+            //}
         }
 
         //Grid of patterns that will be created with WFC
@@ -209,7 +262,7 @@ public class WaveFunctionCollapse : MonoBehaviour, IWFC
         //2nd step - find the position with least entropy and collapse one of its possible values
         //3rd step - propagate the change to the neighboors, recalculating their possible values 
 
-        max_iter = output_pattern_grid.GetLength(0) * output_pattern_grid.GetLength(1);
+        int max_iter = output_pattern_grid.GetLength(0) * output_pattern_grid.GetLength(1);
         for (int i = 0; i < max_iter; i++)
         {
             if (i == max_iter - 1) Debug.Log("Max iter");
