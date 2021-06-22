@@ -33,6 +33,12 @@ public class BManUpdate : MonoBehaviour, IUpdate
     private int turnos = 0;
     public int maximoNumeroTurnos;
 
+    public bool humanPlayer;
+    private int PlanningAgentWins = 0;
+    private int MLAgent1Wins = 0;
+    private int MLAgent2Wins = 0;
+    private int HumanPlayerWins = 0;
+
     public event EventHandler OnMLAgentWin;
 
     public void SetupSimulation(Grid grid, System.Random prng)
@@ -155,35 +161,48 @@ public class BManUpdate : MonoBehaviour, IUpdate
                         if (a.GetType() == typeof(MLSyntheticPlayer) && a!= agent)
                         {
                             OnMLAgentWin?.Invoke(this, EventArgs.Empty);
+                            MLSyntheticPlayer player = (MLSyntheticPlayer)a;
+                            if (player.TeamID == 0)
+                            {
+                                MLAgent1Wins++;
+                            }
+                            else
+                            {
+                                MLAgent2Wins++;
+                            }
+                        }
+                        else if (a.GetType() == typeof(PlanningSyntheticPlayer) && a != agent)
+                        {
+                            PlanningAgentWins++;
+                        }
+                        else if(a.GetType() == typeof(PBomberman) && a!= agent)
+                        {
+                            HumanPlayerWins++;
                         }
                     }
 
                     Debug.Log("GAME OVER");
                     grid.simOver = true;
+                    PrintWins();
                 }
-                /*
-                if (agent.GetType() == typeof(MLSyntheticPlayer))
-                {
-                    SelfPlayManager manager = gameObject.GetComponent<SelfPlayManager>();
-                    if (manager.selfPlay)
-                    {
-                        manager.numberOfMLAgents--;
-                        if (manager.numberOfMLAgents == 0)
-                        {
-                            gameOver = true;
-                            grid.simOver = true;
-                        }
-                    }
-                    else
-                    {
-                        gameOver = true;
-                        grid.simOver = true;
-                    }
-                }*/
                 break;
             default:
                 Debug.Log("unknown Agent called");
                 break;
         }
+    }
+
+
+    private void PrintWins()
+    {
+        Debug.Log("TOTAL WINS");
+        string res = null;
+        res = "Planning Agent: " + PlanningAgentWins + "\tML Agent 1: " + MLAgent1Wins + "\tML Agent 2: " + MLAgent2Wins;
+        if (humanPlayer)
+        {
+
+            res += "\tHuman Player: " + HumanPlayerWins;
+        }
+        Debug.Log(res);
     }
 }

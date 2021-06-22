@@ -37,7 +37,7 @@ public class BManSetupM : MonoBehaviour, ISetup
                             break;
                         case 3:
 
-                            //agentGrid[x, y].Add(new PBomberman(new List<int> { }, x, y, this, GetComponent<IUpdate>()));
+                            agentGrid[x, y].Add(new PBomberman(new List<int> { }, x, y, this, GetComponent<IUpdate>()));
                             //agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
 
                             break;

@@ -17,9 +17,11 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
     private bool finishedHeuristic;
     public static int nextId = 0;
     public int id;
+    private int teamID;
 
     public MLAgent MlAgentRef { get => mlAgentRef; set => mlAgentRef = value; }
     public int HeuristicAction { get => heuristicAction; set => heuristicAction = value; }
+    public int TeamID { get => teamID; }
 
     private Recompensas recompensas;
     public MLSyntheticPlayer(List<int> states, int x, int y, IUpdate updateInterface, MLAgent agentRef) : base(states, x, y, updateInterface)
@@ -32,6 +34,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         MlAgentRef.X = position.x;
         MlAgentRef.Y = position.y;
         Debug.Log("TEAM ID: " + MlAgentRef.gameObject.GetComponent<BehaviorParameters>().TeamId);
+        teamID = MlAgentRef.gameObject.GetComponent<BehaviorParameters>().TeamId;
         updateInterface.OnMLAgentWin += OnWin;
         heuristicMode = MlAgentRef.gameObject.GetComponent<BehaviorParameters>().IsInHeuristicMode();
         MlAgentRef.MlPlayer = this;

@@ -248,7 +248,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debug: 0
   minNumberPlayers: 2
-  maximoNumeroTurnos: 2000
+  maximoNumeroTurnos: 300
+  humanPlayer: 1
 --- !u!114 &260572032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -338,7 +339,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seed: 
   useRandomSeed: 1
-  numberOfEpisodes: 100000
+  numberOfEpisodes: 100
 --- !u!4 &260572036
 Transform:
   m_ObjectHideFlags: 0
@@ -375,9 +376,9 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: a512d57348bfe9444b68e18d7440ced2, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 553c8266fba64a74792457ec0b4930fd, type: 3}
   m_InferenceDevice: 1
-  m_BehaviorType: 0
+  m_BehaviorType: 2
   m_BehaviorName: MLBomberman
   TeamId: 0
   m_UseChildSensors: 1
@@ -415,7 +416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 11
   height: 11
-  wallPercent: 30
+  wallPercent: 60
 --- !u!114 &260572040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -430,7 +431,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Record: 0
   NumStepsToRecord: 0
-  DemonstrationName: 100EpsvsPlan0Walls
+  DemonstrationName: 100EpsvsPlvsML30Walls
   DemonstrationDirectory: Demos
 --- !u!114 &260572041
 MonoBehaviour:
@@ -448,7 +449,7 @@ MonoBehaviour:
   OnWinRewardValue: 1
   OnDeathPenalty: 1
   OnDeathPenaltyValue: -1
-  IterationPenalty: 0
+  IterationPenalty: 1
   IterationPenaltyValue: -0.0001
   ExplodeBlockReward: 0
   ExplodeBlockRewardValue: 0.1
@@ -722,9 +723,9 @@ MonoBehaviour:
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
-  m_Model: {fileID: 5022602860645237092, guid: a512d57348bfe9444b68e18d7440ced2, type: 3}
+  m_Model: {fileID: 5022602860645237092, guid: 3c79e632937fd2e418c0904c82f14c2a, type: 3}
   m_InferenceDevice: 1
-  m_BehaviorType: 0
+  m_BehaviorType: 2
   m_BehaviorName: MLBomberman
   TeamId: 1
   m_UseChildSensors: 1

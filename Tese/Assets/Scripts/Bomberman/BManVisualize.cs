@@ -41,11 +41,20 @@ public class BManVisualize : MonoBehaviour, IVisualize
                         case "Malaquias_Bomberman":
                             if (a.GetType() == typeof(MLSyntheticPlayer))
                             {
-                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
+                                MLSyntheticPlayer player = (MLSyntheticPlayer)a;
+                                if (player.TeamID == 0)
+                                {
+                                    grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
+                                }
+                                else
+                                {
+                                    grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(0 / 255f, 102 / 255f, 102 / 255f);
+                                }
+                                
                             }
                             else if(a.GetType() == typeof(PlanningSyntheticPlayer))
                             {
-                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255 / 255f, 215 / 255f, 0 / 255f);
+                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255 / 255f, 165 / 255f, 0 / 255f);
                             }
                             else if (a.GetType() == typeof(RandomSyntheticPlayer))
                             {
