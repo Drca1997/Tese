@@ -5,7 +5,7 @@ using UnityEngine;
 //ISetup Interface for the Bomberman game scenario with:
 //a random distribution of Weak Wall Agents,
 //a Bomberman Player Agent
-public class BManSetupM : MonoBehaviour, ISetup
+public class Setup : MonoBehaviour, ISetup
 {
 
     
@@ -39,6 +39,7 @@ public class BManSetupM : MonoBehaviour, ISetup
 
                             agentGrid[x, y].Add(new PBomberman(new List<int> { }, x, y, this, GetComponent<IUpdate>()));
                             //agentGrid[x, y].Add(new IdleSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
+                            //agentGrid[x, y].Add(new RandomSyntheticPlayer(new List<int> { }, x, y, GetComponent<IUpdate>()));
 
                             break;
                         case 4:

@@ -84,6 +84,7 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
 
 
     #region ConvertGrid
+    //Turns the game world into a grid representation, common to both synthetic players
     protected int[,] ConvertGrid(Grid g)
     {
         List<int>[,] agentGrid = g.ConvertAgentGrid();
@@ -244,6 +245,7 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
 
     #endregion
 
+    //Responsible for dealing with the game logic of executing actions in the game
     public void ProcessAction(Grid g, int action)
     {
         Vector2Int newPosition = position;
@@ -335,5 +337,23 @@ public abstract class SyntheticBombermanPlayer : GameAgentPlayer
     }
 
     public abstract int TakeAction();
+
+    //Delay in executing an action. Only for used to record videos for the survey
+    protected void ReactionTime()
+    {
+        float delay = 12f;
+        float waitingTime = 0f;
+        while (true)
+        {
+            Debug.Log("UPDATE");
+            waitingTime += Time.deltaTime;
+            if (waitingTime >= delay) 
+            {
+
+                waitingTime = 0f;
+                break;
+            }
+        }
+    }
 
 }

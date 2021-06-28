@@ -5,10 +5,17 @@ using UnityEngine;
 
 public static class AStar
 {
-    private static bool pathfindingVerbose = false;
-    private static bool planningVerbose = false;
+    private static bool pathfindingVerbose = false; //Boolean to manage the amount of debug information given by the pathfinding algorithm 
+    private static bool planningVerbose = false; //Boolean to manage the amount of debug information given by the planning algorithm 
 
     #region Pathfinding
+
+    /**
+     * Graph graph: Graph where the search will occur
+     * GraphNode start: the starting node of the search
+     * List<GraphNode> possibleGoals: all the possible goal nodes
+     * Func<GraphNode, List<GraphNode>, double> heuristic: heuristic function to be used to calculate h(n)
+     */
     public static List<GraphNode> AStarPathFinding(Graph graph, GraphNode start, List<GraphNode> possibleGoals, Func<GraphNode, List<GraphNode>, double> heuristic)
     {
         List<GraphNode> expandableList = new List<GraphNode> { start }; //pega-se no primeiro nó

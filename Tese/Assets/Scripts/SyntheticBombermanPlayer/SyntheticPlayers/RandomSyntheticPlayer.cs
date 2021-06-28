@@ -17,6 +17,7 @@ public class RandomSyntheticPlayer : SyntheticBombermanPlayer
             action = Random.Range(0, 6);
 
         }
+        ReactionTime();
         return action;
     }
 

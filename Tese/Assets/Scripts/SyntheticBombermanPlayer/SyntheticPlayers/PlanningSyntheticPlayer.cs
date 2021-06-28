@@ -5,18 +5,27 @@ using UnityEngine;
 public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
 {
 
-    private Goal[] allGoals;
-    private SymbolicAction [] allActions;
-    private List<SymbolicAction> currentPlan;
-    private Goal currentGoal;
-    //Simulated Position of the agent when planning
-    private int simulatedX;
-    private int simulatedY;
+    private Goal[] allGoals; //list with all goals the agent can pursure
+    private SymbolicAction [] allActions; //list of all actions the agent can execute
+    private List<SymbolicAction> currentPlan; //the current plan (sequence of actions) to execute
+    private Goal currentGoal; //current goal the agent is pursuing
+    private int simulatedX; //Simulated X Coordinate of the agent's position when planning
+    private int simulatedY; //Simulated Y Coordinate of the agent's position when planning
+
     private bool firstTime;
 
     public int SimulatedX { get => simulatedX; set => simulatedX = value; }
     public int SimulatedY { get => simulatedY; set => simulatedY = value; }
 
+    /**
+     * Constructor of an Agent Instance
+     * List<int> states: an intrinsic attribute of a platform's game agent. This particular agent does not use this
+     * int x: the x coordinate of the agent’s position in the grid 
+     * int y: the y coordinate of the agent’s position in the grid
+     * IUpdate updateInterface: reference to the platform’s update interface, responsible for the game loop update.
+     * Goal [] allGoals: a vector of all the possible goals the agent can pursue during a game session
+     * SymbolicAction [] allActions: a vector of all the possible actions the agent can perform during a game session
+     */
     public PlanningSyntheticPlayer(List<int> states, int x, int y, IUpdate updateInterface, Goal [] allGoals, SymbolicAction [] allActions) : base(states, x, y, updateInterface)
     {
 
@@ -40,15 +49,9 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         Debug.Log("POSITION: " + position.x + "," + position.y);
     }
 
+    //Method responsible for updating the agent in its turn
     public override void UpdateAgent(Grid g, int step_stage, System.Random prng)
     {
-        //podes usar g.agentGrid para obter a matriz de List<Agent>
-        //g.ConvertAgentGrid() devolve-te uma List<int>[,] correspondente
-        //tem em conta que algumas das listas podem estar vazias ou ter multiplos elementos, visto que há sitios na grelha sem ou com multiplos agentes
-        //Os inteiros correspondem aos indices que os tipos de agente ocupam em g.agentTypes - podes modificá-los na interface de setup, na criação da nova Grid
-
-        //Para mover o agente e criar uma bomba podes consultar o meu codigo em PBomberman.cs na função Logic
-
         //Debug.Log("UPDATING AGENT in " + position.x + ", " + position.y);
         
         HasBomb();
@@ -67,68 +70,23 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
 
     }
 
-    /*
-    public override int TakeAction()
-    {
-        Debug.Log("REQUESTING DECISION");
-        int nextAction;
-        if (HasPlan()) //verificar se plano ainda é exequivel e se sim, efetuar proxima açao
-        {
-            if (currentGoal != null)
-            {
-                if (GetMoreImportantObjectives(currentGoal)== null) 
-                {
-                    Debug.Log("Verificando plano existente");
-
-                    
-                    if (currentGoal.IsPossible() && currentPlan[0].IsPossible(gridArray))
-                    {
-                        Debug.Log("Possível de avançar para a próxima ação do plano");
-                        nextAction = AdvancePlan(); //Efetua Primeira Ação do Plano
-
-                    }
-                    else
-                    {
-                        Replanning();
-                        nextAction = CheckMoveSafeness(currentPlan[0]);
-                    }
-                }
-                else //Se houver objetivos mais prioritários passíveis de perseguir
-                {
-                    Replanning();
-                    nextAction = AdvancePlan(); //Efetua Primeira Ação do Plano
-                }
-                
-            }
-            else
-            {
-                Debug.Log("Algo correu mal");
-                nextAction = -1;
-            }
-        }
-        else
-        {
-            Replanning();
-            nextAction = CheckMoveSafeness(currentPlan[0]);
-            
-        }
-        return nextAction;
-    }*/
    
+    //The Decision Making Process of the Agent
     public override int TakeAction()
     {
         Debug.Log("REQUESTING DECISION");
         int nextAction;
+        //If the agent has a plan, and there is not any higher-priorit goal than the current one, and the current goal is still possible to achieve, then
         if (HasPlan() && GetMoreImportantObjectives(currentGoal) == null && currentGoal != null && currentGoal.IsPossible())
         {
-            nextAction = MoveCheck(currentPlan[0]);
+            nextAction = MoveCheck(currentPlan[0]); //check the safety of the action to be executed
         }
-        else
+        else 
         {
             Replanning();
             if (currentPlan != null)
             {
-                nextAction = MoveCheck(currentPlan[0]);
+                nextAction = MoveCheck(currentPlan[0]); //check the safety of the action to be executed
             }
             else
             {
@@ -136,12 +94,14 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
             }
             
         }
+        ReactionTime(); //implemented delay to record videos for the surveys
+
         return nextAction;
     }
 
-
-
-
+    /**
+     * Method to retrive higher-priority goals than the one provided as input 
+     */
     private Goal GetMoreImportantObjectives(Goal currentgoal)
     {
         foreach (Goal goal in allGoals)
@@ -158,6 +118,9 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         return null;
     }
 
+    /**
+     * Advances the plan, executing its next action
+     */
     public int AdvancePlan()
     {
         if (currentPlan != null && currentPlan.Count > 0)
@@ -171,6 +134,7 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         return -1;
     }
 
+    //Checks if the agent currently has a plan
     private bool HasPlan()
     {
         if (currentPlan == null || currentPlan.Count == 0)
@@ -182,6 +146,7 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         return true;
     }
 
+    //Plan() + ResetSim()
     private void Replanning()
     {
         Debug.Log("Impossível seguir com plano em frente. A gerar um novo plano...");
@@ -189,6 +154,7 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         ResetSim(); //reset agents' planning sim atributes 
     }
 
+    //Checks if action is possible and advances plan
     private int MoveCheck(SymbolicAction action)
     {
 
@@ -203,39 +169,50 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         }
     }
 
+    /**
+     * Agent's Planning Process
+     * */
     private List<SymbolicAction> Plan()
     {
         Debug.Log("A gerar novo plano...");
         currentGoal = null;
-        Goal goal = GetNextGoal();
+        Goal goal = GetNextGoal(); //First it gets a goal to pursue
         currentGoal = goal;
-        if (goal == null)
+        if (goal == null) //if there is no possible goal to pursure, then return null
         {
            
             return null;
         }
 
+        //A* Pathfinding in order to get the nearest goal tile
         List<GraphNode> pathfindingNodes = NavGraph.GetPath(GridArray, position.x, position.y, goal);
         if (pathfindingNodes == null)
         {
             return null;
         }
-        int goalNodeIndex = GetGoalNodeIndex(goal, pathfindingNodes);
+        int goalNodeIndex = GetGoalNodeIndex(goal, pathfindingNodes); //get index of nearest goal tile
         int[] simTile = SyntheticPlayerUtils.GetTileFromIndex(goalNodeIndex, GridArray.GetLength(0));
-        SimulatedX = simTile[0];
-        simulatedY = simTile[1];
-        Debug.Log("Goal Tile:" + simTile[0] + ", " + simTile[1]);
-        WorldNode goalNode = new WorldNode(0, this, goal.GetGoalGrid(GridArray, goalNodeIndex, this)); //cria nó com base no estado objetivo
-        WorldNode currentNode = new WorldNode(1, this, GridArray); //cria nó com base no estado atual do jogo
         
+        //simulated position of the agent becomes equal to the goal tile's coordinates
+        SimulatedX = simTile[0]; 
+        simulatedY = simTile[1];
+        //Debug.Log("Goal Tile:" + simTile[0] + ", " + simTile[1]);
 
-        List<SymbolicAction> newPlan = AStar.AStarForPlanning(this, goalNode, currentNode, allActions, goal); //aquigoalNode e currentNode trocam-se pois é procura regressiva
+
+        WorldNode goalNode = new WorldNode(0, this, goal.GetGoalGrid(GridArray, goalNodeIndex, this)); //creates search node with goal state
+        WorldNode currentNode = new WorldNode(1, this, GridArray); //creates search node with current game state
+
+        //A*for planning is invoked. Here goalNode is the starting node of the search and currentNode the goal node, 
+        //since we are performing regressive search
+        List<SymbolicAction> newPlan = AStar.AStarForPlanning(this, goalNode, currentNode, allActions, goal); 
         DebugPlan(newPlan);
 
         return newPlan;
     }
 
-
+    /**
+     *  Returns the Highest-Priority Possible Goal
+     */
     private Goal GetNextGoal()
     {
         foreach (Goal goal in allGoals)
@@ -252,6 +229,9 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         return null;
     }
 
+    /**
+     * Get Index of the Goal Tile, according to the goal to be pursued
+     */
     private int GetGoalNodeIndex(Goal goal, List<GraphNode> list)
     { 
         if (goal.GetType() == typeof(AttackEnemyGoal) || goal.GetType() == typeof(ExplodeBlockGoal))
@@ -272,13 +252,17 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
         return -1;
     }
 
+    //Resets the agent's simulated position, in order to be once again equal to the real position
     private void ResetSim()
     {
         simulatedX = position.x;
         simulatedY = position.y;
     }
 
-
+    /**
+     * Method to Print a Plan
+     * List<SymbolicAction> plan: The plan to be printed
+     */
     private void DebugPlan(List<SymbolicAction> plan)
     {
         if (plan != null)
@@ -301,8 +285,7 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
 
     }
 
-    //usa para algo que querias que o agente faça ao ser removido da grid
-    //de momento meti codigo para o agente avisar a interface de update que "morreu", para se saber quando a simulação deve ser parada
+    //Method to deal with the agent's death
     public override void Epitaph(Grid g, int step_stage, System.Random prng)
     {
         //na função AgentCall a interface vai lidar com decrementar a sua variável que indica o numero de jogadores

@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class BeSafeGoal : Goal 
 {
+    /* Returns the grid that represents the goal game state
+    * int[,] currentGrid: grid that represents the current game state
+    * int index: Index of the Goal Tile (tile where the agent wants to be)
+    * PlanningSyntheticPlayer agent: reference to the planning agent
+    */
     public override int[,] GetGoalGrid(int[,] currentGrid, int index, PlanningSyntheticPlayer agent)
     { 
         int[,] goalGrid = SyntheticPlayerUtils.deepCopyWorld(currentGrid);
@@ -23,6 +28,10 @@ public class BeSafeGoal : Goal
     
     }
 
+    /*Provides a Custom Heuristic to be used in A*. This particular case is the Manhattan Distance
+     * WorldNode state: Current Node 
+     * WorldNode goal: Goal Node
+     **/
     public override double Heuristic(WorldNode state, WorldNode goal)
     {
         int[] start = new int[2] { state.Agent.SimulatedX, goal.Agent.SimulatedY };
@@ -30,24 +39,29 @@ public class BeSafeGoal : Goal
         return SyntheticPlayerUtils.CalculateManhattanDistance(start, end);
     }
 
+    /*
+     * Checks if a particular node is the goal node
+     * WorldNode node: Node to be checked
+     */
     public override bool IsObjective(WorldNode node)
     {
         return node.Agent.SimulatedX == node.Agent.position.x && node.Agent.SimulatedY == node.Agent.position.y;
     }
 
+    //Checks if the Goal is Possible to Execute
     public override bool IsPossible()
     {
 
-        Debug.Log("Verificando se é possível fugir de uma bomba");
+        //Debug.Log("Verificando se é possível fugir de uma bomba");
         RefTile = new int[2] { PlanningAgent.position.x, PlanningAgent.position.y };
 
         if (!SyntheticPlayerUtils.IsTileSafe(PlanningAgent.GridArray, RefTile))
         {
-            Debug.Log("NOT SAFE! POSSÍVEL FUGIR DE BOMBA!");
+            //Debug.Log("NOT SAFE! POSSÍVEL FUGIR DE BOMBA!");
             TargetTiles = SyntheticPlayerUtils.dangerTiles(SyntheticPlayerUtils.dangerMap(PlanningAgent.GridArray), true);
             return true;
         }
-        Debug.Log("Já está seguro. Mais produtivo encontrar outro objetivo...");
+        //Debug.Log("Já está seguro. Mais produtivo encontrar outro objetivo...");
 
         return false;
     }

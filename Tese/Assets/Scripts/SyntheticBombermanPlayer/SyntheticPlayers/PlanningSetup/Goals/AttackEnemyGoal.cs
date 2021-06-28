@@ -5,6 +5,7 @@ using UnityEngine;
 public class AttackEnemyGoal : AttackEntityGoal
 {
 
+    //Checks if the Goal is Possible to Execute
     public override bool IsPossible()
     {
         Debug.Log("Verificando se é possível atacar inimigo");

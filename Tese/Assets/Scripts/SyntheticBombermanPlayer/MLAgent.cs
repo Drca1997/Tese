@@ -27,24 +27,26 @@ public class MLAgent : Agent
 
 
 
-    private int x;
-    private int y;
-    private int rawAction;
-    private KeyCode input = KeyCode.None;
-    private int[,] grid;
-    private MLSyntheticPlayer mlPlayer;
+    private int x; //x coordinate of the agent's position
+    private int y; //y coordinate of the agent's position
+    private int rawAction; //variable that indicates the next action to execute
+    private KeyCode input = KeyCode.None; //Last input of the human player. Only used if heuristic mode is on
+    private int[,] grid; //grid representation of the current game state
+    private MLSyntheticPlayer mlPlayer; //reference to the MLSyntheticPlayer script
     private bool start = false;
     private bool restart = false;
-    public bagingus gameHandler;
-    public Recompensas Recompensas;
-    private const int tileVectorObservationSize = 5;
+    public GameHandler gameHandler; //reference to the GameHandler script
+    public Recompensas Recompensas; //reference to the script responsible for managing the setup of rewards
+    
+    //some helpful constants to use in CollectTileObservation()
+    private const int tileVectorObservationSize = 5; 
     private const int bombermanObsIndex = 0;
     private const int explodableObsIndex = 1;
     private const int unsurpassableObsIndex = 2;
     private const int bombObsIndex = 3;
     private const int fireObsIndex = 4;
 
-    public event EventHandler OnInputReceived;
+    public event EventHandler OnInputReceived; //public event that fires when input from the human player is received.Only used in heuristic mode
     
     
     public int X { get => x; set => x = value; }
@@ -71,6 +73,7 @@ public class MLAgent : Agent
         }
     }
     
+    //Helps to Synchronize files
     public IEnumerator WaitForEpisodeRestart()
     {
         while (!restart)
@@ -84,6 +87,7 @@ public class MLAgent : Agent
         //StartCoroutine(WaitForNewRef());
     }
 
+    
     private void OnEpisodeEnd(object sender, EventArgs e)
     {
         gameHandler.OnEpisodeEnd -= OnEpisodeEnd;
@@ -122,6 +126,7 @@ public class MLAgent : Agent
         sensor.AddObservation(y / grid.GetLength(1)); // Add Y of Agent to Observation Vector. Recommended to be normalized between 0 and 1.
     }
 
+    //Return the observaction vector of a tile
     private int[] CollectTileObservation(int [] tile)
     {
         int[] tileState = new int[tileVectorObservationSize] {0, 0, 0, 0, 0};
@@ -179,6 +184,7 @@ public class MLAgent : Agent
         return tileState;
     }
 
+    //Prints a observaction vector of a tile
     private void DebugObsVector(int [] vector, int[] tile)
     {
         string res = null;
@@ -207,6 +213,7 @@ public class MLAgent : Agent
     }
 
     
+    //Responsible for dealing with the Heuristic Mode of the agent
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         ActionSegment<int> discreteActions = actionsOut.DiscreteActions;

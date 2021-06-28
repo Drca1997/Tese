@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class GameHandler : MonoBehaviour
+public class TempGameHandler : MonoBehaviour
 {
     [SerializeField]
     private int width;

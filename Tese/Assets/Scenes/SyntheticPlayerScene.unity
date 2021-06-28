@@ -416,7 +416,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 11
   height: 11
-  wallPercent: 60
+  wallPercent: 30
 --- !u!114 &260572040
 MonoBehaviour:
   m_ObjectHideFlags: 0

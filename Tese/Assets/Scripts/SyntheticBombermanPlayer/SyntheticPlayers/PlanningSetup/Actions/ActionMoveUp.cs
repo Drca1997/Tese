@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ActionMoveUp : SymbolicAction
 {
+    //Initializes the attributes of the action
     public override void Init(PlanningSyntheticPlayer agent)
     {
         Agent = agent;
@@ -11,12 +12,14 @@ public class ActionMoveUp : SymbolicAction
         Effect = SyntheticPlayerUtils.deepCopyWorld(agent.GridArray);
     }
 
+    //Reverts the effects of the action. It is like it never happened
     public override void Revert()
     {
         Agent.SimulatedY -= 1;
 
     }
 
+    //Simulates the action in the environment, applying its effects
     public override void Simulate()
     {
         if (Effect[Agent.SimulatedX, Agent.SimulatedY] == (int)Tile.PlayerNBomb)
@@ -47,10 +50,9 @@ public class ActionMoveUp : SymbolicAction
         }
     }
 
+    //Checks if the action is possible to be simulated
     public override bool CheckPreconditions(int [,] grid)
     {
-
-        //Debug.Log("PRECOND SIMPOS: " + Agent.SimulatedX + ", " + Agent.SimulatedY + "= " + grid[Agent.SimulatedX, Agent.SimulatedY]);
         if (grid[Agent.SimulatedX, Agent.SimulatedY] == (int)Tile.PlayerNBomb)
         {
             return false;
@@ -64,6 +66,7 @@ public class ActionMoveUp : SymbolicAction
         return SyntheticPlayerUtils.IsTileWalkableSim(grid, Agent.SimulatedX, Agent.SimulatedY + 1);
     }
 
+    //Checks if the action is possible to be executed in the current game state
     public override bool IsPossible(int [,] grid)
     {
         if (SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x, Agent.position.y + 1))
@@ -71,7 +74,6 @@ public class ActionMoveUp : SymbolicAction
             if (!SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x, Agent.position.y }) || 
                 SyntheticPlayerUtils.IsTileSafe(grid, new int[2] { Agent.position.x, Agent.position.y + 1}))
             {
-                Debug.Log("SAFE TILE: " + Agent.position.x + "," + Agent.position.y);
                 return true;
             }
         }

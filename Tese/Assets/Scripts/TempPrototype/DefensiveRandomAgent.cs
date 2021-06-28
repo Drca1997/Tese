@@ -43,7 +43,7 @@ public class DefensiveRandomAgent : BaseAgent, IDecisionRequester
 
     private List<int[]> CalculateDanger(bool onDanger, int x, int y)
     {
-        List<Bomb> bombs = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameHandler>().getBombs();
+        List<Bomb> bombs = GameObject.FindGameObjectWithTag("GameController").GetComponent<TempGameHandler>().getBombs();
         List<int[]> affectedTiles = new List<int[]>();
         foreach (Bomb bomba in bombs)
         {

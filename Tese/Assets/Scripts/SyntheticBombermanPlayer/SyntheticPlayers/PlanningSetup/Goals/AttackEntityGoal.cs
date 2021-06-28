@@ -4,6 +4,11 @@ using UnityEngine;
 
 public abstract class AttackEntityGoal : Goal
 {
+    /* Returns the grid that represents the goal game state
+    * int[,] currentGrid: grid that represents the current game state
+    * int index: Index of the Goal Tile (tile where the agent wants to be)
+    * PlanningSyntheticPlayer agent: reference to the planning agent
+    */
     public override int[,] GetGoalGrid(int[,] currentGrid, int index, PlanningSyntheticPlayer agent)
     {
         int[,] goalGrid = SyntheticPlayerUtils.deepCopyWorld(currentGrid);
@@ -41,6 +46,10 @@ public abstract class AttackEntityGoal : Goal
         return goalGrid;
     }
 
+    /*Provides a Custom Heuristic to be used in A*. This particular case is the Manhattan Distance
+     * WorldNode state: Current Node 
+     * WorldNode goal: Goal Node
+     **/
     public override double Heuristic(WorldNode state, WorldNode goal)
     {
         int[] start = new int[2] { state.Agent.SimulatedX, goal.Agent.SimulatedY };
@@ -48,6 +57,10 @@ public abstract class AttackEntityGoal : Goal
         return SyntheticPlayerUtils.CalculateManhattanDistance(start, end);
     }
 
+    /*
+    * Checks if a particular node is the goal node
+    * WorldNode node: Node to be checked
+    */
     public override bool IsObjective(WorldNode node)
     {
         if (node.Grid[node.Agent.SimulatedX, node.Agent.SimulatedY] == (int)Tile.Player)
@@ -57,6 +70,7 @@ public abstract class AttackEntityGoal : Goal
         return false;
     }
 
+    //Checks if the Goal is Possible to Execute
     public abstract override bool IsPossible();
     
     public void GetEntityPos()

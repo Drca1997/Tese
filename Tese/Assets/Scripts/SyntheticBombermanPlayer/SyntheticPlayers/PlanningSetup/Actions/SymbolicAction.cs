@@ -23,16 +23,17 @@ public abstract class SymbolicAction : MonoBehaviour
     }
 
     private PlanningSyntheticPlayer agent;
-    private int rawAction;
+    private int rawAction; //integer that represents the action 
     [SerializeField]
-    private int cost;
-    private int[,] effect;
+    private int cost; //cost of the action when performing A*
+    private int[,] effect; //Effects of the action
     [SerializeField]
-    private SymbolicAction oppositeAction;
+    private SymbolicAction oppositeAction; //opposite action
 
     public abstract void Init(PlanningSyntheticPlayer agent);
         
 
+    //Update the effect grid
     public void UpdateEffectGrid(int[,] newGrid)
     {
         Effect = SyntheticPlayerUtils.deepCopyWorld(newGrid);

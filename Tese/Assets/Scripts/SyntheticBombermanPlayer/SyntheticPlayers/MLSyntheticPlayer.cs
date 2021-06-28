@@ -7,23 +7,32 @@ using System.Collections;
 
 public class MLSyntheticPlayer: SyntheticBombermanPlayer
 {
-    private MLAgent mlAgentRef;
-    private bool heuristicMode;
-    private int[] tilesWithAgents;
-    private int formerClosestDistToEnemy;
-    private int currentClosestDistToEnemy;
-    private int beforeFirstTurn;
+    private MLAgent mlAgentRef; //reference to the MLAgent file in charge of the machine learning training process
+    private bool heuristicMode; //boolean than indicates if the agent is running in heuristic mode (human controlling it to provide demonstrations) or not
+    private int[] tilesWithAgents; //vector with the tile configurations that indicates an agent in them
+    private int formerClosestDistToEnemy; //Distance to the closest enemy before executing the most recent action. Used to calculate the reward/penalty of being closer or farther away from an enemy 
+    private int currentClosestDistToEnemy; //Distance to the closest enemy after executing the most recent action. Used to calculate the reward/penalty of being closer or farther away from an enemy 
+    private int beforeFirstTurn; 
     private int heuristicAction;
-    private bool finishedHeuristic;
-    public static int nextId = 0;
-    public int id;
-    private int teamID;
+    private bool finishedHeuristic; //boolean that indicates if the heuristic loop of the ML Agent script ended in this turn. Used in a Coroutine to synchronize both scripts
+    public static int nextId = 0;  //ID to be given to the next instance of this agent.
+    public int id; //id of the agent. This only useful to a matter of debug, to check if there is a new instance of the agent being created at every game session
+    private int teamID; //The TeamID parameter of the ML Agent script
 
     public MLAgent MlAgentRef { get => mlAgentRef; set => mlAgentRef = value; }
     public int HeuristicAction { get => heuristicAction; set => heuristicAction = value; }
     public int TeamID { get => teamID; }
 
-    private Recompensas recompensas;
+    private Recompensas recompensas; //Reference to the script responsible for managing the rewards setup
+
+    /**
+     * Constructor of an Instance of this Agent
+     * List<int> states: an intrinsic attribute of a platform's game agent. This particular agent does not use this
+     * int x: the x coordinate of the agent’s position in the grid 
+     * int y: the y coordinate of the agent’s position in the grid
+     * IUpdate updateInterface: reference to the platform’s update interface, responsible for the game loop update.
+     * MLAgent agentRef: reference to the MLAgent file in charge of the machine learning training process
+    */
     public MLSyntheticPlayer(List<int> states, int x, int y, IUpdate updateInterface, MLAgent agentRef) : base(states, x, y, updateInterface)
     {
         MlAgentRef = agentRef;
@@ -48,17 +57,11 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         recompensas = mlAgentRef.Recompensas;
         //updated = false;
     }
-    
 
+
+    //Method responsible for updating the agent in its turn
     public override void UpdateAgent(Grid g, int step_stage, System.Random prng)
     {
-        //podes usar g.agentGrid para obter a matriz de List<Agent>
-        //g.ConvertAgentGrid() devolve-te uma List<int>[,] correspondente
-        //tem em conta que algumas das listas podem estar vazias ou ter multiplos elementos, visto que há sitios na grelha sem ou com multiplos agentes
-        //Os inteiros correspondem aos indices que os tipos de agente ocupam em g.agentTypes - podes modificá-los na interface de setup, na criação da nova Grid
-
-        //Para mover o agente e criar uma bomba podes consultar o meu codigo em PBomberman.cs na função Logic
-        Debug.Log("Turn: " + beforeFirstTurn);
         if (heuristicMode)
         {
             Debug.Log("HEURISTIC MODE ON");
@@ -76,6 +79,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         }
     }
 
+    //Update Internal attributes of the agent
     private void UpdateAgentInternalState(Grid g)
     {
         HasBomb();
@@ -87,6 +91,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         MlAgentRef.Y = position.y;
     }
 
+    //Decides Action to Take + Executes Action in the Environment + Calculate the Obtained Reward with the Action
     private void DecisionMakingProcess(Grid g)
     {
         int actionTaken = TakeAction();
@@ -94,16 +99,19 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         CalculateReward(actionTaken);
     }
 
+    //Returns what action to execute
     public override int TakeAction()
     {
         if (!heuristicMode)
             MlAgentRef.RequestDecision();
 
         Debug.Log(SyntheticPlayerUtils.ActionToString(MlAgentRef.RawAction));
+        ReactionTime();
         return MlAgentRef.RawAction;
     }
 
     #region HeuristicMode
+    //Deals with the game Input Logic in case of heuristic mode is on
     private IEnumerator InputLogic(Grid g, int step_stage, System.Random prng)
     {
         
@@ -146,11 +154,16 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
 
     }
 
+
+    //Activated when the OnInput Event is fired
     private void OnInput(object sender, EventArgs e)
     {
         finishedHeuristic = true;
     }
 
+    /**
+     * Synchronizes both scripts
+    */
     private IEnumerator WaitForHeuristic(Grid g)
     {
         while (!finishedHeuristic)
@@ -167,6 +180,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
     #endregion
 
     #region Recompensas
+    //Claculates all the rewards
     private void CalculateReward(int action)
     {
         if (recompensas.GetCloserToEnemyReward)
@@ -204,6 +218,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         }
     }
 
+    //Reward for agent being safe or not
     private void RewardIsNotSafe(int action)
     {
         if (!SyntheticPlayerUtils.IsTileSafe(gridArray, new int[2] { position.x, position.y }))
@@ -213,6 +228,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         }   
     }
 
+    //Reward for exploding a block
     public void RewardExplodeBlock()
     {
         if (recompensas.ExplodeBlockReward)
@@ -223,6 +239,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
        
     }
 
+    //Reward for killing an enemy
     public void RewardKillEnemy()
     {
         if (recompensas.KillEnemyReward)
@@ -233,6 +250,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         
     }
 
+    //Activated when the agent wins the game. Agent gets a positive reward
     private void OnWin(object sender, EventArgs e)
     {
         if (recompensas.OnWinReward)
@@ -245,6 +263,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         //MlAgentRef.EndEpisode();
     }
 
+    //Activated when the agent dies. Agent gets a negative reward
     private void OnDeath()
     {
         MlAgentRef.SetReward(recompensas.OnDeathPenaltyValue); //PENALIZACAO por morrer: -1
@@ -254,6 +273,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
 
     #endregion
 
+    //Update the distance to the closest enemy after executing the most recent action
     private void UpdateDistanceToClosestEnemy()
     {
         if (beforeFirstTurn == 0) //calcula distancia ao inimigo mais próximo antes de começar o jogo
@@ -265,6 +285,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         beforeFirstTurn++;
     }
 
+    //Get impossible actions to execute in the current turn
     public IEnumerable<int> GetImpossibleActions()
     {
         List<int> possibleActions = new List<int>();
@@ -276,8 +297,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
         return possibleActions;
     }
 
-    //usa para algo que querias que o agente faça ao ser removido da grid
-    //de momento meti codigo para o agente avisar a interface de update que "morreu", para se saber quando a simulação deve ser parada
+    //Platform's method to deal with this game agent's death
     public override void Epitaph(Grid g, int step_stage, System.Random prng)
     {
         if (recompensas.OnDeathPenalty)

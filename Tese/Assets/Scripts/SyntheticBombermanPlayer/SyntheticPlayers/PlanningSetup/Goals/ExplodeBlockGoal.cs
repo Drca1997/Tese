@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ExplodeBlockGoal : AttackEntityGoal
 {
+    //Checks if the Goal is Possible to Execute
     public override bool IsPossible()
     {
         Debug.Log("Verificando se é possível explodir bloco");

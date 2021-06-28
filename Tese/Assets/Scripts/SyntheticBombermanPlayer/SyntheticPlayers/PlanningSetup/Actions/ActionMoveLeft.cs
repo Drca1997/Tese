@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class ActionMoveLeft : SymbolicAction
 {
+    //Initializes the attributes of the action
     public override void Init(PlanningSyntheticPlayer agent)
     {
         Agent = agent;
@@ -11,6 +12,7 @@ public class ActionMoveLeft : SymbolicAction
         Effect = SyntheticPlayerUtils.deepCopyWorld(agent.GridArray);
     }
 
+    //Reverts the effects of the action. It is like it never happened
     public override void Revert()
     {
 
@@ -18,6 +20,7 @@ public class ActionMoveLeft : SymbolicAction
 
     }
 
+    //Simulates the action in the environment, applying its effects
     public override void Simulate()
     {
         if (Effect[Agent.SimulatedX, Agent.SimulatedY] == (int)Tile.PlayerNBomb)
@@ -49,6 +52,7 @@ public class ActionMoveLeft : SymbolicAction
 
     }
 
+    //Checks if the action is possible to be simulated
     public override bool CheckPreconditions(int [,] grid)
     {
         if (grid[Agent.SimulatedX, Agent.SimulatedY] == (int)Tile.PlayerNBomb)
@@ -62,6 +66,7 @@ public class ActionMoveLeft : SymbolicAction
         return SyntheticPlayerUtils.IsTileWalkableSim(grid, Agent.SimulatedX - 1, Agent.SimulatedY);
     }
 
+    //Checks if the action is possible to be executed in the current game state
     public override bool IsPossible(int [,] grid)
     {
         if (SyntheticPlayerUtils.IsTileWalkable(grid, Agent.position.x - 1, Agent.position.y))

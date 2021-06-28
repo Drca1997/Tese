@@ -12,6 +12,7 @@ public static class NavGraph
         FireNBombNPlayer, FireNBombNPlayerEnemy, FireNBombNAIEnemy
     }
 
+    //Get the path from the agent's current position to the nearest goal tile
     public static List<GraphNode> GetPath(int[,] grid, int agentX, int agentY, Goal goal)
     {
         Graph graph = CreateGraph(grid, goal);
@@ -20,6 +21,7 @@ public static class NavGraph
 
     }
 
+    //Creates the graph to be used in the A* pathfinding
     private static Graph CreateGraph(int[,] grid, Goal goal)
     {
         int width = grid.GetLength(0);
@@ -76,6 +78,7 @@ public static class NavGraph
         return graph;
     }
 
+    //Get starting node
     private static GraphNode GetStart(Graph graph, int gridWidth, int agentX, int agentY)
     {
 
@@ -83,6 +86,7 @@ public static class NavGraph
     }
 
 
+    //Get all the goal nodes
     public static List<GraphNode> GetGoals(int[,] grid, int agentX, int agentY, Graph graph, Goal goal)
     {
         List<GraphNode> goals = new List<GraphNode>();
@@ -129,6 +133,7 @@ public static class NavGraph
         return goals;
     }
 
+    //Prints a graph
     private static void DebugGraph(Graph graph)
     {
         foreach (GraphNode node in graph.Nodes)

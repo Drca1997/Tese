@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ActionPlantBomb : SymbolicAction
 {
-
+    //Initializes the attributes of the action
     public override void Init(PlanningSyntheticPlayer agent)
     {
         Agent = agent;
@@ -12,28 +12,27 @@ public class ActionPlantBomb : SymbolicAction
         Effect = SyntheticPlayerUtils.deepCopyWorld(agent.GridArray);
     }
 
+    //Reverts the effects of the action. It is like it never happened
     public override void Revert()
     {
         //Agent.SimulatedPlantedBomb = false;
         Effect[Agent.SimulatedX, Agent.SimulatedY] = (int)Tile.PlayerNBomb;
     }
 
+
+    //Simulates the action in the environment, applying its effects
     public override void Simulate()
     {
         Effect[Agent.SimulatedX, Agent.SimulatedY] = (int)Tile.Player;
     }
-    /*
-    public void Execute()
-    {
-        Effect[Agent.SimulatedX, Agent.SimulatedY] = (int)Tile.PlayerNBomb;
-        //Agent.SimulatedPlantedBomb = true;
-    }*/
 
+    //Checks if the action is possible to be simulated
     public override bool CheckPreconditions(int [,] grid)
     {
         return grid[Agent.SimulatedX, Agent.SimulatedY] == (int)Tile.PlayerNBomb;
     }
 
+    //Checks if the action is possible to be executed in the current game state
     public override bool IsPossible(int [,] grid)
     {
         //if (!Agent.SimulatedPlantedBomb)

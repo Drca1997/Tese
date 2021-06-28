@@ -44,21 +44,32 @@ public class BManVisualize : MonoBehaviour, IVisualize
                                 MLSyntheticPlayer player = (MLSyntheticPlayer)a;
                                 if (player.TeamID == 0)
                                 {
-                                    grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
+                                    //grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.cyan;
+                                    grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.blue;
+                                    
+                                    
                                 }
                                 else
                                 {
-                                    grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(0 / 255f, 102 / 255f, 102 / 255f);
+                                    //grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(0 / 255f, 102 / 255f, 102 / 255f);
+                                    grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255 / 255f, 165 / 255f, 0 / 255f); //Laranja
+
                                 }
                                 
                             }
                             else if(a.GetType() == typeof(PlanningSyntheticPlayer))
                             {
-                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255 / 255f, 165 / 255f, 0 / 255f);
+                                //grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255 / 255f, 165 / 255f, 0 / 255f);
+                                
+                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255 / 225f, 20 / 225f, 147 / 255f); //Rosa
+
+
                             }
                             else if (a.GetType() == typeof(RandomSyntheticPlayer))
                             {
-                                grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255/225f, 20/225f, 147/255f);
+                                //grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = new Color(255/225f, 20/225f, 147/255f);
+                                
+                               
                             }
                             else if (a.GetType() == typeof(IdleSyntheticPlayer))
                             {
@@ -67,7 +78,9 @@ public class BManVisualize : MonoBehaviour, IVisualize
                             
                             break;
                         case "Player_Bomberman":
-                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.blue;
+                            //grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.blue;
+                            grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.green;
+                            
                             break;
                         case "Agent_Bomberman":
                             grid.objectGrid[i, j].GetComponent<SpriteRenderer>().color = Color.green;

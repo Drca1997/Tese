@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-public class bagingus : MonoBehaviour
+public class GameHandler : MonoBehaviour
 {
     //seed used to initiate System.Random used in the simulation
     public string seed;
