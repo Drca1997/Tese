@@ -106,7 +106,7 @@ public class MLSyntheticPlayer: SyntheticBombermanPlayer
             MlAgentRef.RequestDecision();
 
         Debug.Log(SyntheticPlayerUtils.ActionToString(MlAgentRef.RawAction));
-        ReactionTime();
+        //ReactionTime();
         return MlAgentRef.RawAction;
     }
 

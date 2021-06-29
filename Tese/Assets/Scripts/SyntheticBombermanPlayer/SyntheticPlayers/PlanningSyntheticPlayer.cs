@@ -94,7 +94,7 @@ public class PlanningSyntheticPlayer : SyntheticBombermanPlayer
             }
             
         }
-        ReactionTime(); //implemented delay to record videos for the surveys
+        //ReactionTime(); //implemented delay to record videos for the surveys
 
         return nextAction;
     }
