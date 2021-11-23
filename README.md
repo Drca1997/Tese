@@ -1,6 +1,4 @@
 # Tese
-Master Dissertation
-
 *Branch B*
 
 Bernardo Correia' Master Dissertation: **[Title]** 
