@@ -1,10 +1,16 @@
 # Tese
 Master Dissertation
 
+Branch B
+
+Bernardo Correia' Master Dissertation: **[Title]** 
+
+[Description]
+
+
 Branch Diogo
 
-
-Diogo Alves' Master Dissertation: Modeling Synthetic Players as an Instrument for Testing Generative Content
+Diogo Alves' Master Dissertation: **Modeling Synthetic Players as an Instrument for Testing Generative Content**
 
 Master thesis focused on AI in Games, more precisely on modeling AI 
 characters to playtest procedurally generated game scenarios. Two approaches 
