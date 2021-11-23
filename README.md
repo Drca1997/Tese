@@ -1,14 +1,14 @@
 # Tese
 Master Dissertation
 
-Branch B
+*Branch B*
 
 Bernardo Correia' Master Dissertation: **[Title]** 
 
 [Description]
 
 
-Branch Diogo
+*Branch Diogo*
 
 Diogo Alves' Master Dissertation: **Modeling Synthetic Players as an Instrument for Testing Generative Content**
 
