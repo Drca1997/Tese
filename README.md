@@ -10,7 +10,7 @@ Bernardo Correia' Master Dissertation: **[Title]**
 
 
 
-*Branch Diogo*
+<br>*Branch Diogo*
 
 Diogo Alves' Master Dissertation: **Modeling Synthetic Players as an Instrument for Testing Generative Content**
 
