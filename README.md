@@ -1,7 +1,7 @@
 # Tese
 Master Dissertation
 
-Branch Diogo\n
+Branch Diogo
 
 
 Diogo Alves' Master Dissertation: Modeling Synthetic Players as an Instrument for Testing Generative Content
